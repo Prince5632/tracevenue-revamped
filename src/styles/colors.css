@@ -1,0 +1,88 @@
+/* =============================================
+   COLORS.CSS - Design System Color Tokens
+   ============================================= */
+
+:root {
+    /* ========== Primary Brand Colors ========== */
+    --color-primary: #ff4000;
+    --color-primary-light: #ff6b35;
+    --color-primary-dark: #e63900;
+    --color-primary-hover: #ff5722;
+
+    /* ========== Gradient Colors ========== */
+    /* Main gradient used for headers, CTAs, badges */
+    --color-gradient-start: #f39c12;
+    --color-gradient-mid: #f08e45;
+    --color-gradient-end: #ee5763;
+
+    /* Pre-defined gradients */
+    --gradient-primary: linear-gradient(to right, var(--color-gradient-start), var(--color-gradient-end));
+    --gradient-primary-135: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
+    --gradient-primary-90: linear-gradient(90deg, var(--color-gradient-mid), var(--color-gradient-end));
+
+    /* Card background gradients */
+    --color-card-gradient-start: #fdeaed;
+    --color-card-gradient-end: #fff3ea;
+    --gradient-card: linear-gradient(90deg, var(--color-card-gradient-start) 50%, var(--color-card-gradient-end) 100%);
+
+    /* ========== Semantic Colors ========== */
+    --color-success: #15b076;
+    --color-success-light: #e8f8f2;
+    --color-error: #e74c3c;
+    --color-error-light: #fef2f2;
+    --color-warning: #e67e22;
+    --color-warning-light: #fef9e7;
+    --color-info: #3498db;
+    --color-info-light: #ebf5fb;
+
+    /* ========== Neutral Colors ========== */
+    /* Text Colors */
+    --color-text-primary: #060606;
+    --color-text-secondary: #5c5f62;
+    --color-text-muted: #85878c;
+    --color-text-disabled: #aaaaaa;
+    --color-text-inverse: #ffffff;
+
+    /* Background Colors */
+    --color-background: #f0f0f4;
+    --color-background-alt: #f5f5f5;
+    --color-background-hover: #f1f5f9;
+    --color-surface: #ffffff;
+    --color-surface-elevated: #ffffff;
+
+    /* Border Colors */
+    --color-border: #d7d9da;
+    --color-border-light: #eeeeee;
+    --color-border-focus: var(--color-primary);
+    --color-border-error: var(--color-error);
+    --color-border-success: var(--color-success);
+
+    /* ========== Overlay Colors ========== */
+    --color-overlay: rgba(0, 0, 0, 0.5);
+    --color-overlay-light: rgba(0, 0, 0, 0.1);
+    --color-backdrop: rgba(255, 255, 255, 0.98);
+
+    /* ========== Scrollbar Colors ========== */
+    --color-scrollbar-thumb: #a7a7a7;
+    --color-scrollbar-track: #eeeeee;
+
+    /* ========== Primary Color Variants ========== */
+    /* Semi-transparent primary for focus rings, shadows, animations */
+    --color-primary-10: rgba(255, 64, 0, 0.1);
+    --color-primary-30: rgba(255, 64, 0, 0.3);
+    --color-primary-40: rgba(255, 64, 0, 0.4);
+
+    /* ========== Component-Specific Colors ========== */
+    --color-rdp-accent-bg: #fff5f0;
+}
+
+/* Dark Mode Support (optional - for future use) */
+@media (prefers-color-scheme: dark) {
+    :root.dark-mode {
+        --color-text-primary: #ffffff;
+        --color-text-secondary: #a0a0a0;
+        --color-background: #121212;
+        --color-surface: #1e1e1e;
+        --color-border: #333333;
+    }
+}

@@ -1,0 +1,153 @@
+/* =============================================
+   LAYOUTS.CSS - Spacing, Sizing, Layout Tokens
+   ============================================= */
+
+:root {
+    /* ========== Typography ========== */
+    --font-family: "Gilroy", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    /* Font Sizes */
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-base: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 20px;
+    --font-size-2xl: 24px;
+    --font-size-3xl: 30px;
+    --font-size-4xl: 38px;
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-heavy: 900;
+
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.6;
+
+    /* ========== Spacing Scale ========== */
+    --spacing-0: 0;
+    --spacing-1: 4px;
+    --spacing-2: 8px;
+    --spacing-3: 12px;
+    --spacing-4: 16px;
+    --spacing-5: 20px;
+    --spacing-6: 24px;
+    --spacing-7: 28px;
+    --spacing-8: 32px;
+    --spacing-10: 40px;
+    --spacing-12: 48px;
+    --spacing-16: 64px;
+    --spacing-20: 80px;
+
+    /* ========== Border Radius ========== */
+    --radius-none: 0;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 14px;
+    --radius-2xl: 20px;
+    --radius-pill: 30px;
+    --radius-full: 50px;
+    --radius-circle: 50%;
+
+    /* ========== Container Widths ========== */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1200px;
+    --container-2xl: 1340px;
+
+    /* ========== Shadows ========== */
+    --shadow-sm: 0px 0px 12px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0px 4px 10px 0px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0px 0px 35px -3px rgba(0, 0, 0, 0.16);
+    --shadow-xl: 0px 10px 40px rgba(0, 0, 0, 0.15);
+    --shadow-primary: 0 4px 20px var(--color-primary-30);
+    --shadow-primary-lg: 0 6px 24px var(--color-primary-40);
+
+    /* ========== Z-Index Scale ========== */
+    --z-dropdown: 10;
+    --z-sticky: 100;
+    --z-fixed: 1000;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+
+    /* ========== Transitions ========== */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-bounce: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* ========== Header Height ========== */
+    --header-height: 4rem;
+    --header-height-mobile: 60px;
+}
+
+/* ========== Common Layout Utilities ========== */
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-4);
+}
+
+/* Flex utilities */
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grid utilities */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-5);
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-5);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 991px) {
+    .container {
+        padding-left: var(--spacing-3);
+        padding-right: var(--spacing-3);
+    }
+
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767px) {
+    :root {
+        --spacing-section: var(--spacing-10);
+    }
+}

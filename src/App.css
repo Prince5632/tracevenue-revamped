@@ -1,0 +1,10 @@
+/* =============================================
+   APP.CSS - App-Specific Styles
+   All styles should use CSS variables from the design system
+   ============================================= */
+
+#root {
+  max-width: var(--container-xl);
+  margin-left: auto;
+  margin-right: auto;
+}

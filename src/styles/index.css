@@ -1,0 +1,18 @@
+/* =============================================
+   INDEX.CSS - Main Entry Point
+   TraceVenue Design System
+   ============================================= */
+
+/* Tailwind Base */
+@import "tailwindcss";
+
+/* Design System Partials */
+@import "./colors.css";
+@import "./layouts.css";
+@import "./base.css";
+@import "./variants.css";
+
+/* App-Specific Styles (add as needed) */
+/* @import "./app/header.css"; */
+/* @import "./app/sidebar.css"; */
+/* @import "./app/components.css"; */

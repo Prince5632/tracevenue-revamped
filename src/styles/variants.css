@@ -1,0 +1,283 @@
+/* =============================================
+   VARIANTS.CSS - Component Variants & States
+   ============================================= */
+
+/* ========== Button Variants ========== */
+
+/* Primary Button */
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-pill);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+    box-shadow: var(--shadow-primary);
+    transform: translateY(-2px);
+}
+
+/* Gradient Button */
+.btn-gradient {
+    background: var(--gradient-primary-135);
+    color: var(--color-text-inverse);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-gradient:hover {
+    box-shadow: var(--shadow-primary-lg);
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Outline Button */
+.btn-outline {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    padding: 10px 20px;
+    border-radius: var(--radius-pill);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-outline:hover {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background: var(--color-background);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    padding: 10px 20px;
+    border-radius: var(--radius-pill);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-secondary:hover {
+    background: var(--color-background-hover);
+    border-color: var(--color-text-secondary);
+}
+
+/* ========== Card Variants ========== */
+
+/* Gradient Card */
+.card-gradient {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: var(--spacing-5);
+    background: var(--gradient-card);
+}
+
+/* Bordered Card */
+.card-bordered {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: var(--spacing-5);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ========== Input Variants ========== */
+
+/* Base Input */
+.input-base {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 11px 20px;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    background: var(--color-surface);
+    transition: var(--transition-base);
+    width: 100%;
+}
+
+.input-base:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
+.input-base::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* Input Error State */
+.input-error {
+    border-color: var(--color-error) !important;
+}
+
+.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+/* ========== Badge Variants ========== */
+
+.badge-primary {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    padding: 5px 15px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+.badge-success {
+    background: var(--color-success);
+    color: var(--color-text-inverse);
+    padding: 5px 15px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+.badge-outline {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    padding: 5px 15px;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+/* ========== Gradient Text ========== */
+
+.text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ========== Animation Keyframes ========== */
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 var(--color-primary-40);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 8px transparent;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation Classes */
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+    animation: shimmer 3s infinite;
+}
+
+.animate-slide-in {
+    animation: slideInFromRight 0.4s ease-out;
+}
+
+.animate-fade-up {
+    animation: fadeSlideUp 0.5s ease forwards;
+}
+
+/* ========== Hover Effects ========== */
+
+.hover-lift {
+    transition: var(--transition-base);
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.hover-scale {
+    transition: var(--transition-base);
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* ========== Active/Selected States ========== */
+
+.state-active {
+    border-color: var(--color-primary) !important;
+}
+
+.state-selected {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-primary);
+}
+
+.state-success {
+    border-color: var(--color-success) !important;
+}

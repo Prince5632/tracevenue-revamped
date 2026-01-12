@@ -1,0 +1,6 @@
+/* =============================================
+   Main Entry Point - Import Design System
+   ============================================= */
+
+/* Import the full design system from styles folder */
+@import "./styles/index.css";
