@@ -292,3 +292,156 @@
 .state-success {
     border-color: var(--color-success) !important;
 }
+
+/* ========== Text Color Utilities ========== */
+
+/* Brand Colors */
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-primary-light {
+    color: var(--color-primary-light);
+}
+
+.text-primary-dark {
+    color: var(--color-primary-dark);
+}
+
+/* Semantic Colors */
+.text-success {
+    color: var(--color-success);
+}
+
+.text-error {
+    color: var(--color-error);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.text-info {
+    color: var(--color-info);
+}
+
+/* Neutral Text Colors */
+.text-body {
+    color: var(--color-text-primary);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.text-muted {
+    color: var(--color-text-muted);
+}
+
+.text-disabled {
+    color: var(--color-text-disabled);
+}
+
+.text-inverse {
+    color: var(--color-text-inverse);
+}
+
+/* ========== Background Color Utilities ========== */
+
+/* Brand Colors */
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+    background-color: var(--color-primary-light);
+}
+
+.bg-primary-dark {
+    background-color: var(--color-primary-dark);
+}
+
+/* Semantic Colors */
+.bg-success {
+    background-color: var(--color-success);
+}
+
+.bg-success-light {
+    background-color: var(--color-success-light);
+}
+
+.bg-error {
+    background-color: var(--color-error);
+}
+
+.bg-error-light {
+    background-color: var(--color-error-light);
+}
+
+.bg-warning {
+    background-color: var(--color-warning);
+}
+
+.bg-warning-light {
+    background-color: var(--color-warning-light);
+}
+
+.bg-info {
+    background-color: var(--color-info);
+}
+
+.bg-info-light {
+    background-color: var(--color-info-light);
+}
+
+/* Neutral Background Colors */
+.bg-surface {
+    background-color: var(--color-surface);
+}
+
+.bg-background {
+    background-color: var(--color-background);
+}
+
+.bg-background-alt {
+    background-color: var(--color-background-alt);
+}
+
+.bg-background-hover {
+    background-color: var(--color-background-hover);
+}
+
+/* Gradient Backgrounds */
+.bg-gradient-primary {
+    background: var(--gradient-primary);
+}
+
+.bg-gradient-card {
+    background: var(--gradient-card);
+}
+
+/* ========== Border Color Utilities ========== */
+
+.border-primary {
+    border-color: var(--color-primary);
+}
+
+.border-success {
+    border-color: var(--color-success);
+}
+
+.border-error {
+    border-color: var(--color-error);
+}
+
+.border-warning {
+    border-color: var(--color-warning);
+}
+
+.border-default {
+    border-color: var(--color-border);
+}
+
+.border-light {
+    border-color: var(--color-border-light);
+}

@@ -130,6 +130,7 @@ const ComponentDocs = () => {
         { id: 'text', label: 'Text', icon: '🌈' },
         { id: 'dividers', label: 'Dividers', icon: '➖' },
         { id: 'tabs', label: 'Tabs', icon: '📑' },
+        { id: 'utilities', label: 'Utilities', icon: '🛠️' },
     ];
 
     const scrollToSection = (id) => {
@@ -999,6 +1000,142 @@ export { Dropdown } from './Dropdown';
 // Utility Components
 export { GradientText } from './GradientText';`} />
                         </Card>
+                    </Section>
+
+                    <Divider variant="gradient" className="my-10" />
+
+                    {/* ==================== UTILITY CLASSES ==================== */}
+                    <Section id="utilities" title="Utility Classes" icon="🛠️" description="CSS utility classes for quick styling.">
+
+                        <ComponentExample
+                            title="Text Color Classes"
+                            description="Apply text colors using utility classes."
+                            code={`// Brand Colors
+<p className="text-primary">Primary text</p>
+<p className="text-primary-light">Primary light text</p>
+<p className="text-primary-dark">Primary dark text</p>
+
+// Semantic Colors
+<p className="text-success">Success text</p>
+<p className="text-error">Error text</p>
+<p className="text-warning">Warning text</p>
+<p className="text-info">Info text</p>
+
+// Neutral Colors
+<p className="text-body">Body text (default)</p>
+<p className="text-secondary">Secondary text</p>
+<p className="text-muted">Muted text</p>
+<p className="text-disabled">Disabled text</p>
+<p className="text-inverse">Inverse text (for dark bg)</p>`}
+                        >
+                            <div className="space-y-4">
+                                <div>
+                                    <p className="text-xs font-bold text-[#85878c] uppercase mb-2">Brand Colors</p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <span className="text-primary font-medium">.text-primary</span>
+                                        <span className="text-primary-light font-medium">.text-primary-light</span>
+                                        <span className="text-primary-dark font-medium">.text-primary-dark</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold text-[#85878c] uppercase mb-2">Semantic Colors</p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <span className="text-success font-medium">.text-success</span>
+                                        <span className="text-error font-medium">.text-error</span>
+                                        <span className="text-warning font-medium">.text-warning</span>
+                                        <span className="text-info font-medium">.text-info</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold text-[#85878c] uppercase mb-2">Neutral Colors</p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <span className="text-body font-medium">.text-body</span>
+                                        <span className="text-secondary font-medium">.text-secondary</span>
+                                        <span className="text-muted font-medium">.text-muted</span>
+                                        <span className="text-disabled font-medium">.text-disabled</span>
+                                        <span className="bg-[#060606] px-2 py-1 rounded text-inverse font-medium">.text-inverse</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ComponentExample>
+
+                        <ComponentExample
+                            title="Background Color Classes"
+                            description="Apply background colors using utility classes."
+                            code={`// Brand Colors
+<div className="bg-primary">Primary background</div>
+<div className="bg-primary-light">Primary light</div>
+<div className="bg-primary-dark">Primary dark</div>
+
+// Semantic Colors
+<div className="bg-success">Success</div>
+<div className="bg-success-light">Success light</div>
+<div className="bg-error">Error</div>
+<div className="bg-error-light">Error light</div>
+<div className="bg-warning">Warning</div>
+<div className="bg-info">Info</div>
+
+// Neutral Colors
+<div className="bg-surface">Surface (white)</div>
+<div className="bg-background">Background</div>
+<div className="bg-background-alt">Alt background</div>
+
+// Gradients
+<div className="bg-gradient-primary">Gradient primary</div>
+<div className="bg-gradient-card">Gradient card</div>`}
+                        >
+                            <div className="space-y-4">
+                                <div>
+                                    <p className="text-xs font-bold text-[#85878c] uppercase mb-2">Brand Colors</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="bg-primary text-white px-3 py-1.5 rounded-lg text-sm">.bg-primary</span>
+                                        <span className="bg-primary-light text-white px-3 py-1.5 rounded-lg text-sm">.bg-primary-light</span>
+                                        <span className="bg-primary-dark text-white px-3 py-1.5 rounded-lg text-sm">.bg-primary-dark</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold text-[#85878c] uppercase mb-2">Semantic Colors</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="bg-success text-white px-3 py-1.5 rounded-lg text-sm">.bg-success</span>
+                                        <span className="bg-success-light text-success px-3 py-1.5 rounded-lg text-sm">.bg-success-light</span>
+                                        <span className="bg-error text-white px-3 py-1.5 rounded-lg text-sm">.bg-error</span>
+                                        <span className="bg-error-light text-error px-3 py-1.5 rounded-lg text-sm">.bg-error-light</span>
+                                        <span className="bg-warning text-white px-3 py-1.5 rounded-lg text-sm">.bg-warning</span>
+                                        <span className="bg-info text-white px-3 py-1.5 rounded-lg text-sm">.bg-info</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold text-[#85878c] uppercase mb-2">Neutral & Gradients</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="bg-surface border border-[#e5e7eb] px-3 py-1.5 rounded-lg text-sm">.bg-surface</span>
+                                        <span className="bg-background px-3 py-1.5 rounded-lg text-sm">.bg-background</span>
+                                        <span className="bg-gradient-primary text-white px-3 py-1.5 rounded-lg text-sm">.bg-gradient-primary</span>
+                                        <span className="bg-gradient-card px-3 py-1.5 rounded-lg text-sm">.bg-gradient-card</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ComponentExample>
+
+                        <ComponentExample
+                            title="Border Color Classes"
+                            description="Apply border colors using utility classes."
+                            code={`// Use with border utility
+<div className="border border-primary">Primary border</div>
+<div className="border border-success">Success border</div>
+<div className="border border-error">Error border</div>
+<div className="border border-warning">Warning border</div>
+<div className="border border-default">Default border</div>
+<div className="border border-light">Light border</div>`}
+                        >
+                            <div className="flex flex-wrap gap-3">
+                                <span className="border-2 border-primary px-3 py-1.5 rounded-lg text-sm">.border-primary</span>
+                                <span className="border-2 border-success px-3 py-1.5 rounded-lg text-sm">.border-success</span>
+                                <span className="border-2 border-error px-3 py-1.5 rounded-lg text-sm">.border-error</span>
+                                <span className="border-2 border-warning px-3 py-1.5 rounded-lg text-sm">.border-warning</span>
+                                <span className="border-2 border-default px-3 py-1.5 rounded-lg text-sm">.border-default</span>
+                                <span className="border-2 border-light px-3 py-1.5 rounded-lg text-sm">.border-light</span>
+                            </div>
+                        </ComponentExample>
                     </Section>
 
                     <Divider variant="gradient" className="my-10" />

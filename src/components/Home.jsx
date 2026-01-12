@@ -2,9 +2,14 @@ import { GradientText } from "./common"
 
 const Home = () => {
     return (
-        <GradientText as="h1" className="text-4xl font-bold">
-            Welcome to TraceVenue
-        </GradientText>
+        <>
+
+            <GradientText as="h1" className="text-4xl font-bold">
+                Welcome to TraceVenue
+            </GradientText>
+        </>
+
+
     )
 }
 
