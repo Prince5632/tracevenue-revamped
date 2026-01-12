@@ -1,11 +1,9 @@
 import './App.css'
+import ComponentDocs from './pages/ComponentDocs'
 
 function App() {
-
   return (
-    <>
-      <h1 className='text-3xl text-red-500 font-bold underline'>The G.O.A.T Prince singh</h1>
-    </>
+    <ComponentDocs />
   )
 }
 
