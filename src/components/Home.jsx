@@ -7,6 +7,9 @@ const Home = () => {
             <GradientText as="h1" className="text-4xl font-bold">
                 Welcome to TraceVenue
             </GradientText>
+
+
+            
         </>
 
 
