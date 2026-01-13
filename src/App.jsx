@@ -1,5 +1,4 @@
 import './App.css'
-import Home from './pages/Home'
 import EnquiryLayout from './layouts/EnquiryLayout'
 import ComponentDocs from './pages/ComponentDocs'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
