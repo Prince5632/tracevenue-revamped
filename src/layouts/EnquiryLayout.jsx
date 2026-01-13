@@ -56,7 +56,6 @@ const EnquiryLayout = () => {
                 >
                     <Menu size={22} />
                 </button>
-
                 {isSidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/40 z-40 lg:hidden"
@@ -64,13 +63,7 @@ const EnquiryLayout = () => {
                     />
                 )}
                 <div
-                    className={`
-            fixed lg:static z-50 lg:z-auto
-            top-0 left-0 h-full
-            transform transition-transform duration-300
-            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-            lg:translate-x-0
-          `}
+                    className={`fixed lg:static z-50 lg:z-auto top-0 left-0 h-full transform transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
                 >
                     <Sidebar
                         steps={steps}
@@ -84,7 +77,6 @@ const EnquiryLayout = () => {
                         <X size={20} />
                     </button>
                 </div>
-
                 <div className="flex-1 min-w-0 md:mt-20">
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
@@ -95,12 +87,8 @@ const EnquiryLayout = () => {
                     <div className="mt-6 sm:mt-8 lg:mt-10 ">
                         <StepRenderer stepKey={currentStep.componentKey} />
                     </div>
-
                     <StepControlFooter onNext={handleNext} onBack={handleBack} isFirstStep={isFirstStep} isLastStep={isLastStep} />
                 </div>
-
-
-
             </div>
         </>
     );
