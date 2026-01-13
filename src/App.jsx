@@ -5,10 +5,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
-  // {
-  //   path: '/',
-  //   element: <Home />,
-  // },
   {
     path: '/',
     element: <EnquiryLayout />,
