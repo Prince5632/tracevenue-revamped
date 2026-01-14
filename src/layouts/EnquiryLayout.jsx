@@ -77,7 +77,7 @@ const EnquiryLayout = () => {
                         <X size={20} />
                     </button>
                 </div>
-                <div className="flex-1 min-w-0 md:mt-20">
+                <div className="flex-1 min-w-0 mt-20 lg:mt-0">
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
                         totalSteps={steps.length}
