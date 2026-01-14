@@ -3,7 +3,8 @@ import logo from "../../assets/images/logo.png"
 
 const Navbar = () => {
     return (
-        <nav className="w-full bg-white shadow-lg sticky top-0 z-50">
+        <nav className="w-full bg-white shadow-lg fixed top-0 left-0 z-50">
+            {/* fixed top-0 left-0 */}
             <div
                 className="
           max-w-7xl

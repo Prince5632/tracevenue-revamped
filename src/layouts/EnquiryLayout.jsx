@@ -49,7 +49,7 @@ const EnquiryLayout = () => {
     return (
         <>
             <Navbar />
-            <div className="flex lg:flex-row max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 gap-6 lg:gap-7 mt-6 lg:mt-8">
+            <div className="flex lg:flex-row max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 gap-6 lg:gap-7 mt-6 lg:mt-25">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
                     className="lg:hidden fixed top-24 left-4 z-50 bg-white border shadow-md rounded-full p-2 mb-3"
@@ -85,7 +85,7 @@ const EnquiryLayout = () => {
                     </button>
                 </div>
 
-                <div className="flex-1 min-w-0 md:mt-20">
+                <div className="flex-1 min-w-0 ">
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
                         totalSteps={steps.length}
