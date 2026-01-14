@@ -11,7 +11,7 @@ const ServiceType = () => {
       heading: "Discover",
       sub_heading: "Venue",
       description:
-        "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ducimus eveniet harum quis corrupti illo? ",
+        "Discover verified banquet halls, farmhouses, rooftops in Tricity that match your guest list, style, and budget in just a few clicks.",
       image: Venue,
     },
     {
@@ -19,7 +19,7 @@ const ServiceType = () => {
       heading: "Plan",
       sub_heading: "Catering",
       description:
-        "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ducimus eveniet harum quis corrupti illo? ",
+        "Plan customized catering with complete service teams so your guests enjoy seamless food and hospitality across the tri-city.",
       image: Catering,
     },
   ];
@@ -30,7 +30,6 @@ const ServiceType = () => {
         <div
           className="
         w-full  
-        gap-2 
         mb-6"
         >
           <h1
@@ -39,17 +38,8 @@ const ServiceType = () => {
           text-[20px] 
           text-[#060606]"
           >
-            What are you loooking for?
+            What are you looking for?
           </h1>
-          <p
-            className="
-          text-[14px] 
-          font-semibold"
-          >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda
-            labore aut quae, laudantium maiores excepturi voluptatem eius fugit,
-            quasi vero odit animi!
-          </p>
         </div>
         <div
           className="
