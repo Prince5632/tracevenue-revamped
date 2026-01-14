@@ -85,14 +85,14 @@ const EnquiryLayout = () => {
                     </button>
                 </div>
 
-                <div className="flex-1 min-w-0 md:mt-20">
+                <div className="flex-1 min-w-0 mt-6 md:mt-2">
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
                         totalSteps={steps.length}
                         title={currentStep.title}
                         subtitle={currentStep.description}
                     />
-                    <div className="mt-6 sm:mt-8 lg:mt-10 ">
+                    <div className="mt-6">
                         <StepRenderer stepKey={currentStep.componentKey} />
                     </div>
 
