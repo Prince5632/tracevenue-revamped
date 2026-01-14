@@ -6,18 +6,19 @@ import StepItem from './StepItem';
 
 const Sidebar = ({ steps, currentStep, completedSteps = [] }) => {
   return (
-    <aside className="relative  lg:w-[360px] h-[572px] bg-[#F2F3F5] rounded-3xl flex flex-col border border-gray-300 lg:sticky lg:top-6">
+    <aside className="relative  lg:w-[340px] h-[572px] bg-[#F2F3F5] rounded-3xl 
+    flex flex-col border border-gray-300 lg:sticky lg:top-6">
       {/* Header Image Section */}
-      <div className="relative mt-3 pr-6">
-        <img src={header} alt="header" className="w-full rounded-t-3xl" />
+      <div className="relative mt-3 pr-10">
+        <img src={header} alt="header" className="w-full " />
 
-        <h2 className="absolute inset-0 flex items-center justify-center text-white text-2xl font-bold z-10 px-9">
-          Plan Your Event in Minutes
+        <h2 className="absolute inset-0 flex items-center text-white text-2xl font-bold z-10 pl-12">
+          Plan Your Event <br />in Minutes
         </h2>
       </div>
 
       {/* Steps Section */}
-      <div className="flex-1 ml-7 z-10">
+      <div className="flex-1 ml-7 mt-4 z-10">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(step.id);
 
