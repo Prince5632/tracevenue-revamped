@@ -10,41 +10,49 @@ import familyImg from '../assets/step3/familyFunction.png';
 const events = [
   {
     id: 1,
+    eventId: 'birthday',
     title: "Birthday Party",
     image: birthdayImg,
   },
   {
     id: 2,
+    eventId: 'charity',
     title: "Charity Run",
     image: charityImg,
   },
   {
     id: 3,
+    eventId: 'anniversary',
     title: "Anniversary Celebration",
     image: anniversaryImg,
   },
   {
     id: 4,
+    eventId: 'kitty',
     title: "Kitty Party",
     image: kittyImg,
   },
   {
     id: 5,
+    eventId: 'corporate',
     title: "Corporate Conference",
     image: corporateImg,
   },
   {
     id: 6,
+    eventId: 'farewell',
     title: "Farewell Party",
     image: farewellImg,
   },
   {
     id: 7,
+    eventId: 'wedding',
     title: "Wedding Ceremony",
     image: weddingImg,
   },
   {
     id: 8,
+    eventId: 'family',
     title: "Family Function",
     image: familyImg,
   },
