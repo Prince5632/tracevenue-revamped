@@ -75,7 +75,7 @@ const CustomTimePicker = ({
 
         return false;
     };
-
+    
     // Handle selection
     const handleSelect = (type, val) => {
         if (isOptionDisabled(type, val)) return;
