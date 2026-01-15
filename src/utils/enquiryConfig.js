@@ -8,8 +8,8 @@ const STEP_DEFINITIONS = {
     },
     service_type: {
         id: 'service_type',
-        title: 'Service Type',
-        description: 'What kind of service do you need?',
+        title: 'Specify the service type',
+        description: 'Choose whether you need only a venue, only catering, or a complete event solution',
         componentKey: 'ServiceType'
     },
     event_type: {

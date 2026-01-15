@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../../common/Card";
 import Venue from "../../../assets/images/venue.png";
 import Catering from "../../../assets/images/catering.png";
 import Tick from "../../../assets/images/tick.png";
 
 const ServiceType = () => {
+  const [selectedService, setSelectedServiceId] = useState(()=>{
+    const savedId = localStorage.getItem("selectedService");
+    return savedId ? Number(savedId) : null;
+  });
   const services = [
     {
-    
+      id:1,
       heading: "Discover",
       sub_heading: "Venue",
       description:
@@ -15,7 +19,7 @@ const ServiceType = () => {
       image: Venue,
     },
     {
-     
+      id:2,
       heading: "Plan",
       sub_heading: "Catering",
       description:
@@ -49,7 +53,20 @@ const ServiceType = () => {
         gap-3 "
         >
           {services.map((service, index) => (
-            <Card key={index} variant="bordered" padding="md">
+            <Card
+              key={index}
+              variant="bordered"
+              padding="md"
+              onClick={() => {
+                setSelectedServiceId(service.id)
+                localStorage.setItem("selectedService", service.id);
+              }}
+              className={`cursor-pointer transition-all duration-200 ${
+                selectedService === service.id 
+                ? "border border-[#ff8359]"
+                : "border-none"
+              }`}
+            >
               {service.image && (
                 <Card.Header>
                   <div className="flex">
@@ -59,9 +76,18 @@ const ServiceType = () => {
                     flex-col 
                     justify-between "
                     >
-                      <div >
-                        <img src={Tick} alt="Tick" />
+                      <div className="h-6">
+                        <img
+                          src={Tick}
+                          alt="Tick"
+                          className={`transition-opacity duration-200 ${
+                            selectedService === service.id
+                              ? "opacity-100"
+                              : "opacity-0"
+                          }`}
+                        ></img>
                       </div>
+
                       <div>
                         <h6
                           className="
