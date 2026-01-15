@@ -5,10 +5,6 @@ const FoodPreferences = () => {
     return (
         <>
             <main>
-                {/* <div className='pb-4'>
-                    <h2 className='text-lg font-bold'>Food & Venue Preferences</h2>
-                    <p>Choose pure veg or a mix of veg and non-veg, and alcohol preferences to match you with suitable caterers or venues</p>
-                </div> */}
                 <div className='w-full sm:flex  sm:items-stretch sm:flex-col sm:gap-2'>
                     <Card variant="default" padding="md" className='sm:w-[50%] sm:min-h-26 mb-4 sm:mb-0'>
                         <Card.Header>
