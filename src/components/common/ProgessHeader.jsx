@@ -9,7 +9,7 @@ const ProgressHeader = ({ currentStep, totalSteps, title, subtitle }) => {
 
       <h1 className="text-2xl font-bold text-[#060606] mb-2">{title}</h1>
 
-      <p className="text-gray-500 font-semibold max-w-2xl mb-5">{subtitle}</p>
+      <p className="text-gray-500 font-semibold max-w-2xl !mb-5">{subtitle}</p>
 
       <div className="h-[6px] w-full bg-gray-200 rounded-full overflow-hidden">
         <div
