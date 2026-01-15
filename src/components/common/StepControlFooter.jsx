@@ -4,7 +4,7 @@ import { Button } from './index'; // Assuming Button is exported from common/ind
 const StepControlFooter = ({ onNext, onBack, isFirstStep, isLastStep }) => {
     return (
         <div className="mt-12 border-t border-gray-200 w-full sticky z-10 bottom-0 bg-white">
-            <div className="flex justify-between sm:justify-end items-center gap-4 py-2">
+            <div className="flex justify-between sm:justify-end items-center gap-4 py-6">
                 <Button
                     variant="outline"
                     onClick={onBack}
