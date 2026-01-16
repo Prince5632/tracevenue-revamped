@@ -3,7 +3,7 @@ const ProgressHeader = ({ currentStep, totalSteps, title, subtitle }) => {
 
   return (
     <div className="w-full">
-      <p className="text-[14px] font-semibold text-[#5C5F62] mb-1">
+      <p className="text-[14px] font-semibold text-[#5C5F62] mb-1 hidden lg:block">
         Step {currentStep}/{totalSteps}
       </p>
 
