@@ -49,8 +49,7 @@ const EnquiryLayout = () => {
 
     return (
         <>
-            <Navbar />
-            
+            <Navbar />            
             <div className="flex lg:flex-row  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
             lg:gap-7 mt-20 lg:mt-24">   
                 <Button className="sm:mb-4 lg:hidden fixed left-0 top-24 rounded-l-none"  onClick={() => setIsSidebarOpen(true)}
