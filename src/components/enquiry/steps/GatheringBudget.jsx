@@ -2,76 +2,91 @@ import React, { useState } from 'react';
 import Card from '../../common/Card';
 import Button from '../../common/Button';
 import Input from '../../common/Input';
+import { Info } from 'lucide-react';
 
 const GatheringBudget = () => {
   const [budgetType, setBudgetType] = useState('perPerson');
-  
-    {/**
-      * The Card, Input and Button are taken from the Component(Common).
-      * Collect Gathering Size.
-      * Collect Budget.
-      *    -> Budget Can be either.
-      *         -> Per Person 
-      *         -> Lump Sum
+  const [minPeople, setMinPeople] = useState("");
+  const [maxPeople, setMaxPeople] = useState("");
+  const [minBudget, setMinBudget] = useState("");
+  const [maxBudget, setMaxBudget] = useState("");
+
+
+  {/**This Line of Code tell us if maxPeople and maxBudget is less than we have to put the warning. */}
+  const isInvalidPeopleRange =
+    minPeople !== "" &&
+    maxPeople !== "" &&
+    Number(maxPeople) < Number(minPeople);
+
+  const isInvalidBudgetRange =
+    minBudget !== "" &&
+    maxBudget !== "" &&
+    Number(maxBudget) < Number(minBudget);
+
+     {/**
+       * The Card, Input and Button are taken from the Component(Common).
+       * Collect Gathering Size.
+       * Collect Budget.
+       *    -> Budget Can be either.
+       *         -> Per Person 
+       *         -> Lump Sum
       */}
 
   return (
     <div className="bg-white grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/**
-         * 1- Mobile view -> Columns 
-         * 2- Large Screen View -> Rows
-         */}
-
-         {/**
-          * Gathering Size Card
-          */}
-
-      <Card padding="lg" className="w-full">
+           * Gathering Size Card
+        */}        
+    
+      <Card padding="md" className="max-w-full">
         <Card.Header>
-          <h2 className="text-xl font-semibold justify-start">
-            Gathering Size
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-800">Gathering Size</h2>
         </Card.Header>
 
         <Card.Body>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
+          <div className="flex flex-row sm:flex-row gap-4">
             <div className="flex flex-col gap-2">
-              <h3 className="text-gray-500 font-semibold">
-                Minimum
-              </h3>
+              <h3 className="text-gray-500 font-semibold">Minimum</h3>
               <Input
-                type="number"
-                min={0}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 fullWidth
+                value={minPeople}
+                onChange={(e) => setMinPeople(e.target.value)}
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <h3 className="text-gray-500 font-semibold">
-                Maximum
-              </h3>
+              <h3 className="text-gray-500 font-semibold">Maximum</h3>
               <Input
-                type="number"
-                min={0}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 fullWidth
+                value={maxPeople}
+                onChange={(e) => setMaxPeople(e.target.value)}
               />
             </div>
-
           </div>
+
+          {isInvalidPeopleRange && (
+            <p className="mt-3!  flex items-start gap-1 text-sm  text-orange-600!">
+              <Info size={16} className="shrink-0"/>Max people range should be greater than min people range
+            </p>
+          )}
         </Card.Body>
+
       </Card>
 
+
         {/**
-          * Gathering Size Card
-          */}
-        
-      <Card padding="lg" className="w-full">
+        *  Budget Card
+        */}
+      <Card padding="md" className="w-full ">
         <Card.Header>
-          <div className="flex flex-row items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold">
-                Budget
-            </h2>
+          <div className="flex items-center justify-between gap-3 text-gray-800">
+            <h2 className="text-xl font-semibold">Budget</h2>
 
             <div className="flex gap-2">
               <Button
@@ -105,65 +120,66 @@ const GatheringBudget = () => {
 
         <Card.Body>
           {budgetType === 'perPerson' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-              <div className="flex flex-col gap-2">
-                <h3 className="text-gray-500 font-semibold">
+            <>
+              <div className="flex flex-row sm:flex-row gap-4">
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-gray-500 font-semibold">
                     Minimum Price
-                </h3>
-                <Input
-                  type="number"
-                  min={0}
-                  fullWidth
-                  leftIcon={
-                                <span className="font-semibold text-gray-500">
-                                    ₹
-                                </span>
-                            }
-                />
-              </div>
+                  </h3>
+                  <Input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    fullWidth
+                    leftIcon={<span className="font-semibold text-gray-500">₹</span>}
+                    value={minBudget}
+                    onChange={(e) => setMinBudget(e.target.value)}
+                  />
+                </div>
 
-              <div className="flex flex-col gap-2">
-                <h3 className="text-gray-500 font-semibold ">
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-gray-500 font-semibold">
                     Maximum Price
-                </h3>
-                <Input
-                  type="number"
-                  min={0}
-                  fullWidth
-                  leftIcon={
-                                <span className='font-semibold text-gray-500'>
-                                    ₹
-                                </span>
-                            }
-                />
+                  </h3>
+                  <Input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    fullWidth
+                    leftIcon={<span className="font-semibold text-gray-500">₹</span>}
+                    value={maxBudget}
+                    onChange={(e) => setMaxBudget(e.target.value)}
+                  />
+                </div>
               </div>
 
-            </div>
+              
+              {isInvalidBudgetRange && (
+                <p className="mt-3! flex items-start gap-1 text-sm text-orange-600!">
+                  <Info size={16} className="shrink-0"/>Maximum budget must be greater than minimum budget
+                </p>
+              )}
+            </>
           )}
 
           {budgetType === 'lumpSum' && (
             <div className="flex flex-col gap-2">
               <h3 className="text-gray-500 font-semibold">
                 Total Budget (excl. additional services)
-            </h3>
+              </h3>
               <Input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 className="sm:max-w-75"
-                leftIcon={
-                            <span className='font-semibold text-gray-500'>
-                                ₹
-                            </span>
-                        }
+                leftIcon={<span className="font-semibold text-gray-500">₹</span>}
               />
             </div>
           )}
         </Card.Body>
       </Card>
-
     </div>
   );
 };
 
 export default GatheringBudget;
-

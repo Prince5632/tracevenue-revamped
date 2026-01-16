@@ -14,6 +14,7 @@ const EnquiryLayout = () => {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [completedSteps, setCompletedSteps] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   
 
 
 
@@ -49,7 +50,7 @@ const EnquiryLayout = () => {
 
     return (
         <>
-            <Navbar />            
+            <Navbar />
             <div className="flex lg:flex-row  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
             lg:gap-7 mt-20 lg:mt-24">   
                 <Button className="sm:mb-4 lg:hidden fixed left-0 top-24 rounded-l-none"  onClick={() => setIsSidebarOpen(true)}
@@ -64,16 +65,14 @@ const EnquiryLayout = () => {
                     className={`fixed lg:static z-50 lg:z-auto top-0 left-0 transform transition-transform 
                          duration-300 ${isSidebarOpen ? "rounded-t-none" : "rounded-t-xl "} ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
                 >
-                    
-                    <Sidebar className={``}
+                    <Sidebar
                         steps={steps}
                         currentStep={currentStepIndex + 1}
                         completedSteps={completedSteps}
                         isSidebarOpen={
                             isSidebarOpen
                         }
-                    />
-                    
+                    /> 
                     <button
                         onClick={() => 
                             setIsSidebarOpen(false)}
