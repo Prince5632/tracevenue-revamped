@@ -23,3 +23,9 @@ export { default as Dropdown } from './Dropdown';
 
 // Utility Components
 export { default as GradientText } from './GradientText';
+
+// Header Components
+export {default as Navbar} from './Navbar';
+
+//Package Components
+export {default as PackageInfo} from './PackageInfo';
