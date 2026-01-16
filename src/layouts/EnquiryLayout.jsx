@@ -51,10 +51,10 @@ const EnquiryLayout = () => {
     return (
         <>
             <Navbar />
-            <div className="flex lg:flex-row  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
+           
+            <div className="flex lg:flex-row  max-w-7xl mx-auto sm:px-6 lg:px-0  
             lg:gap-7 mt-20 lg:mt-24">   
-                <Button className="sm:mb-4 lg:hidden fixed left-0 top-24 rounded-l-none"  onClick={() => setIsSidebarOpen(true)}
-                size="lg" variant="gradient" >Step 1/6</Button>
+               
                 {isSidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/40 z-40 lg:hidden "
@@ -76,14 +76,16 @@ const EnquiryLayout = () => {
                     <button
                         onClick={() => 
                             setIsSidebarOpen(false)}
-                        className="lg:hidden absolute top-4 right-4 bg-white rounded-full p-1 shadow 
+                        className="lg:hidden absolute top-1 -right-2 sm:-right-2 bg-white rounded-full p-1 shadow 
                         cursor-pointer z-60"
                     >
                         <X size={20} />
                     </button>
                 </div>   
-                <div className="lg:flex-1 relative top-20 md:-top-20 min-w-0 md:mt-20 ">
-                    <ProgressHeader
+                <div className="lg:flex-1">
+                  <Button className="mb-4 lg:hidden rounded-l-none"  onClick={() => setIsSidebarOpen(true)}
+                size="lg" variant="gradient" >Step 1/6</Button>  
+                  <ProgressHeader
                         currentStep={currentStepIndex + 1}
                         totalSteps={steps.length}
                         title={currentStep.title}

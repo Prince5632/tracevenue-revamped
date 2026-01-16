@@ -6,20 +6,20 @@ import StepItem from './StepItem';
 
 const Sidebar = ({ steps, currentStep, completedSteps = [] , isSidebarOpen }) => {
   return (
-    <aside className={`relative  lg:w-[270px] ${isSidebarOpen ? "rounded-none mt-0 mb-0 h-screen" : "rounded-3xl "} lg:h-auto bg-[#F2F3F5] lg:rounded-3xl 
+    <aside className={`relative w-full max-w-[340px] min-w-[280px] sm:max-w-[380px] md:max-w-[380px] lg:max-w-[340px] ${isSidebarOpen ? "rounded-none mt-0 mb-0 h-lvh sm:h-lvh" : "rounded-3xl "} lg:h-auto bg-[#F2F3F5] lg:rounded-4xl 
     flex flex-col border border-gray-300 lg:sticky lg:top-6 lg:-mt-2 `}>
       {/* Header Image Section */}
       <div className="relative mt-4 pr-10">
         <img src={header} alt="header" className="w-full " />
 
         <h2 className="absolute inset-0 flex items-center text-white 
-        text-xl font-semibold z-10 ml-10 leading-none">
-          Plan Your Event <br />in Minutes
+        text-2xl font-bold z-10 ml-10 leading-none">
+          Plan Your Event in <br />Minutes
         </h2>
       </div>
 
       {/* Steps Section */}
-      <div className="flex-1 ml-7 z-10 mt-2">
+      <div className="flex-1 ml-7 z-10 mt-2 pr-8 ">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(step.id);
 
@@ -36,7 +36,7 @@ const Sidebar = ({ steps, currentStep, completedSteps = [] , isSidebarOpen }) =>
       </div>
 
       {/* Footer Illustration */}
-      <div className="w-full left-0 -mt-4">
+      <div className="w-full left-0 -mt-12">
         <img
           src={illustration}
           alt="illustration"
