@@ -36,6 +36,7 @@ const STEP_DEFINITIONS = {
         description: 'Any specific food requirement?',
         componentKey: 'FoodPreferences'
     },
+    
 };
 
 export const getEnquirySteps = () => {

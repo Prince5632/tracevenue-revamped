@@ -8,12 +8,14 @@ import { getEnquirySteps } from '../utils/enquiryConfig';
 import { Menu, X } from "lucide-react";
 import ProgressHeader from '../components/common/ProgessHeader';
 import { Button } from '../components/common';
+import DiscoverPackages from '../components/enquiry/steps/DiscoverPackages';
 
 
 const EnquiryLayout = () => {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [completedSteps, setCompletedSteps] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [showDiscoverPackages, setShowDiscoverPackages] = useState(false);
 
 
 
@@ -33,19 +35,27 @@ const EnquiryLayout = () => {
             setCurrentStepIndex(prev => prev + 1);
             window.scrollTo(0, 0);
         } else {
-            // Handle finish/submit
-            alert('Enquiry Raised!');
+            // Show DiscoverPackages on last step
+            setShowDiscoverPackages(true);
+            window.scrollTo(0, 0);
         }
     };
 
     const handleBack = () => {
-        if (!isFirstStep) {
+        if (showDiscoverPackages) {
+            setShowDiscoverPackages(false);
+            window.scrollTo(0, 0);
+        } else if (!isFirstStep) {
             setCurrentStepIndex(prev => prev - 1);
             window.scrollTo(0, 0);
         }
     };
 
-    if (!currentStep) return <div>Loading configuration...</div>;
+    if (!currentStep && !showDiscoverPackages) return <div>Loading configuration...</div>;
+
+    if (showDiscoverPackages) {
+        return <DiscoverPackages steps={steps} currentStep={steps.length} completedSteps={completedSteps} onBack={handleBack} />;
+    }
 
     return (
         <>
@@ -83,18 +93,26 @@ const EnquiryLayout = () => {
                     >
                         <X size={20} />
                     </button>
-                </div>   
+                </div>
+
                 <div className="lg:flex-1 relative top-20 md:-top-20 min-w-0 md:mt-20 ">
-                    <ProgressHeader
-                        currentStep={currentStepIndex + 1}
-                        totalSteps={steps.length}
-                        title={currentStep.title}
-                        subtitle={currentStep.description}
-                    />
-                    <div className="mt-6">
-                        <StepRenderer stepKey={currentStep.componentKey} />
-                    </div>
-                    <StepControlFooter onNext={handleNext} onBack={handleBack} isFirstStep={isFirstStep} isLastStep={isLastStep} />
+                    {!showDiscoverPackages ? (
+                        <>
+                            <ProgressHeader
+                                currentStep={currentStepIndex + 1}
+                                totalSteps={steps.length}
+                                title={currentStep.title}
+                                subtitle={currentStep.description}
+                            />
+                            <div className="mt-6 sm:mt-8 lg:mt-10 ">
+                                <StepRenderer stepKey={currentStep.componentKey} />
+                            </div>
+                        </>
+                    ) : (
+                        <DiscoverPackages steps={steps} currentStep={steps.length} completedSteps={completedSteps} onBack={handleBack} />
+                    )}
+
+                    <StepControlFooter onNext={handleNext} onBack={handleBack} isFirstStep={isFirstStep} isLastStep={isLastStep} isDiscoverPackages={showDiscoverPackages} />
                 </div>
             </div>
         </>
