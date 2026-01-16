@@ -51,9 +51,9 @@ const EnquiryLayout = () => {
     return (
         <>
             <Navbar />
-            <div className="flex lg:flex-row  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
-            lg:gap-7 mt-20 lg:mt-24">   
-                <Button className="sm:mb-4 lg:hidden fixed left-0 top-24 rounded-l-none"  onClick={() => setIsSidebarOpen(true)}
+            <div className=" grid grid-cols-1 lg:grid-cols-[280px_1fr]  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
+            gap-7 mt-38 lg:mt-24">   
+                <Button className="lg:hidden fixed left-0 top-24 rounded-l-none z-30"  onClick={() => setIsSidebarOpen(true)}
                 size="lg" variant="gradient" >Step 1/6</Button>
                 {isSidebarOpen && (
                     <div
@@ -82,17 +82,21 @@ const EnquiryLayout = () => {
                         <X size={20} />
                     </button>
                 </div>   
-                <div className="lg:flex-1 relative top-20 md:-top-20 min-w-0 md:mt-20 ">
+                <div className="min-w-0 flex flex-col relative">
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
                         totalSteps={steps.length}
                         title={currentStep.title}
                         subtitle={currentStep.description}
                     />
-                    <div className="mt-6">
+                    <div className="mt-6 flex-1">
                         <StepRenderer stepKey={currentStep.componentKey} />
                     </div>
-                    <StepControlFooter onNext={handleNext} onBack={handleBack} isFirstStep={isFirstStep} isLastStep={isLastStep} />
+                    <StepControlFooter 
+                    onNext={handleNext} 
+                    onBack={handleBack} 
+                    isFirstStep={isFirstStep} 
+                    isLastStep={isLastStep} />
                 </div>
             </div>
         </>
