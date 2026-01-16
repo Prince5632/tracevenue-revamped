@@ -13,6 +13,7 @@ const GatheringBudget = () => {
   const [budget, setBudget] = useState("");
 
 
+
   {/**This Line of Code tell us if maxPeople and maxBudget is less than we have to put the warning. */}
   const isInvalidPeopleRange =
     minPeople !== "" &&
@@ -54,6 +55,7 @@ const GatheringBudget = () => {
                 pattern="[0-9]*"
                 fullWidth
                 value={minPeople}
+                required
                 onChange={(e)=>{
                     const value =e.target.value.replace(/[^0-9]/g,"");
                     setMinPeople(value)
@@ -68,6 +70,7 @@ const GatheringBudget = () => {
                 inputMode="numeric"
                 pattern="[0-9]*"
                 fullWidth
+                required
                 value={maxPeople}
                  onChange={(e) => {
                   const value = e.target.value.replace(/[^0-9]/g, "");
@@ -99,7 +102,12 @@ const GatheringBudget = () => {
               <Button
                 variant="outline"
                 size="3xs"
-                onClick={() => setBudgetType('perPerson')}
+                onClick={() => {setBudgetType('perPerson')
+                    if(maxBudget){
+                        const eightyPercentage = Math.floor(Number(maxBudget)*0.8);
+                        setMinBudget(String(eightyPercentage))
+                    }
+                }}
                 className={`rounded-full px-2 ${
                   budgetType === 'perPerson'
                     ? 'text-orange-600 border-[#ff4000]'
@@ -112,7 +120,15 @@ const GatheringBudget = () => {
               <Button
                 variant="outline"
                 size="3xs"
-                onClick={() => setBudgetType('lumpSum')}
+                onClick={() => {
+                  setBudgetType('lumpSum');
+
+                  if (maxPeople && maxBudget) {
+                    setBudget(String(Number(maxPeople) * Number(maxBudget)));
+                  } else {
+                    setBudget("");
+                  }
+                }}
                 className={`rounded-full px-2 ${
                   budgetType === 'lumpSum'
                     ? 'text-orange-600 border-[#ff4000]'
@@ -138,6 +154,7 @@ const GatheringBudget = () => {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     fullWidth
+                    required
                     leftIcon={<span className="font-semibold text-gray-500">₹</span>}
                     value={minBudget}
                     onChange={(e) =>{ 
@@ -156,6 +173,7 @@ const GatheringBudget = () => {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     fullWidth
+                    required
                     leftIcon={<span className="font-semibold text-gray-500">₹</span>}
                     value={maxBudget}
                     onChange={(e) =>{ 
