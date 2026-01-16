@@ -13,6 +13,7 @@ const EnquiryLayout = () => {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [completedSteps, setCompletedSteps] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   
 
 
 
@@ -49,7 +50,7 @@ const EnquiryLayout = () => {
     return (
         <>
             <Navbar />
-            <div className="flex lg:flex-row max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 gap-6 lg:gap-7 mt-6 lg:mt-8">
+             <div className="flex relative min-h-[calc(100vh-56px)] mt-6 lg:mt-8  gap-6 lg:gap-7 px-4 sm:px-2 lg:px-3">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
                     className="lg:hidden fixed top-24 left-4 z-50 bg-white border shadow-md rounded-full p-2 mb-3"
@@ -73,6 +74,7 @@ const EnquiryLayout = () => {
           `}
                 >
                     <Sidebar
+                
                         steps={steps}
                         currentStep={currentStepIndex + 1}
                         completedSteps={completedSteps}
@@ -85,15 +87,15 @@ const EnquiryLayout = () => {
                     </button>
                 </div>
 
-                <div className="flex-1 min-w-0 mt">
+                <div className="flex-1 min-w-0 mt-2 flex flex-col">
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
                         totalSteps={steps.length}
                         title={currentStep.title}
                         subtitle={currentStep.description}
                     />
-                    <div className="mt-6 sm:mt-8 lg:mt-10 ">
-                        <StepRenderer stepKey={currentStep.componentKey} />
+                    <div className="mt-6 sm:mt-8 lg:mt-10 flex-1 overflow-y-auto pb-32">
+                        <StepRenderer stepKey={currentStep.componentKey}  />
                     </div>
 
                     <StepControlFooter onNext={handleNext} onBack={handleBack} isFirstStep={isFirstStep} isLastStep={isLastStep} />

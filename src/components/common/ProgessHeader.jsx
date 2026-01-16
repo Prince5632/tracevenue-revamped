@@ -11,7 +11,7 @@ const ProgressHeader = ({ currentStep, totalSteps, title, subtitle }) => {
 
       <p className="text-gray-500 font-semibold max-w-2xl mb-5">{subtitle}</p>
 
-      <div className="h-[6px] w-full bg-gray-200 rounded-full overflow-hidden">
+      <div className="h-[6px] w-full bg-gray-200 rounded-full overflow-hidden mt-5">
         <div
           className="h-full bg-orange-500 rounded-full transition-all duration-300 ease-out"
           style={{ width: `${progressPercentage}%` }}

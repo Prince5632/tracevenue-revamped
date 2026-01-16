@@ -6,7 +6,7 @@ import StepItem from './StepItem';
 
 const Sidebar = ({ steps, currentStep, completedSteps = [] }) => {
   return (
-    <aside className="relative  lg:w-[360px] h-[572px] bg-[#F2F3F5] rounded-3xl flex flex-col border border-gray-300 lg:sticky lg:top-6">
+    <aside className="relative  lg:w-[310px] h-[542px] bg-[#F2F3F5] rounded-3xl flex flex-col border border-gray-300 lg:sticky lg:top-5">
       {/* Header Image Section */}
       <div className="relative mt-3 pr-6">
         <img src={header} alt="header" className="w-full rounded-t-3xl" />
