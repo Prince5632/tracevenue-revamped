@@ -10,6 +10,7 @@ const GatheringBudget = () => {
   const [maxPeople, setMaxPeople] = useState("");
   const [minBudget, setMinBudget] = useState("");
   const [maxBudget, setMaxBudget] = useState("");
+  const [budget, setBudget] = useState("");
 
 
   {/**This Line of Code tell us if maxPeople and maxBudget is less than we have to put the warning. */}
@@ -53,7 +54,10 @@ const GatheringBudget = () => {
                 pattern="[0-9]*"
                 fullWidth
                 value={minPeople}
-                onChange={(e) => setMinPeople(e.target.value)}
+                onChange={(e)=>{
+                    const value =e.target.value.replace(/[^0-9]/g,"");
+                    setMinPeople(value)
+                }}
               />
             </div>
 
@@ -65,7 +69,10 @@ const GatheringBudget = () => {
                 pattern="[0-9]*"
                 fullWidth
                 value={maxPeople}
-                onChange={(e) => setMaxPeople(e.target.value)}
+                 onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, "");
+                  setMaxPeople(value);
+                 }}
               />
             </div>
           </div>
@@ -133,7 +140,10 @@ const GatheringBudget = () => {
                     fullWidth
                     leftIcon={<span className="font-semibold text-gray-500">₹</span>}
                     value={minBudget}
-                    onChange={(e) => setMinBudget(e.target.value)}
+                    onChange={(e) =>{ 
+                        const value = e.target.value.replace(/[^0-9]/g, "");
+                        setMinBudget(value)
+                    }}
                   />
                 </div>
 
@@ -148,7 +158,10 @@ const GatheringBudget = () => {
                     fullWidth
                     leftIcon={<span className="font-semibold text-gray-500">₹</span>}
                     value={maxBudget}
-                    onChange={(e) => setMaxBudget(e.target.value)}
+                    onChange={(e) =>{ 
+                        const value = e.target.value.replace(/[^0-9]/g, "");
+                        setMaxBudget(value)
+                    }}
                   />
                 </div>
               </div>
@@ -168,12 +181,18 @@ const GatheringBudget = () => {
                 Total Budget (excl. additional services)
               </h3>
               <Input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                className="sm:max-w-75"
-                leftIcon={<span className="font-semibold text-gray-500">₹</span>}
-              />
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  className="sm:max-w-75"
+                  leftIcon={<span className="font-semibold text-gray-500">₹</span>}
+                  value={budget}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    setBudget(value);
+                  }}
+                />
+
             </div>
           )}
         </Card.Body>
