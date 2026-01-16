@@ -12,9 +12,8 @@ const EventType = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const openSearch = () => setIsSearchOpen(true);
-const toggleSearch = () => setIsSearchOpen(prev => !prev);
-const closeSearch = () => setIsSearchOpen(false);
-
+  const toggleSearch = () => setIsSearchOpen((prev) => !prev);
+  const closeSearch = () => setIsSearchOpen(false);
 
   const allEvents = useMemo(() => flattenEvents(eventCategories), []);
 
@@ -35,27 +34,31 @@ const closeSearch = () => setIsSearchOpen(false);
     setSearchValue("");
     setSelectedEventId(null);
   };
+  const handleSearchClose = () => {
+  setIsSearchOpen(false);
+};
+
 
   return (
     <>
       <SearchBar
-  value={searchValue}
-  onChange={setSearchValue}
-  onFocus={openSearch}
-  isOpen={isSearchOpen}
-  clear={() => {
-    clearSelection();
-    closeSearch();
-  }}
-  searchResults={searchResults}
-  categories={eventCategories}
-  onSelect={(event) => {
-    handleSelect(event);
-    closeSearch();
-  }}
-  onToggle={toggleSearch}
-/>
-
+        value={searchValue}
+        onChange={setSearchValue}
+        onFocus={openSearch}
+        isOpen={isSearchOpen}
+        clear={() => {
+          clearSelection();
+          closeSearch();
+        }}
+        searchResults={searchResults}
+        categories={eventCategories}
+        onSelect={(event) => {
+          handleSelect(event);
+          closeSearch();
+        }}
+        onToggle={toggleSearch}
+        onClose={handleSearchClose}
+      />
 
       <div className="py-5 px-2">
         <p className="!font-bold !text-[18px] !text-black">Popular Events</p>
