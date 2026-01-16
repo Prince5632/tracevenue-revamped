@@ -44,7 +44,49 @@ export const checkBudgetRange = (userBudget, estimatedMin, estimatedMax) => {
 
     // Check if ranges overlap in an acceptable way
     // 1. Estimated min is within extended user range
+    const estMinInRange =
+        estMin >= extendedUserMin && estMin <= extendedUserMax;
 
+    // 2. Estimated max is within extended user range
+    const estMaxInRange =
+        estMax >= extendedUserMin && estMax <= extendedUserMax;
+
+    // 3. User range is completely within estimated range
+    const userRangeInsideEstimatedRange =
+        estMin <= userMin && estMax >= userMax;
+
+    // Return success (green) if any of the acceptable range conditions are met
+    if (estMinInRange || estMaxInRange || userRangeInsideEstimatedRange) {
+        return "success";
+    }
+
+    // Default to normal text color
+    return "normal";
+};
+
+/**
+ * Gets a CSS class name based on budget comparison
+ *
+ * @param {Object} userBudget - User's budget with min and max values
+ * @param {number} estimatedMin - Estimated minimum budget
+ * @param {number} estimatedMax - Estimated maximum budget
+ * @returns {string} - CSS class name for styling
+ */
+export const getBudgetColorClass = (userBudget, estimatedMin, estimatedMax) => {
+    const result = checkBudgetRange(userBudget, estimatedMin, estimatedMax);
+
+    // Map result to Bootstrap color classes
+    switch (result) {
+        case "success":
+            return "text-success";
+        case "danger":
+            return "text-danger";
+        default:
+            return "";
+    }
+};
+export function formatRupees(value) {
+    if (isNaN(value)) return "₹0";
     return new Intl.NumberFormat("en-IN", {
         style: "currency",
         currency: "INR",
