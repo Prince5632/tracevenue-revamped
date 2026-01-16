@@ -83,7 +83,7 @@ const EnquiryLayout = () => {
                     >
                         <X size={20} />
                     </button>
-                </div>    
+                </div>   
                 <div className="lg:flex-1 relative top-20 md:-top-20 min-w-0 md:mt-20 ">
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
@@ -91,7 +91,7 @@ const EnquiryLayout = () => {
                         title={currentStep.title}
                         subtitle={currentStep.description}
                     />
-                    <div className="mt-6  ">
+                    <div className="mt-6">
                         <StepRenderer stepKey={currentStep.componentKey} />
                     </div>
                     <StepControlFooter onNext={handleNext} onBack={handleBack} isFirstStep={isFirstStep} isLastStep={isLastStep} />
