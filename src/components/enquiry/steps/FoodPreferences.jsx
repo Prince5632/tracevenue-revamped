@@ -38,8 +38,8 @@ const FoodPreferences = () => {
                         <Card.Body>
                             <div className='flex justify-between items-center'>
                                 <div className='flex justify-center items-center'>
-                                    <img src={Alcohol} alt="Serves_Alcohol image" />
-                                    <label htmlFor="alcohol">Serves Alcohol</label>
+                                    <img className="mr-2" src={Alcohol} alt="Serves_Alcohol image" />
+                                    <label className='text-[14px] text-[#060606]' htmlFor="alcohol">Serves Alcohol</label>
                                 </div>
                                 <input type="checkbox" className='h-4 w-4 accent-[#ff4000]' />
                             </div>
