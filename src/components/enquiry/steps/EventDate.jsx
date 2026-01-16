@@ -13,7 +13,7 @@ const EventDate = () => {
   const [t2Time, setT2Time] = useState("10:30");
   const [prefferedOpen1, setPrefferedOpen1] = useState(false);
   const [date1, setDate1] = useState();
-  const [viewdate, setViewdate] = useState(new Date());
+  const [viewdate, setViewdate] = useState();
   const [alternateDates, setAlternateDates] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [openCalender, setOpenCalender] = useState(false);
@@ -26,31 +26,42 @@ const EventDate = () => {
   const handleAddAlternate = () => {
     if (alternateDates.length >= 3) return;
 
+    // 1. Add the empty slot
     setAlternateDates((prev) => [...prev, { date: null }]);
+
+    // 2. Set the index to the one we just added
     setActiveIndex(alternateDates.length);
+
+    // 3. Open the calendar
     setOpenCalender(true);
   };
 
   const handleAlternateSelect = (date) => {
-    setAlternateDates((prev) => {
-      const updated = [...prev];
-      updated[activeIndex].date = date;
-      return updated;
-    });
+    if (activeIndex === null) return;
+
+    const newData = alternateDates.map((item, index) =>
+      index === activeIndex ? { ...item, date } : item
+    );
+
+    setAlternateDates(newData);
     setOpenCalender(false);
+    setActiveIndex(null); // Clear the active slot
   };
 
   const handleDeleteAlternate = (index) => {
     setAlternateDates((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleOutsideClick = () => {
+    setOpenCalender(false);
+    setAlternateDates((prev) => prev.filter((item) => item.date !== null));
+  };
+  console.log(openCalender);
   return (
     <>
       <div
         className="w-full grid grid-cols-1 sm:grid-cols-2 justify-around gap-5 "
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
+        onClick={handleOutsideClick}
       >
         {/*Preffered Card 1*/}
 
@@ -74,7 +85,6 @@ const EventDate = () => {
               onClick={(e) => {
                 setPrefferedOpen1(true);
                 e.stopPropagation();
-                console.log("clicked");
               }}
             >
               <PrePrefferedDateCard />
@@ -94,17 +104,22 @@ const EventDate = () => {
           )}
         </div>
 
-        <div className=" w-full h-100 ">
+        <div className="w-full h-100 relative">
           {openCalender && (
-            <Calendar
-              date={alternateDates[activeIndex]?.date || new Date()}
-              disabledDates={[date1]}
-              onChange={handleAlternateSelect}
-              className="absolute z-50 shadow-lg"
-              color="#ff4000"
-              shownDate={viewdate}
-              onShownDateChange={setViewdate}
-            />
+            <div
+              className="absolute z-50 left-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Calendar
+                date={alternateDates[activeIndex]?.date || new Date()}
+                disabledDates={[date1]}
+                onChange={handleAlternateSelect}
+                className="shadow-lg border rounded-md"
+                color="#ff4000"
+                shownDate={viewdate}
+                onShownDateChange={setViewdate}
+              />
+            </div>
           )}
 
           <div className="w-full h-100">
@@ -112,26 +127,44 @@ const EventDate = () => {
               Alternate Dates (optional)
             </h1>
 
-            <div className="w-full flex flex-col gap-4 relative">
+            <div className="w-full flex flex-col gap-4">
               {alternateDates.map((item, index) => (
-                <AlternateDateCard
-                  t1Time={t1Time}
-                  setT1Time={setT1Time}
-                  t2Time={t2Time}
-                  setT2Time={setT2Time}
-                  key={index}
-                  date={item.date}
-                  onOpen={() => {
-                    setActiveIndex(index);
-                    setOpenCalender(true);
-                  }}
-                  onDelete={() => handleDeleteAlternate(index)}
-                />
+                <div key={index}>
+                  {!item.date ? (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveIndex(index);
+                        setOpenCalender(true);
+                      }}
+                    >
+                      <PreAlternateDateCard />
+                    </div>
+                  ) : (
+                    <AlternateDateCard
+                      date={item.date}
+                      onOpen={(e) => {
+                        e.stopPropagation();
+                        setActiveIndex(index);
+                        setOpenCalender(true);
+                      }}
+                      onDelete={() => handleDeleteAlternate(index)}
+                    />
+                  )}
+                </div>
               ))}
 
-              {alternateDates.length < 3 && (
-                <PreAlternateDateCard onAdd={handleAddAlternate} />
-              )}
+              {alternateDates.length < 3 &&
+                alternateDates.every((d) => d.date !== null) && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddAlternate();
+                    }}
+                  >
+                    <PreAlternateDateCard />
+                  </div>
+                )}
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 .rdrDayDisabled .rdrDayNumber span {
   color: #000000;
-  cursor: default;
-  background-color: #ffb399; /* Light orange tint on hover */
+  background-color: #ffb399;
   width: 100%;
   border: 1px solid #ff4000 !important;
   border: 5px;
