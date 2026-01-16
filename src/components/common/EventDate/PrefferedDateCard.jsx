@@ -1,15 +1,23 @@
 import React from "react";
 import { useState } from "react";
-import Card from "./Card";
+import Card from "../Card";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import CustomTimePicker from "./CustomTimePicker";
-import imgcal from "./../../assets/dashboard/calendar.svg";
-import hoursgreen from "./../../assets/new images/hours.png";
-import hoursgray from "./../../assets/new images/hoursgray.svg";
+import CustomTimePicker from "../CustomTimePicker";
+import imgcal from "../../../assets/dashboard/calendar.svg";
+import hoursgreen from "../../../assets/new images/hours.png";
+import hoursgray from "../../../assets/new images/hoursgray.svg";
 
-function PrefferedDateCard({ date1, setOpen, open }) {
+function PrefferedDateCard({
+  date1,
+  setOpen,
+  open,
+  t1Time,
+  setT1Time,
+  t2Time,
+  setT2Time,
+}) {
   const dayName = date1.toLocaleDateString("en-US", {
     weekday: "long",
   });
@@ -34,8 +42,7 @@ function PrefferedDateCard({ date1, setOpen, open }) {
       setFullday("Time");
     }
   };
-  const [t1Time, setT1Time] = useState();
-  const [t2Time, setT2Time] = useState("10:30");
+
   return (
     <>
       <div>
@@ -119,6 +126,7 @@ function PrefferedDateCard({ date1, setOpen, open }) {
 
           <div>
             <button
+              className="cursor-pointer"
               onClick={(e) => {
                 setOpen(!open);
                 e.stopPropagation();

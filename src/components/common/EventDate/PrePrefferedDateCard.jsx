@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import Card from "./Card";
-
-function PreAlternateDateCard() {
+import React from "react";
+import Card from "../Card";
+function PrePrefferedDateCard() {
   return (
     <>
       <div>
@@ -31,4 +30,4 @@ function PreAlternateDateCard() {
   );
 }
 
-export default PreAlternateDateCard;
+export default PrePrefferedDateCard;
