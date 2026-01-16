@@ -3,29 +3,29 @@ const StepItem = ({ step, isLast, index, currentStep }) => {
   const isActive = index === currentStep;
 
   return (
-    <div className="flex gap-3 mb-1">
+    <div className="flex gap-3 ">
       <div className="flex flex-col items-center">
-        <div className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center">
+        <div className="w-4 h-4 rounded-full border border-[#D7D9DA] flex items-center justify-center">
           <div
-            className={`w-6 h-6 rounded-full flex items-center justify-center
+            className={`w-4 h-4 rounded-full flex items-center justify-center
             ${isCompleted
                 ? "border-2 bg-[#15b076]  border-1 border-white"
                 : isActive
-                  ? "border-2  bg-[#f39c12] border-1 border-white"
-                  : "border border-gray-300"
+                  ? "border-2 bg-[#FF4000] border-1 border-white"
+                  : "border border-[#D7D9DA] bg-[#fff]"
               }
           `}
           ></div>
         </div>
 
-        {!isLast && <div className="w-[2px] h-full bg-white "></div>}
+        {!isLast && <div className="w-[3px] h-full bg-[#FFFFFF] "></div>}
       </div>
 
-      <div>
-        <h6 className="font-semibold text-gray-900">{step.title}</h6>
-        <p className="text-[13px] font-semibold text-gray-500 leading-snug max-w-[235px]">
+      <div className='-mt-1 mb-3'>
+        <h6 className="font-semibold text-[#060606] text-[16px]">{step.title}</h6>
+        <span className="text-[#5C5F62] text-[12px]  leading-medium">
           {step.subtitle}
-        </p>
+        </span>
       </div>
     </div>
   );
