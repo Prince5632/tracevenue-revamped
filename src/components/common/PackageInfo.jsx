@@ -1,4 +1,5 @@
 import Button from "../common/Button";
+import CardImage from "../../assets/packageCard/card1.jpeg"
 function PackageInfo(props) {
     return <>
         <main className="pt-[65px] px-[40px]">
@@ -24,22 +25,64 @@ function PackageInfo(props) {
                 </div>
                 <div className="py-[8px] px-[12px] flex gap-3 mb-[10px] bg-[#f8f9fa] rounded-[6px]">
                     {
-                        props.services.map((item)=>( 
-                            (item.content == 'Services included')?
-                            <div className="flex justify-center items-center gap-[6px] bg-[#fff5f0] text-[#ff6b35] px-[10px] py-[4px] rounded-[12px]">
-                                <i className={`${item.class} text-[14px]`}></i>
-                                <span className="text-[12px] text-[#555555]">{item.content}</span>
-                            </div>:
-                            <div className="flex justify-center items-center gap-[6px] text-[#ff6b35]">
-                                <i className={`${item.class} text-[14px]`}></i>
-                                <span className="text-[12px] text-[#555555]">{item.content}</span>
-                            </div>
+                        props.services.map((item) => (
+                            (item.content == 'Services included') ?
+                                <div className="flex justify-center items-center gap-[6px] bg-[#fff5f0] text-[#ff6b35] px-[10px] py-[4px] rounded-[12px]">
+                                    <i className={`${item.class} text-[14px]`}></i>
+                                    <span className="text-[12px] text-[#555555]">{item.content}</span>
+                                </div> :
+                                <div className="flex justify-center items-center gap-[6px] text-[#ff6b35]">
+                                    <i className={`${item.class} text-[14px]`}></i>
+                                    <span className="text-[12px] text-[#555555]">{item.content}</span>
+                                </div>
                         ))
                     }
                 </div>
             </div>
-            <div>
-                    
+            <div className="flex justify-between py-[16px]">
+                <div className="h-[272px] w-[400px] rounded-[30px]">
+                    <img className="h-full w-full rounded-[30px]" src={CardImage} alt="" />
+                </div>
+                <div>
+                    <div className="h-[231px] w-[670px] m-[16px] px-[16px] border-l-[3px] border-[#ff6b35]">
+                        <h4 className="mb-[8px] text-[13px] text-[#ff6b35]">INCLUSIONS</h4>
+                        <div className="grid grid-cols-2 grid-row-3 gap-x-4 gap-y-2">
+                            {/* {
+                                props.cardInfo.map((data)=>(
+                                    <div>{data.cardHeading}</div>
+                                ))
+                            } */}
+                            {
+                                props.cardInfo.map((item, i) => (
+                                    <div key={i} className="text-[12px] mb-[2px] text-[#1a1a1a] font-semibold">{item.cardHeading}
+                                        <ul className="list-disc text-[#ff6b35]">
+                                            {
+                                                item.cardItems.map((list, index) => (
+                                                    <li key={index} className="text-[12px] text-[#444444] py-[1px] pl-[12px]">{list}</li>
+                                                ))
+                                            }
+                                        </ul>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                    <div className="py-[8px] px-[12px] flex gap-3 mb-[10px] bg-[#f8f9fa] rounded-[6px]">
+                        {
+                            props.services.map((item) => (
+                                (item.content == 'Services included') ?
+                                    <div className="flex justify-center items-center gap-[6px] bg-[#fff5f0] text-[#ff6b35] px-[10px] py-[4px] rounded-[12px]">
+                                        <i className={`${item.class} text-[14px]`}></i>
+                                        <span className="text-[12px] text-[#555555]">{item.content}</span>
+                                    </div> :
+                                    <div className="flex justify-center items-center gap-[6px] text-[#ff6b35]">
+                                        <i className={`${item.class} text-[14px]`}></i>
+                                        <span className="text-[12px] text-[#555555]">{item.content}</span>
+                                    </div>
+                            ))
+                        }
+                    </div>
+                </div>
             </div>
         </main>
     </>

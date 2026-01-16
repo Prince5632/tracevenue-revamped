@@ -22,14 +22,39 @@ function PackageDetails() {
                     content: 'Services included', 
                     class: "fa-solid fa-bell-concierge" }
             ],
-            cardDescription: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Pariatur perferendis, corporis soluta quisquam autem sint eaque consequuntur dignissimos cumque incidunt. Iure doloribus eveniet unde eligendi nostrum mollitia consequatur, commodi, at ratione, labore architecto cumque! Ex commodi quas alias eveniet dolorum totam quam excepturi, eum, asperiores culpa minus. Modi, labore tempore?'
+            cardInfo: [
+                {
+                    cardHeading: 'Soups',
+                    cardItems: ['3 Veg Soups', '1 Non-Veg Soups']
+                },
+                {
+                    cardHeading: 'Beverages',
+                    cardItems: ['1 Veg Beverages','5 Cold Beverages', '2 Rum']
+                },
+                {
+                    cardHeading: 'Starter/Snacks',
+                    cardItems: ['1 Paneer Starter/Snacks','4 Non-Veg Starter/Snacks', '3 Veg Starter/Snacks']
+                },
+                {
+                    cardHeading: 'Main course',
+                    cardItems: ['3 Raita']
+                },
+                {
+                    cardHeading: 'Complimentary',
+                    cardItems: ['3 Veg Complimentary']
+                },
+                {
+                    cardHeading: 'Services',
+                    cardItems: ['Complimentary Services Included']
+                }
+            ]
         }
     ]
     return <>
         <Navbar />
         {
             packageInformation.map((item, index) => (
-                <PackageInfo key={index} step={item.step} heading={item.heading} description={item.description} subHeading={item.subHeading} price={item.price} services={item.services} cardDescription={item.cardDescription} />
+                <PackageInfo key={index} step={item.step} heading={item.heading} description={item.description} subHeading={item.subHeading} price={item.price} services={item.services} cardInfo={item.cardInfo} />
             ))
         }
     </>
