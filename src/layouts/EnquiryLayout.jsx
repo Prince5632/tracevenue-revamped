@@ -9,7 +9,6 @@ import { Menu, X } from "lucide-react";
 import ProgressHeader from '../components/common/ProgessHeader';
 import { Button } from '../components/common';
 
-
 const EnquiryLayout = () => {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [completedSteps, setCompletedSteps] = useState([]);
