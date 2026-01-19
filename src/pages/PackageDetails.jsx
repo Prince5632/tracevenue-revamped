@@ -47,14 +47,15 @@ function PackageDetails() {
                     cardHeading: 'Services',
                     cardItems: ['Complimentary Services Included']
                 }
-            ]
+            ],
+            cuisines: ['Indian', 'Italian', 'Continental', 'Chinese', 'North Indian', 'Mughlai', 'Indo-Chinese', 'Indian/Continental']
         }
     ]
     return <>
         <Navbar />
         {
             packageInformation.map((item, index) => (
-                <PackageInfo key={index} step={item.step} heading={item.heading} description={item.description} subHeading={item.subHeading} price={item.price} services={item.services} cardInfo={item.cardInfo} />
+                <PackageInfo key={index} step={item.step} heading={item.heading} description={item.description} subHeading={item.subHeading} price={item.price} services={item.services} cardInfo={item.cardInfo} cuisines={item.cuisines}/>
             ))
         }
     </>
