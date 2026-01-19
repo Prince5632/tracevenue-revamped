@@ -49,7 +49,7 @@ const DiscoverPackages = ({ steps, currentStep, completedSteps, onBack }) => {
         Discover Packages
       </h2>
 
-      <p className="text-gray-500 font-semibold max-w-2xl mb-5 text-[16px]">
+      <p className="text-gray-500 font-semibold max-w-2xl !mb-5 text-[16px]">
         Based on your location and event type, restaurants are offering a
         variety of packages with different cuisine combinations.
       </p>
