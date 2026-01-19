@@ -32,8 +32,8 @@ const STEP_DEFINITIONS = {
     },
     food_preferences: {
         id: 'food_preferences',
-        title: 'Food Preferences',
-        description: 'Any specific food requirement?',
+        title: 'Specify the food preferences',
+        description: 'Choose pure veg or a mix of veg and non-veg, and alcohol preferences',
         componentKey: 'FoodPreferences'
     },
 };
