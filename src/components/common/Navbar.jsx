@@ -1,8 +1,14 @@
+import { useState } from "react";
+import { Button } from "../common";
 import tracevenue from "../../assets/images/Tracevenue.png"
 import logo from "../../assets/images/logo.png"
+import { MenuIcon } from "lucide-react";
+
 
 const Navbar = () => {
+    const [open, setOpen] = useState(false);
     return (
+        
         <nav className="w-full bg-white shadow-lg fixed top-0 left-0 z-50">
             {/* fixed top-0 left-0 */}
             <div
@@ -16,7 +22,7 @@ const Navbar = () => {
           justify-between
         "
             >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                     <img src={logo} alt="logo" className="h-6 sm:h-7" />
                     <img
                         src={tracevenue}
@@ -25,29 +31,28 @@ const Navbar = () => {
                     />
                 </div>
 
-                <div className="flex items-center gap-3 sm:gap-5">
-                    <button className="text-sm sm:text-[16px] font-semibold text-[#060606] cursor-pointer">
-                        Login
-                    </button>
+                 <div className='hidden lg:block flex gap-3 p-4'  >
+                                    
+                    <Button size="sm" variant="ghost" className='px-5'>Login</Button>
+                
+                    <Button size="sm" variant="gradient" className='px-5'>Sign up</Button>
+                                    
+                 </div>
 
-                    <button
-                        className="
-            bg-[#FF4000]
-            text-white
-            border
-            rounded-2xl
-            px-3 sm:px-4
-            py-1
-            text-sm sm:text-base
-            font-semibold
-            cursor-pointer
-          "
-                    >
-                        Sign up
-                    </button>
-                </div>
+                <MenuIcon className="lg:hidden flex-shrink-0 space-x-4 md:mr-40"
+                    onClick={() => setOpen(!open)} />
+
             </div>
+            {open && <div className='bg-black mr-50 lg:hidden'  >
+
+                <Button size="sm" variant="ghost" className='px-5'>Login</Button>
+
+
+                <Button size="sm" variant="gradient" className='px-5'>Sign up</Button>
+
+            </div>}
         </nav>
+        
     );
 };
 
