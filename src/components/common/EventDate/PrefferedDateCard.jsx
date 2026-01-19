@@ -60,8 +60,6 @@ function PrefferedDateCard({
             </div>
           </div>
 
-          {/* CustomTimePicker Component Added from common component file but not functional due to the onChange function prop */}
-
           <div className="h-16 w-[33%] bg-green-100 p-2 rounded-xl flex flex-col justify-center items-center text-[#85878C]">
             {fullday === "Fullday" && (
               <div className="flex items-center gap-2 py-4">

@@ -6,10 +6,6 @@ function PreAlternateDateCard({ onAdd }) {
       variant="default"
       padding="lg"
       className="flex items-center justify-around gap-5 cursor-pointer"
-      // onClick={(e) => {
-      //   e.stopPropagation();
-      //   onAdd();
-      // }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -25,14 +25,8 @@ const EventDate = () => {
 
   const handleAddAlternate = () => {
     if (alternateDates.length >= 3) return;
-
-    // 1. Add the empty slot
     setAlternateDates((prev) => [...prev, { date: null }]);
-
-    // 2. Set the index to the one we just added
     setActiveIndex(alternateDates.length);
-
-    // 3. Open the calendar
     setOpenCalender(true);
   };
 
@@ -40,12 +34,12 @@ const EventDate = () => {
     if (activeIndex === null) return;
 
     const newData = alternateDates.map((item, index) =>
-      index === activeIndex ? { ...item, date } : item
+      index === activeIndex ? { ...item, date } : item,
     );
 
     setAlternateDates(newData);
     setOpenCalender(false);
-    setActiveIndex(null); // Clear the active slot
+    setActiveIndex(null);
   };
 
   const handleDeleteAlternate = (index) => {
@@ -54,9 +48,21 @@ const EventDate = () => {
 
   const handleOutsideClick = () => {
     setOpenCalender(false);
+    setPrefferedOpen1(false);
     setAlternateDates((prev) => prev.filter((item) => item.date !== null));
   };
-  console.log(openCalender);
+
+  const getDisabledDates = () => {
+    const disabled = [];
+    if (date1) disabled.push(date1);
+    alternateDates.forEach((item, index) => {
+      if (item.date && index !== activeIndex) {
+        disabled.push(item.date);
+      }
+    });
+
+    return disabled;
+  };
   return (
     <>
       <div
@@ -77,6 +83,7 @@ const EventDate = () => {
                 color="#ff4000"
                 shownDate={viewdate}
                 onShownDateChange={setViewdate}
+                minDate={new Date()}
               />
             </div>
           )}
@@ -112,12 +119,13 @@ const EventDate = () => {
             >
               <Calendar
                 date={alternateDates[activeIndex]?.date || new Date()}
-                disabledDates={[date1]}
+                disabledDates={getDisabledDates()}
                 onChange={handleAlternateSelect}
                 className="shadow-lg border rounded-md"
                 color="#ff4000"
                 shownDate={viewdate}
                 onShownDateChange={setViewdate}
+                minDate={new Date()}
               />
             </div>
           )}
@@ -149,6 +157,11 @@ const EventDate = () => {
                         setOpenCalender(true);
                       }}
                       onDelete={() => handleDeleteAlternate(index)}
+                      t1Time={t1Time}
+                      t2Time={t2Time}
+                      setT1Time={setT1Time}
+                      setT2Time={setT2Time}
+                      disabledDates={getDisabledDates()}
                     />
                   )}
                 </div>
