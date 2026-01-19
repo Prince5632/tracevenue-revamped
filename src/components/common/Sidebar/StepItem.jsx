@@ -5,9 +5,9 @@ const StepItem = ({ step, isLast, index, currentStep }) => {
   return (
     <div className="flex gap-3 ">
       <div className="flex flex-col items-center">
-        <div className="w-4 h-4 rounded-full border border-[#D7D9DA] flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full border border-[#D7D9DA] flex items-center justify-center">
           <div
-            className={`w-4 h-4 rounded-full flex items-center justify-center
+            className={`w-6 h-6 rounded-full flex items-center justify-center
             ${isCompleted
                 ? "border-2 bg-[#15b076]  border-1 border-white"
                 : isActive
@@ -21,7 +21,7 @@ const StepItem = ({ step, isLast, index, currentStep }) => {
         {!isLast && <div className="w-[3px] h-full bg-[#FFFFFF] "></div>}
       </div>
 
-      <div className='-mt-1 mb-3'>
+      <div className='-mt-1 leading-[18px] mb-3'>
         <h6 className="font-semibold text-[#060606] text-[16px]">{step.title}</h6>
         <span className="text-[#5C5F62] text-[12px]  leading-medium">
           {step.subtitle}

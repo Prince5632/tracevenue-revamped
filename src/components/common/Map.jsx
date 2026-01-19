@@ -10,6 +10,7 @@ function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setSho
   const mapRef = useRef(null);
   const isLoaded = useRef(false);
 
+
   const onLoad = (map) => {
     if (isLoaded.current) return; // StrictMode guard
     isLoaded.current = true;
@@ -48,7 +49,13 @@ function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setSho
       zoom={8}
       onLoad={onLoad}
       options={{
-          mapTypeControl: true,
+          mapTypeControl: true, 
+          fullscreenControl: false,   
+          streetViewControl: false,  
+          zoomControl: true,
+          zoomControlOptions: {
+            position: window.google.maps.ControlPosition.RIGHT_CENTER,
+          },
           mapTypeControlOptions: {
           style: window.google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
           position: window.google.maps.ControlPosition.BOTTOM_RIGHT,
