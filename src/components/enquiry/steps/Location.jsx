@@ -43,14 +43,11 @@ const Location = () => {
                     const lat = place.geometry.location.lat();
                     const lng = place.geometry.location.lng();
 
-                    // ✅ Move map & marker
+                  
                     setCenter({ lat, lng });
                     setShowMarker(true);
-
-                    // ✅ Update input
                     setLocation(place.formatted_address);
 
-                    // ✅ UI cleanup
                     setSuggestions([]);
                     setOptions(false);
                     setRadiusSlider(true);
@@ -108,7 +105,7 @@ const Location = () => {
 
                 setCenter({ lat, lng });
                 setShowMarker(true);
-
+                showRadiusSlider(true);
                 reverseGeocode(lat, lng);
             },
             (error) => {
@@ -170,11 +167,13 @@ const Location = () => {
 
     return (
         <>
-            <div ref={wrapperRef} className='relative z-2 w-full'>
+    
+            <div ref={wrapperRef} className="w-full">
+                {/* search bar */}
                 <div>
 
                     {/* input */}
-                    <div className='relative z-4 flex justify-end items-center'>
+                    <div className='relative z-4 flex justify-end items-center w-full'>
 
                         <Input type="text" inputClassName='text-secondary text-[5px] py-2 z-2'
                             placeholder="Enter Your Location" onChange={(e) => {
@@ -185,7 +184,7 @@ const Location = () => {
                                 clearTimeout(debounceTimer.current);
                                 debounceTimer.current = setTimeout(() => {
                                     fetchSuggestions(value);
-                                }, 400); // ⏱ debounce delay
+                                }, 400); 
                                 if (!value.trim()) {
                                     setSuggestions([]);
                                     setHasSearched(false);
@@ -212,7 +211,7 @@ const Location = () => {
                     {options &&
                         <>
                             <div onClick={() => { setOptions(false) }}>
-                                <div className="text-primary text-[18px] font-bold absolute z-4 bg-white w-full py- rounded-2xl p-4 border border-[#d7d9da]">
+                                <div className="text-primary text-[18px] font-bold absolute z-4 bg-white w-full  rounded-2xl p-4 border border-[#d7d9da]">
 
                                     <div className='flex items-center gap-2 '>
                                         <LocateFixed size={12} />
@@ -358,6 +357,8 @@ const Location = () => {
                     </div>
                 </div>
             </div>
+   
+     
         </>
     );
 };
