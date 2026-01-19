@@ -6,7 +6,6 @@ import "../../../styles/Module/CalenderModule.css";
 import AlternateDateCard from "../../common/EventDate/AlternateDateCard";
 import PreAlternateDateCard from "../../common/EventDate/PreAlternateDateCard";
 import PrefferedDateCard from "../../common/EventDate/PrefferedDateCard";
-import PrePrefferedDateCard from "../../common/EventDate/PrePrefferedDateCard";
 
 const EventDate = () => {
   const [t1Time, setT1Time] = useState();
@@ -75,7 +74,7 @@ const EventDate = () => {
           <h1 className="font-semibold text-[18px] mb-5">Preffered Date</h1>
           {/* Card Component */}
           {prefferedOpen1 && (
-            <div>
+            <div onClick={(e) => e.stopPropagation()}>
               <Calendar
                 date={date1}
                 onChange={handleSelect}
@@ -94,7 +93,7 @@ const EventDate = () => {
                 e.stopPropagation();
               }}
             >
-              <PrePrefferedDateCard />
+              <PreAlternateDateCard />
             </div>
           ) : (
             <>

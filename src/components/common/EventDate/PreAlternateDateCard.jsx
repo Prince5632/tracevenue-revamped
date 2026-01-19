@@ -1,6 +1,6 @@
 import Card from "../Card";
 
-function PreAlternateDateCard({ onAdd }) {
+function PreAlternateDateCard() {
   return (
     <Card
       variant="default"
