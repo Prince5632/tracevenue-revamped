@@ -1,5 +1,6 @@
 import Button from "../common/Button";
-import CardImage from "../../assets/packageCard/card1.jpeg"
+import CardImage from "../../assets/packageCard/card1.jpeg";
+// import { Button } from '../components/common';
 function PackageInfo(props) {
     return <>
         <main className="pt-[65px] px-[40px]">
@@ -9,9 +10,10 @@ function PackageInfo(props) {
                     <p className="text-[13px] text-[#666666] font-semibold">{props.description}</p>
                 </div>
                 <div className="lg:flex lg:justify-center lg:items-center">
-                    <button className=" border border-[#FF5722] px-[25px]  py-[4px] rounded-[30px] bg-white text-[#Ff5722] text-base font-bold">
+                    {/* <button className=" border border-[#FF5722] px-[25px]  py-[4px] rounded-[30px] bg-white text-[#Ff5722] ">
                         Plan New Event
-                        <i className="fa-solid fa-arrow-right"></i></button>
+                        <i className="fa-solid fa-arrow-right"></i></button> */}
+                        <Button variant="outline" className='text-[16px] font-bold' rightIcon={<i className="fa-solid fa-arrow-right"></i>}>Plan New Event</Button>
                 </div>
             </div>
             <div className="h-[5px] rounded-[30px] w-full bg-[#F0F0F4] mt-6 mb-[20px]"></div>

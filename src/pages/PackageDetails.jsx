@@ -7,7 +7,7 @@ function PackageDetails() {
             heading: 'Package Details',
             description: 'Based on your location and event type, restaurants are offering a variety of packages with different cuisine combinations.',
             subHeading: 'Mega 6-Cuisine Celebration Spread Featuring Indian & Continental',
-            price: '40',
+            price: '80000',
             services: [
                 { 
                     content: '21+dishes', 
