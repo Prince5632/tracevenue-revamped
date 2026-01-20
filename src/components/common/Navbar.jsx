@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import tracevenue from "../../assets/images/Tracevenue.png"
 import logo from "../../assets/images/logo.png"
 
 const Navbar = () => {
+     const navigate = useNavigate();
     return (
         <nav className="w-full bg-white shadow-lg fixed top-0 left-0 z-50">
             {/* fixed top-0 left-0 */}
@@ -26,6 +28,11 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-5">
+                     <button onClick={()=>{
+                        navigate('/dashboard')
+                     }} className="text-sm sm:text-[16px] font-semibold text-[#060606] cursor-pointer">
+                       My Enquiries
+                    </button>
                     <button className="text-sm sm:text-[16px] font-semibold text-[#060606] cursor-pointer">
                         Login
                     </button>
