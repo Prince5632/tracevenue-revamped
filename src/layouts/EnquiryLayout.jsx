@@ -47,7 +47,7 @@ const EnquiryLayout = () => {
 
     return (
         <>
-            <Navbar className='' />
+            <Navbar />
           
                
             
