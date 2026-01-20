@@ -5,4 +5,10 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    port: 4000,       // 👈 your custom port
+    open: true,       // optional: auto open browser
+    strictPort: true, // fail if port is already in use
+  },
+
 })
