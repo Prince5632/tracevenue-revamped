@@ -5,13 +5,13 @@ import Catering from "../../../assets/images/catering.png";
 import Tick from "../../../assets/images/tick.png";
 
 const ServiceType = () => {
-  const [selectedService, setSelectedServiceId] = useState(()=>{
+  const [selectedService, setSelectedServiceId] = useState(() => {
     const savedId = localStorage.getItem("selectedService");
     return savedId ? Number(savedId) : null;
   });
   const services = [
     {
-      id:1,
+      id: 1,
       heading: "Discover",
       sub_heading: "Venue",
       description:
@@ -19,7 +19,7 @@ const ServiceType = () => {
       image: Venue,
     },
     {
-      id:2,
+      id: 2,
       heading: "Plan",
       sub_heading: "Catering",
       description:
@@ -58,13 +58,13 @@ const ServiceType = () => {
               variant="bordered"
               padding="md"
               onClick={() => {
-                setSelectedServiceId(service.id)
+                setSelectedServiceId(service.id);
                 localStorage.setItem("selectedService", service.id);
               }}
               className={`cursor-pointer transition-all duration-200 ${
-                selectedService === service.id 
-                ? "border border-[#ff8359]"
-                : "border-none"
+                selectedService === service.id
+                  ? "border border-[#ff8359]"
+                  : "border-none"
               }`}
             >
               {service.image && (
@@ -72,7 +72,7 @@ const ServiceType = () => {
                   <div className="flex">
                     <div
                       className="
-                    flex 
+                    flex 90
                     flex-col 
                     justify-between "
                     >
