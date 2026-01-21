@@ -62,7 +62,7 @@ const ImageSection = () => {
         <img
           src={images[0]}
           alt="Media 0"
-          className="w-full !h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-300"
+          className="w-full !h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
           onClick={() => {
             setActiveIndex(0);
             setIsGalleryOpen(true);
@@ -74,7 +74,7 @@ const ImageSection = () => {
         {images.slice(1, 5).map((img, index) => (
           <div
             key={index}
-            className="relative overflow-hidden rounded cursor-pointer hover:scale-110 transition-transform duration-300"
+            className="relative overflow-hidden rounded cursor-pointer hover:scale-105 transition-transform duration-300"
             style={{
               width: "calc(50% - 0.125rem)",
               height: "calc(50% - 0.125rem)",
