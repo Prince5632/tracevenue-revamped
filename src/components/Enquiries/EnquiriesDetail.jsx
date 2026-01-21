@@ -1,0 +1,554 @@
+import React, { useState, useRef, useEffect } from 'react';
+import EnquiryTopview from './EnquiryTopview';
+import Map from '../common/Map';
+import Card from '../common/Card';
+import Alcohol from '../../assets/images/alcohol.svg';
+import Veg from '../../assets/images/veg.svg';
+import NonVeg from '../../assets/images/non-veg.svg';
+import ColdDrink from '../../assets/images/colddrink.svg'
+import Venue from '../../assets/images/venue.png';
+import Catering from '../../assets/images/catering.png';
+import Icon from '../../assets/images/dotLine.svg';
+import { CircleArrowLeft } from "lucide-react";
+
+const EnquiriesDetail = () => {
+  const [location, setLocation] = useState('');
+  const [center, setCenter] = useState(null);
+
+ const menuData = [
+  {
+    section: "Beverages",
+    count:2,
+    icon:ColdDrink,
+    groups: [
+      {
+        title: "Cold Drink(s)",
+        items: ["Coke"],
+      },
+      {
+        title: "Welcome Drinks",
+        items: ["Tea", "Coffee"],
+      },
+    ],
+  },
+  {
+    section: "Starter / Snacks",
+    count:4,
+    icon:Veg,
+    groups: [
+      {
+        title: "Paneer Items",
+        items: [
+          "Achari Paneer Tikka",
+          "Lemon Paneer Tikka",
+          "Multani Paneer Tikka",
+        ],
+      },
+      {
+        title: "Veg Items",
+        items: [
+          "Mushroom Tikka",
+          "Rosted Papad",
+          "Stuffed Mushroom Tikka",
+          "Masala Papad",
+          "Peanut Masala",
+          "Masala Champ",
+          "French Fries",
+          "Potato Wedges",
+          "Malai Champ",
+          "Aloo Chaat",
+          "Corn Chaat",
+          "Achari Chaap",
+          "Veg Seekh Kebab",
+          "Corn Seekh Kebab",
+          "Bell Pepper Kebab",
+          "Spiced Yogurt Cake",
+          "Paneer Tikka",
+          "Haryali Paneer Tikka",
+          "Tandoori Aloo",
+          "Tandoori Pine Apple",
+          "Khas Veg Kebab",
+          "Veg Platter",
+          "Tandoori Sizzler",
+          "Tandoori Chaap",
+        ],
+      },
+    ],
+  },
+  {
+    section: "Salad",
+    count:2,
+    icon:Veg,
+    groups: [
+      {
+        title: "Veg Items",
+        items: ["Russian Salad", "Onion Salad"],
+      },
+    ],
+  },
+  {
+    section: "Main Course",
+    count:6,
+    icon:Veg,
+    groups: [
+      {
+        title: "Paneer Items",
+        items: ["Paneer Lababdar", "Paneer Butter Masala"],
+      },
+      {
+        title: "Veg Items",
+        items: [
+          "Chana Masala",
+          "Special Fire Wood Pizza",
+          "Hakka Noodles",
+          "Manchurian Gravy",
+          "Pasta",
+        ],
+      },
+      {
+        title: "Rice & Biryani",
+        items: [
+          "Peas Pulao",
+          "Veg Pulao",
+          "Rice (Steam/Jeera)",
+          "Fried Rice",
+          "Jeera Rice",
+          "Veg Biryani",
+        ],
+      },
+      {
+        title: "Raita",
+        items: ["Bondi Raita", "Pineapple Raita", "Mix Veg Raita"],
+      },
+      {
+        title: "Breads",
+        items: [
+          "Tandoori Roti",
+          "Missi Roti",
+          "Lacha Parantha",
+          "Butter Naan",
+          "Khastha Roti",
+          "Garlic Naan",
+          "Masala Naan",
+          "Chur Chur Naan",
+        ],
+      },
+    ],
+  },
+  {
+    section: "Desserts",
+    count:1,
+    icon:Veg,
+    groups: [
+      {
+        title: "Veg Items",
+        items: ["Hot Gulab Jamun", "Rasmalai", "Ice Cream"],
+      },
+    ],
+  },
+];
+
+
+  /* SCROLL SPY LOGIC  */
+  const sectionRefs = useRef([]);
+  const [activeSection, setActiveSection] = useState(0);
+
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(Number(entry.target.dataset.index));
+        }
+      });
+    },
+    {
+      root: null,    
+      threshold: 0.4,
+    }
+  );
+
+  sectionRefs.current.forEach((el) => el && observer.observe(el));
+
+  return () => observer.disconnect();
+}, []);
+
+
+  const [selectedService, setSelectedService] = useState(() => {
+    const saved = localStorage.getItem('selectedService');
+    return saved ? Number(saved) : null;
+  });
+
+  const services = [
+    { id: 1, label: 'Venue', image: Venue },
+    { id: 2, label: 'Catering', image: Catering },
+  ];
+
+  const handleLocation = (lat, lng) => {
+    setCenter({ lat, lng });
+
+    if (!window.google) return;
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === 'OK' && results?.[0]) {
+        setLocation(results[0].formatted_address);
+      }
+    });
+  };
+
+  return (
+    <div className="w-full flex gap-7.5">
+ 
+
+
+      {/*SIDEBAR */}
+      <div className="hidden lg:block bg-amber-200 w-[25%]">
+        <h1>Sidebar</h1>
+      </div>
+
+     {/**Main Content */}
+      <div className="w-full lg:w-[75%]">
+
+
+        <div className="p-4">
+          <h1 className="font-bold text-2xl mb-2 flex flex-row gap-5">
+            <CircleArrowLeft size={40} color="#fc4103" strokeWidth={1} />
+            <span>
+            Looking venue for kitty party for 30 people on 10 Jan, 2026
+            </span>
+          </h1>
+          <EnquiryTopview />
+        </div>
+
+        {/* BASIC INFORMATION + LOCATION */}
+        <div className=" p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* LEFT */}
+            <div className="w-full  space-y-6">
+              <h2 className="font-bold text-xl mb-6 text-gray-400">Basic Information</h2>
+
+              {/* Venue & Catering */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {services.map(service => (
+                  <Card
+                    key={service.id}
+                    variant="bordered"
+                    padding="md"
+                    onClick={() => {
+                      setSelectedService(service.id);
+                      localStorage.setItem('selectedService', service.id);
+                    }}
+                    className={`cursor-pointer transition-all duration-200 relative min-h-35
+                      ${selectedService === service.id ? 'border-[#ff8359]' : ''}
+                    `}
+                  >
+                    <span className="absolute top-4 left-4 text-[22px] font-bold
+                      bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)]
+                      bg-clip-text text-transparent">
+                      {service.label}
+                    </span>
+
+                    <img
+                      src={service.image}
+                      alt={service.label}
+                      className="absolute bottom-4 right-4 w-20 object-contain"
+                    />
+                  </Card>
+                ))}
+              </div>
+
+              {/* Budget & Gathering Size */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                {/* Budget */}
+                <Card variant="flat" padding="sm" className="h-full bg-white">
+                  <h1 className="font-semibold text-lg ">Budget</h1>
+
+                  <div className="flex flex-col gap-9 mt-2">
+                    <Card className="border-orange-400 text-sm py-1 w-fit">
+                      Per Person
+                    </Card>
+
+                    <Card
+                      padding="sm"
+                      className="font-semibold py-1 px-1 text-sm flex items-center whitespace-nowrap w-fit"
+                    >
+                      <span className="text-gray-500 mx-1.5">₹</span>
+                      2500
+                      <span className="text-gray-500 mx-1">-</span>
+                      <span className="text-gray-500 mx-1.5">₹</span>
+                      5500
+                    </Card>
+                  </div>
+                </Card>
+
+                {/* Gathering Size */}
+                <Card variant="flat" padding="sm" className="flex flex-col h-full bg-white">
+                  <h1 className="font-semibold text-lg whitespace-nowrap">
+                    Gathering Size
+                  </h1>
+
+                  <div className="mt-auto self-end text-right">
+                    <h1 className="text-orange-600 font-bold text-lg">60–80</h1>
+                    <h6 className="font-semibold text-gray-500 whitespace-nowrap">
+                      Number of Guests
+                    </h6>
+                  </div>
+                </Card>
+
+              </div>
+            </div>
+
+            {/* RIGHT : LOCATION */}
+            <div className="w-full ">
+              <h3 className="font-bold text-lg mb-2 text-gray-400">Location (10 km)</h3>
+              <div className="h-85! rounded-2xl overflow-hidden">
+                <Map
+                  center={center}
+                  radius={center ? 10000 : 0}
+                  handleLocation={handleLocation}
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+{/* DATE & TIME + FOOD PREFERENCE  */}
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+
+  {/* DATE & TIME  */}
+  <div className="p-6 text-white rounded-xl">
+    <h2 className="font-semibold text-xl mb-6 text-gray-400">Date & Time</h2>
+
+    <div className="grid grid-row-2 sm:grid-row-2 gap-5">
+      
+      {/* Preferred Date */}
+      <Card variant="default" padding="md" className="flex items-center justify-between gap-5">
+        <div className="text-left">
+          <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+            Saturday
+          </div>
+          <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+            10 Jan
+          </div>
+        </div>
+
+        <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
+          <img src={Icon} alt="connector icon" className='pr-2'/>
+            <div className="flex flex-col leading-tight text-center">
+            <span>18:00</span>
+            <span>22:00</span>
+            </div>
+        </div>
+      </Card>
+
+      {/* Alternate Date */}
+      <h2 className="font-semibold text-xl text-gray-400">Alternate Dates</h2>
+      <Card variant="default" padding="md" className="flex items-center justify-between gap-5">
+        <div className="text-left">
+          <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+            Sunday
+          </div>
+          <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+            11 Jan
+          </div>
+        </div>
+
+        <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
+          <img src={Icon} alt="connector icon" className='pr-2'/>
+            <div className="flex flex-col leading-tight text-center">
+            <span>18:00</span>
+            <span>22:00</span>
+            </div>
+        </div>
+      </Card>
+
+    </div>
+  </div>
+
+  {/*FOOD PREFERENCE  */}
+ <div className="p-6">
+  <h2 className="font-bold text-xl mb-6 text-gray-400">Food Preference</h2>
+
+  <div className="grid grid-cols-2 gap-4">
+    
+    <Card>
+      <Card.Header className="text-lg font-bold">
+        Eating
+      </Card.Header>
+      <Card.Body className="flex items-center text-lg font-bold whitespace-nowrap">
+        <img
+          src={NonVeg}
+          alt="Veg Non Veg"
+          className="w-8 h-8"
+        />
+        <span className='text-sm lg:text-base'>Veg &amp; Non Veg</span>
+      </Card.Body>
+    </Card>
+
+    <Card>
+      <Card.Header className="text-lg font-bold">
+        Alcohol
+      </Card.Header>
+      <Card.Body className="flex items-center  text-lg font-bold whitespace-nowrap">
+        <img
+          src={ColdDrink}
+          alt="Non Alcohol"
+          className="w-8 h-8"
+        />
+        <span className='text-sm lg:text-base'>Non Alcohol</span>
+      </Card.Body>
+    </Card>
+
+  </div>
+</div>
+
+
+</div>
+
+
+
+        {/* CUISINES */}
+<div className="p-6">
+
+  <Card className="flex flex-wrap items-center gap-3">
+    <div>
+  <h2 className="font-bold text-xl mr-3">Cuisines</h2>
+    </div>
+    <div className='flex flex-wrap item-center gap-3'>
+<Card className="w-fit py-2 px-3">
+      <p>North Indian</p>
+    </Card>
+
+    <Card className="w-fit py-2 px-3">
+      <p>Indian</p>
+    </Card>
+
+    <Card className="w-fit py-2 px-3">
+      <p>Continental</p>
+    </Card>
+
+    <Card className="w-fit py-2 px-3">
+      <p>Indo-Chinese</p>
+    </Card>
+
+    <Card className="w-fit py-2 px-3">
+      <p>Mughlai</p>
+    </Card>
+
+    <Card className="w-fit py-2 px-3">
+      <p>Indian / Continental</p>
+    </Card>
+
+    <Card className="w-fit py-2 px-3">
+      <p>Chinese</p>
+    </Card>
+
+    <Card className="w-fit py-2 px-3">
+      <p>Italian</p>
+    </Card>
+    </div>
+    
+
+  </Card>
+</div>
+
+{/*  MENU + FOOD */}
+<div className="p-6 flex gap-7.5">
+
+  {/* LEFT MENU */}
+  <div className="w-[35%] hidden lg:block">
+    <div className="sticky top-4">
+      <Card>
+        <h2 className="font-bold text-xl mb-4">Menu</h2>
+
+        <ul className="space-y-3 mb-6">
+          {menuData.map((section, index) => (
+            <li
+              key={index}
+              className={`flex items-center justify-between px-2 py-3 rounded transition
+                ${
+                  activeSection === index
+                    ? "bg-[#FFF8F0] text-[#ebaf6b] border-l-4 border-[#e0a057]"
+                    : "text-gray-600"
+                }
+              `}
+            >
+              <span className="font-semibold">{section.section}</span>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded">
+                {section.count}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <h3 className="font-bold text-xl mb-2">Amenities & Services</h3>
+        <p className="text-xs text-gray-400">No Amenities & Services</p>
+      </Card>
+    </div>
+  </div>
+
+  {/* RIGHT FOOD */}
+  <div id="food-scroll" className=" w-full lg:w-[65%] space-y-6 grid grid-cols-1">
+    <Card>
+      <h1 className="font-bold text-xl mb-6">Food Items</h1>
+
+      {menuData.map((section, index) => (
+        <div
+          key={index}
+          ref={(el) => (sectionRefs.current[index] = el)}
+          data-index={index}
+          className="mb-10"
+        >
+          <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+            {section.section}
+          </h2>
+
+          {section.groups.map((group, gIndex) => (
+            <Card key={gIndex} className="mb-4">
+              <div className="flex items-center gap-3 mb-3">
+                <h3 className="font-semibold text-lg">{group.title}</h3>
+                <span className="bg-[#f3e2dd] text-[#FF6A3D] px-1.5 rounded-full text-xs font-semibold">Any 2</span>
+                </div>
+
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                {group.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-1">
+                    <img src={section.icon} className="w-8 h-8" />
+                    <span className="font-semibold text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul >
+
+            </Card>
+          
+          ))}
+        </div>
+      ))}
+
+    </Card>
+      <div>
+      <Card>
+      <div className="mt-5">
+      <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+        Amenities & Services
+      </h2>
+      </div>
+        <p className="text-sm font-semibold text-gray-400">
+          No Amenities & Services
+        </p>
+      </Card>
+      </div>
+  </div>
+  </div>
+
+
+</div>
+
+</div>
+  );
+};
+
+export default EnquiriesDetail;
