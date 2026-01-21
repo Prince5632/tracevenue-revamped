@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import StepControlFooter from '../components/common/StepControlFooter';
 import StepRenderer from '../components/enquiry/StepRenderer';
 import { getEnquirySteps } from '../utils/enquiryConfig';
-import { Menu, X } from "lucide-react";
+import { Hamburger, Menu, MenuIcon, X } from "lucide-react";
 import ProgressHeader from '../components/common/ProgessHeader';
 import { Button } from '../components/common';
 
@@ -48,6 +48,9 @@ const EnquiryLayout = () => {
     return (
         <>
             <Navbar />
+          
+               
+            
             <div className="grid grid-cols-1  lg:grid-cols-[280px_1fr]  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
             gap-7 mt-38 lg:mt-24">
                 {isSidebarOpen && (
@@ -76,13 +79,11 @@ const EnquiryLayout = () => {
                     >
                         <X size={20} />
                     </button>
-                </div>
-                <div className="flex-1 relative top-20 md:-top-20 min-w-0 md:mt-20 ">
-                    <Button className="mb-4 lg:hidden rounded-l-none" onClick={() => setIsSidebarOpen(true)}
-                        size="lg" variant="gradient" >
-                        Step 1/6
-                    </Button>
-                    <ProgressHeader
+                </div>   
+                <div className="flex-1 relative lg:left-15 top-20 md:-top-20 min-w-0 md:mt-20 ">
+                  <Button className="mb-4 lg:hidden rounded-l-none"  onClick={() => setIsSidebarOpen(true)}
+                size="lg" variant="gradient" >Step 1/6</Button>  
+                  <ProgressHeader
                         currentStep={currentStepIndex + 1}
                         totalSteps={steps.length}
                         title={currentStep.title}
@@ -94,6 +95,7 @@ const EnquiryLayout = () => {
                     <StepControlFooter onNext={handleNext} onBack={handleBack} isFirstStep={isFirstStep} isLastStep={isLastStep} />
                 </div>
             </div>
+           
         </>
     );
 };
