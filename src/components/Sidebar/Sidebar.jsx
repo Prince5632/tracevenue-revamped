@@ -1,9 +1,10 @@
 import React from 'react';
-import illustration from "../../../assets/images/illustration.png";
+import illustration from "../../assets/images/illustration.png";
 import StepItem from './StepItem';
+import header from "../../assets/images/header.png";
 
 
-const Sidebar = ({ steps, currentStep, completedSteps = [] , isSidebarOpen }) => {
+const Sidebar = ({ steps, currentStep, completedSteps = [], isSidebarOpen }) => {
   return (
     <aside className={`relative w-full max-w-[340px] min-w-[280px] sm:max-w-[380px] md:max-w-[380px] lg:max-w-[340px] ${isSidebarOpen ? "rounded-none mt-0 mb-0 h-lvh sm:h-lvh" : "rounded-3xl "} lg:h-auto bg-[#F2F3F5] lg:rounded-4xl 
     flex flex-col border border-gray-300 lg:sticky lg:top-6 lg:-mt-2 `}>

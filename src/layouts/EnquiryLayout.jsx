@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
-import Sidebar from '../components/common/Sidebar/Sidebar';
+import Sidebar from '../components/Sidebar/Sidebar';
 import StepControlFooter from '../components/common/StepControlFooter';
 import StepRenderer from '../components/enquiry/StepRenderer';
 import { getEnquirySteps } from '../utils/enquiryConfig';
