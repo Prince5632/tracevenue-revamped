@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button } from './index'; // Assuming Button is exported from common/index.js
+import { Button } from './index';
 
 const StepControlFooter = ({ onNext, onBack, isFirstStep, isLastStep }) => {
     return (
         <div className="mt-12 border-t border-gray-200 w-full sticky z-10 bottom-0 bg-white">
-            <div className="flex justify-end items-center gap-4 py-6">
+            <div className="flex justify-between sm:justify-end items-center gap-4 py-6">
                 <Button
                     variant="outline"
                     onClick={onBack}
@@ -14,15 +14,17 @@ const StepControlFooter = ({ onNext, onBack, isFirstStep, isLastStep }) => {
                     &larr; Back
                 </Button>
 
-                <Button
-                    onClick={onNext}
-                    className="px-8 rounded-full bg-[#ff4000] hover:bg-[#ff5722] text-white"
-                >
-                    {isLastStep ? 'Finish' : 'Next'} &rarr;
-                </Button>
-            </div>
-        </div>
-    );
+        <Button
+          onClick={onNext}
+          className="px-8 py-2 rounded-full bg-[#ff4000] hover:bg-[#ff5722] text-white mr-4"
+        >
+          {isLastStep ? 'Finish' : 'Next'} →
+        </Button>
+      </div>
+    </div>
+  );
 };
 
 export default StepControlFooter;
+
+

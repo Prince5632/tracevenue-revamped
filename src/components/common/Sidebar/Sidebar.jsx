@@ -3,24 +3,22 @@ import illustration from "../../../assets/images/illustration.png";
 import StepItem from './StepItem';
 
 
-const Sidebar = ({ steps, currentStep, completedSteps = [] }) => {
+const Sidebar = ({ steps, currentStep, completedSteps = [] , isSidebarOpen }) => {
   return (
-    <aside className="relative lg:w-[360px] min-h-[572px] bg-[#f0f0f4] rounded-3xl flex flex-col border border-gray-300 lg:sticky lg:top-6 overflow-hidden">
-      {/* Ribbon Header Section */}
-      <div className="relative mb-4">
-        {/* Background extension for ribbon effect */}
-        <div className="absolute -left-8 top-0 w-8 h-full bg-gradient-to-r from-[#f39c12] to-[#ee9c29]"></div>
-        {/* Main ribbon */}
-        <h1
-          className="text-2xl font-bold text-white py-2 px-4 bg-gradient-to-r from-[#f39c12] to-[#e74c3c] -ml-1 mt-3"
-          style={{ clipPath: 'polygon(0px 0, 100% 0, calc(100% - 20px) 50%, 100% 100%, 0 100%)' }}
-        >
-          Plan Your Event in Minutes
-        </h1>
+    <aside className={`relative w-full max-w-[340px] min-w-[280px] sm:max-w-[380px] md:max-w-[380px] lg:max-w-[340px] ${isSidebarOpen ? "rounded-none mt-0 mb-0 h-lvh sm:h-lvh" : "rounded-3xl "} lg:h-auto bg-[#F2F3F5] lg:rounded-4xl 
+    flex flex-col border border-gray-300 lg:sticky lg:top-6 lg:-mt-2 `}>
+      {/* Header Image Section */}
+      <div className="relative mt-4 pr-10">
+        <img src={header} alt="header" className="w-full " />
+
+        <h2 className="absolute inset-0 flex items-center text-white 
+        text-2xl font-bold z-10 ml-10 leading-none">
+          Plan Your Event in <br />Minutes
+        </h2>
       </div>
 
       {/* Steps Section */}
-      <ul className="flex-1 ml-7 z-10 mt-4 mb-[73px] list-none p-0">
+      <div className="flex-1 ml-7 z-10 mt-2 pr-8 ">
         {steps.map((step, index) => {
           return (
             <li key={step.id}>
@@ -33,10 +31,10 @@ const Sidebar = ({ steps, currentStep, completedSteps = [] }) => {
             </li>
           );
         })}
-      </ul>
+      </div>
 
       {/* Footer Illustration */}
-      <div className="w-full absolute z-0 left-0 bottom-0">
+      <div className="w-full left-0 -mt-12">
         <img
           src={illustration}
           alt="Tracevenue illustration"
