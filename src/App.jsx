@@ -1,22 +1,13 @@
-import './App.css'
-import EnquiryLayout from './layouts/EnquiryLayout'
-import ComponentDocs from './pages/ComponentDocs'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import './App.css';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes';
 
-// Define routes using createBrowserRouter
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <EnquiryLayout />,
-  },
-  {
-    path: '/docs',
-    element: <ComponentDocs />,
-  },
-])
-
+/**
+ * Main App component
+ * Uses centralized router configuration from routes/index.jsx
+ */
 function App() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
 
 export default App;
