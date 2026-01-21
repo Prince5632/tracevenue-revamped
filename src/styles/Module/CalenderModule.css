@@ -1,0 +1,10 @@
+.rdrDayDisabled .rdrDayNumber span {
+  color: darkgrey;
+  background-color: transparent;
+}
+.rdrDayDisabled.rdrDaySelected .rdrDayNumber span {
+  background-color: #ffb399 !important;
+}
+.rdrDayToday .rdrDayNumber span::after {
+  color: #ff8000 !important;
+}

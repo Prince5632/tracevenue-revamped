@@ -1,7 +1,8 @@
-import './App.css'
-import EnquiryLayout from './layouts/EnquiryLayout'
-import ComponentDocs from './pages/ComponentDocs'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import "./App.css";
+import EnquiryLayout from "./layouts/EnquiryLayout";
+import ComponentDocs from "./pages/ComponentDocs";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Dashboard from "./components/dashboard/Dashboard";
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -10,17 +11,21 @@ const router = createBrowserRouter([
   //   element: <Home />,
   // },
   {
-    path: '/',
+    path: "/",
     element: <EnquiryLayout />,
   },
   {
-    path: '/docs',
+    path: "/docs",
     element: <ComponentDocs />,
   },
-])
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
+]);
 
 function App() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

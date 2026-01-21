@@ -1,210 +1,188 @@
-import React, { useState } from 'react';
-import Card from '../../common/Card';
+import React, { useState } from "react";
 import { Calendar } from "react-date-range";
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
-import imgcal from './../../../assets/dashboard/calendar.svg'
-import hoursgreen from './../../../assets/new images/hours.png'
-import hoursgray from './../../../assets/new images/hoursgray.svg'
-import CustomTimePicker from '../../common/CustomTimePicker';
- 
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import "../../../styles/Module/CalenderModule.css";
+import AlternateDateCard from "../../common/EventDate/AlternateDateCard";
+import PreAlternateDateCard from "../../common/EventDate/PreAlternateDateCard";
+import PrefferedDateCard from "../../common/EventDate/PrefferedDateCard";
+
 const EventDate = () => {
-    
-    const [open ,setOpen] = useState(false)
-    const [date,setDate] = useState(new Date())
-    const dayName = date.toLocaleDateString("en-US", {
-        weekday: "long",
-    });
+  const [t1Time, setT1Time] = useState();
+  const [t2Time, setT2Time] = useState("10:30");
+  const [prefferedOpen1, setPrefferedOpen1] = useState(false);
+  const [date1, setDate1] = useState();
+  const [viewdate, setViewdate] = useState();
+  const [alternateDates, setAlternateDates] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [openCalender, setOpenCalender] = useState(false);
 
-    const dayNumber = date.toLocaleDateString("en-US", {
-        day: "2-digit",
-    });
+  const handleSelect = (date) => {
+    setDate1(date);
+    setPrefferedOpen1(false);
+  };
 
-    const monthName = date.toLocaleDateString("en-US", {
-        month: "short",
-    });
-    const [hoursimg,setHoursimg] = useState(hoursgray)
-    const [hours,setHours] = useState(false)
-    const [fullday,setFullday] = useState('Time')
-    const handleHours = ()=>{
-        setHours(!hours)
-        if(hours){
-            setHoursimg(hoursgreen)
-            setFullday('Fullday')
-        }
-        else{
-            setHoursimg(hoursgray)
-            setFullday("Time")
-        }
-        
-    }
-    const [openCalendarId, setOpenCalendarId] = useState(null);
+  const handleAddAlternate = () => {
+    if (alternateDates.length >= 3) return;
+    setAlternateDates((prev) => [...prev, { date: null }]);
+    setActiveIndex(alternateDates.length);
+    setOpenCalender(true);
+  };
 
-    
-    return (
-        <>
-            <div className='w-full grid grid-cols-1 sm:grid-cols-2 justify-around gap-5'>
+  const handleAlternateSelect = (date) => {
+    if (activeIndex === null) return;
 
-                {/*Preffered Card 1*/ }
-
-                <div className='h-full w-full'>
-                    <h1 className='font-semibold text-[18px] mb-5'>Preffered Date</h1>
-
-                    {/* Card Component */}
-                    <Card variant="default" padding="md" className='flex items-center justify-around gap-5'>
-
-
-                        <div className='text-left'>
-                            <div className='text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayName}</div>
-                            <div className='text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayNumber} {monthName}</div>
-                        </div>
-
-                        {/* CustomTimePicker Component Added from common component file but not functional due to the onChange function prop */}
-
-                        <div className='h-16 w-[25%] bg-green-200 p-1 rounded-xl flex flex-col justify-center items-center text-[#85878C]'>
-                            {fullday === "Fullday"&&fullday}  
-                            {fullday === "Time" && (
-                                <>
-                                    <CustomTimePicker/>
-                                    <CustomTimePicker/>
-                                </>
-                            )}                                                                                                                                                                                         
-                        </div>
-
-                        <div>
-                            <button onClick={handleHours}>
-                                <img src={hoursimg} alt="" className='self-auto'/>
-                            </button>
-                        </div>
-
-                        <div>
-                            <button onClick={()=> setOpen(!open)}>
-                                <img src={imgcal} alt="" />
-                            </button>
-
-                            {open && (
-                            <div className="absolute rounded-xl shadow top-30 left-110 z-50 bg-white w-fit h-fit">
-                             <Calendar onClose={() => setOpen(false)} date={date} onChange={(e)=>{
-                                setDate(e);
-                                setOpen(false)
-                             }}/>
-
-                            </div>
-                            )}
-                        </div>
-                    </Card>
-                </div>
-
-
-                <div className=' w-full h-100 '>
-                    <h1 className='mb-5 font-semibold text-[18px] text-[#070707]'>Alternate Dates (optional)</h1>
-                    <div className='w-full flex flex-col gap-4'>
-
-                        {/*Alternate Card 1 
-                            Taken the card code from prefferred card instead we can make a alternate card component
-                        */}
-
-                        <Card variant="default" padding="md" className='flex items-center justify-around gap-5'>
-
-                        <div className='text-left'>
-                            <div className='text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayName}</div>
-                            <div className='text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayNumber} {monthName}</div>
-                        </div>
-
-                        <div className='h-16 w-[25%] bg-green-200 p-1 rounded-xl flex flex-col justify-center items-center text-[#85878C]'>
-                            {fullday === "Fullday"&&fullday}  
-                            {fullday === "Time" && (
-                                <>
-                                    <CustomTimePicker/>
-                                    <CustomTimePicker/>
-                                </>
-                            )}                                                                                                                                                                                                             
-                        </div>
-
-                        <div className='flex items-center'>
-                            <button onClick={handleHours}>
-                                <img src={hoursimg} alt="" className='self-auto'/>
-                            </button>
-                        </div>
-
-                        <div className='flex items-center'>
-                            <button onClick={()=> setOpen(!open)}>
-                                <img src={imgcal} alt="" />
-                            </button>
-                            {open && (
-                            <div className="absolute rounded-xl shadow top-30 left-110 z-50 bg-white w-fit h-fit">
-                             <Calendar onClose={() => setOpen(false)} date={date} onChange={(e)=>{
-                                setDate(e);
-                                setOpen(false)
-                             }}/>
-                            </div>
-                            )}
-                        </div>
-
-                        <div className='flex justify-center items-center'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-600 lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                        </div>
-                        </Card>
-
-                        {/* Alternate Card 2 
-                            Taken the card code from above instead we can make a component
-                        */}
-                        <Card variant="default" padding="md" className='flex items-center justify-around gap-5'>
-
-                        <div className='text-left'>
-                            <div className='text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayName}</div>
-                            <div className='text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayNumber} {monthName}</div>
-                        </div>
-
-                        <div className='h-16 w-[25%] bg-green-200 p-1 rounded-xl flex flex-col justify-center items-center text-[#85878C] '>
-                            {fullday === "Fullday"&&fullday}  
-                            {fullday === "Time" && (
-                                <>
-                                    <CustomTimePicker/>
-                                    <CustomTimePicker/>
-                                </>
-                            )}                                                                                                                                                                                                             
-                        </div>
-
-                        <div className='flex items-center'>
-                            <button onClick={handleHours}>
-                                <img src={hoursimg} alt="" className='self-auto'/>
-                            </button>
-                        </div>
-
-                        <div className='flex items-center'>
-                            <button onClick={()=> setOpen(!open)}>
-                                <img src={imgcal} alt="" />
-                            </button>
-
-                            {open && (
-                            <div className="absolute rounded-xl shadow top-30 left-110 z-50 bg-white w-fit h-fit">
-                             <Calendar onClose={() => setOpen(false)} date={date} onChange={(e)=>{
-                                setDate(e);
-                                setOpen(false)
-                             }}/>
-                            </div>
-                            )}
-
-                        </div>
-
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-600 lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                        </div>
-                        </Card>
-                        
-                        {/*Alternate Card 3
-                        */}
-
-                        <Card className='w-full h-fit flex justify-center'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" className='text-orange-600 lucide lucide-plus-icon lucide-plus'viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"  ><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                        </Card>
-                    </div>
-                    
-                </div>
-            </div>
-        </>
+    const newData = alternateDates.map((item, index) =>
+      index === activeIndex ? { ...item, date } : item,
     );
+
+    setAlternateDates(newData);
+    setOpenCalender(false);
+    setActiveIndex(null);
+  };
+
+  const handleDeleteAlternate = (index) => {
+    setAlternateDates((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleOutsideClick = () => {
+    setOpenCalender(false);
+    setPrefferedOpen1(false);
+    setAlternateDates((prev) => prev.filter((item) => item.date !== null));
+  };
+
+  const getDisabledDates = () => {
+    const disabled = [];
+    if (date1) disabled.push(date1);
+    alternateDates.forEach((item, index) => {
+      if (item.date && index !== activeIndex) {
+        disabled.push(item.date);
+      }
+    });
+
+    return disabled;
+  };
+  return (
+    <>
+      <div
+        className="w-full grid grid-cols-1 sm:grid-cols-2 justify-around gap-5 "
+        onClick={handleOutsideClick}
+      >
+        {/*Preffered Card 1*/}
+
+        <div className="h-full w-full">
+          <h1 className="font-semibold text-[18px] mb-5">Preffered Date</h1>
+          {/* Card Component */}
+          {prefferedOpen1 && (
+            <div onClick={(e) => e.stopPropagation()}>
+              <Calendar
+                date={date1}
+                onChange={handleSelect}
+                className="absolute z-50 shadow-lg"
+                color="#ff4000"
+                shownDate={viewdate}
+                onShownDateChange={setViewdate}
+                minDate={new Date()}
+              />
+            </div>
+          )}
+          {!date1 ? (
+            <div
+              onClick={(e) => {
+                setPrefferedOpen1(true);
+                e.stopPropagation();
+              }}
+            >
+              <PreAlternateDateCard />
+            </div>
+          ) : (
+            <>
+              <PrefferedDateCard
+                date1={date1}
+                open={prefferedOpen1}
+                setOpen={setPrefferedOpen1}
+                t1Time={t1Time}
+                setT1Time={setT1Time}
+                t2Time={t2Time}
+                setT2Time={setT2Time}
+              />
+            </>
+          )}
+        </div>
+
+        <div className="w-full h-100 relative">
+          {openCalender && (
+            <div
+              className="absolute z-50 left-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Calendar
+                date={alternateDates[activeIndex]?.date || new Date()}
+                disabledDates={getDisabledDates()}
+                onChange={handleAlternateSelect}
+                className="shadow-lg border rounded-md"
+                color="#ff4000"
+                shownDate={viewdate}
+                onShownDateChange={setViewdate}
+                minDate={new Date()}
+              />
+            </div>
+          )}
+
+          <div className="w-full h-100">
+            <h1 className="mb-5 font-semibold text-[18px]">
+              Alternate Dates (optional)
+            </h1>
+
+            <div className="w-full flex flex-col gap-4">
+              {alternateDates.map((item, index) => (
+                <div key={index}>
+                  {!item.date ? (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveIndex(index);
+                        setOpenCalender(true);
+                      }}
+                    >
+                      <PreAlternateDateCard />
+                    </div>
+                  ) : (
+                    <AlternateDateCard
+                      date={item.date}
+                      onOpen={(e) => {
+                        e.stopPropagation();
+                        setActiveIndex(index);
+                        setOpenCalender(true);
+                      }}
+                      onDelete={() => handleDeleteAlternate(index)}
+                      t1Time={t1Time}
+                      t2Time={t2Time}
+                      setT1Time={setT1Time}
+                      setT2Time={setT2Time}
+                      disabledDates={getDisabledDates()}
+                    />
+                  )}
+                </div>
+              ))}
+
+              {alternateDates.length < 3 &&
+                alternateDates.every((d) => d.date !== null) && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddAlternate();
+                    }}
+                  >
+                    <PreAlternateDateCard />
+                  </div>
+                )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default EventDate;
