@@ -1,18 +1,17 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar/Sidebar';
-import StepControlFooter from '../components/common/StepControlFooter';
-import StepRenderer from '../components/enquiry/StepRenderer';
-import { getEnquirySteps } from '../utils/enquiryConfig';
+import { Sidebar } from '@features/venue/components';
+import { StepControlFooter, ProgressHeader } from '@shared/components/layout';
+import { StepRenderer } from '@features/venue/enquiry/components';
+import { getEnquirySteps } from '@features/venue/enquiry/utils';
 import { X } from "lucide-react";
-import ProgressHeader from '../components/common/ProgessHeader';
-import { Button } from '../components/common';
+import { Button } from '@shared/components/ui';
 import {
     getStepIndexFromParams,
     decodeLocationFromUrl,
     decodeServiceTypeFromUrl,
     buildStepUrl
-} from '../utils/urlBuilder';
+} from '@features/venue/enquiry/utils';
 
 const EnquiryLayout = () => {
     const navigate = useNavigate();

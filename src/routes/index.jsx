@@ -1,12 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import MainLayout from '../layouts/MainLayout';
-import { enquiryRoutes } from './enquiryRoutes';
-import { dashboardRoutes } from './dashboardRoutes';
+import MainLayout from '@layouts/MainLayout';
+import { enquiryRoutes } from '@routes/enquiryRoutes';
+import { dashboardRoutes } from '@routes/dashboardRoutes';
 
 // Standalone pages (no layout wrapper)
-import LoginPage from '../pages/LoginPage';
-import NotFound from '../pages/NotFound';
-import Unauthorized from '../pages/Unauthorized';
+import { LoginPage } from '@features/auth';
+import NotFound from '@pages/NotFound';
+import Unauthorized from '@pages/Unauthorized';
 
 /**
  * Main router configuration

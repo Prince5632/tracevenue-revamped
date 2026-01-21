@@ -1,4 +1,4 @@
-import { GradientText } from "../components/common"
+import { GradientText } from "@shared/components/ui"
 
 const Home = () => {
     return (

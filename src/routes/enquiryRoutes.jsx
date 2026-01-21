@@ -1,5 +1,5 @@
-import EnquiryLayout from '../layouts/EnquiryLayout';
-import ComponentDocs from '../pages/ComponentDocs';
+import EnquiryLayout from '@layouts/EnquiryLayout';
+import ComponentDocs from '@pages/ComponentDocs';
 
 /**
  * Enquiry step routes with URL-based step progression

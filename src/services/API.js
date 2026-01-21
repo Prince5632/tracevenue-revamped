@@ -1,9 +1,9 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { getGlobalDispatch } from "../utils/dispatchBridge";
-import { logoutUser } from "../redux/slices/userSlice";
-import { globalLoginToggle } from "../utils/loginBridge";
-import { globalAccessDeniedToggle } from "../utils/accessDeniedBridge";
+import { getGlobalDispatch } from "@/utils/dispatchBridge";
+// import { logoutUser } from "@/redux/slices/userSlice";
+import { globalLoginToggle } from "@/utils/loginBridge";
+import { globalAccessDeniedToggle } from "@/utils/accessDeniedBridge";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const API = axios.create({
