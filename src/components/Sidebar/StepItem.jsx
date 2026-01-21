@@ -7,11 +7,11 @@ const StepItem = ({ step, isLast, index, currentStep }) => {
       <div className="flex flex-col items-center">
         <div className="w-6 h-6 rounded-full border border-[#D7D9DA] flex items-center justify-center">
           <div
-            className={`w-[18px] h-[18px] rounded-full
+            className={`w-5 h-5 rounded-full
               ${isCompleted
                 ? "bg-[#15b076]"
                 : isActive
-                  ? "border-2 bg-[#FF4000] border-1 border-white"
+                  ? "bg-[#FF4000] border-white"
                   : "border border-[#D7D9DA] bg-[#fff]"
               }
             `}
