@@ -1,5 +1,5 @@
 export * from './venueServices';
-export * from './dashboardService';
+export * from '../../../services/dashboardService';
 export * from './menuServices';
 export * from './clubbedPackageService';
 export * from './variantServices';
