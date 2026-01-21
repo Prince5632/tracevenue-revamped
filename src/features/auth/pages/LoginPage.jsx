@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Spinner } from "@shared/components/ui";
+import { Button } from "@shared/components/ui";
+import { Spinner } from "@/shared/components/feedback";
 
 /**
  * Login Page - Ultra Modern Premium Design
@@ -148,9 +149,8 @@ const LoginPage = () => {
       {sliderImages.map((slide, i) => (
         <div
           key={i}
-          className={`absolute inset-0 bg-cover bg-center transition-all duration-[2000ms] ease-out ${
-            i === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
-          }`}
+          className={`absolute inset-0 bg-cover bg-center transition-all duration-[2000ms] ease-out ${i === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
+            }`}
           style={{ backgroundImage: `url(${slide.url})` }}
         />
       ))}
@@ -221,14 +221,13 @@ const LoginPage = () => {
           {/* Slide Indicators */}
           <div className="flex gap-3">
             {sliderImages.map((_, i) => (
-              <Button
+              <span
                 key={i}
                 onClick={() => setCurrentSlide(i)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === currentSlide
-                    ? "w-12 bg-gradient-to-r from-orange-400 to-red-400"
-                    : "w-6 bg-white/30 hover:bg-white/50"
-                }`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${i === currentSlide
+                  ? "w-12 bg-gradient-to-r from-orange-400 to-red-400"
+                  : "w-6 bg-white/30 hover:bg-white/50"
+                  }`}
               />
             ))}
           </div>
@@ -299,11 +298,10 @@ const LoginPage = () => {
                       Phone Number
                     </label>
                     <div
-                      className={`flex items-center h-14 rounded-2xl border-2 overflow-hidden transition-all ${
-                        phoneError
-                          ? "border-red-400 bg-red-50/50"
-                          : "border-gray-200 focus-within:border-orange-500 bg-gray-50/50"
-                      }`}
+                      className={`flex items-center h-14 rounded-2xl border-2 overflow-hidden transition-all ${phoneError
+                        ? "border-red-400 bg-red-50/50"
+                        : "border-gray-200 focus-within:border-orange-500 bg-gray-50/50"
+                        }`}
                     >
                       <div className="h-full px-4 flex items-center bg-white border-r-2 border-gray-200">
                         <span className="text-base font-semibold text-gray-700">
@@ -346,13 +344,12 @@ const LoginPage = () => {
                           onChange={(e) => handleOtpChange(i, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(i, e)}
                           autoFocus={i === 0}
-                          className={`w-14 h-14 text-xl font-bold text-center rounded-xl border-2 outline-none transition-all ${
-                            otpError
-                              ? "border-red-400 bg-red-50"
-                              : otpValues[i]
-                                ? "border-orange-500 bg-orange-50 text-orange-600"
-                                : "border-gray-200 bg-gray-50 focus:border-orange-500"
-                          }`}
+                          className={`w-14 h-14 text-xl font-bold text-center rounded-xl border-2 outline-none transition-all ${otpError
+                            ? "border-red-400 bg-red-50"
+                            : otpValues[i]
+                              ? "border-orange-500 bg-orange-50 text-orange-600"
+                              : "border-gray-200 bg-gray-50 focus:border-orange-500"
+                            }`}
                         />
                       ))}
                     </div>
