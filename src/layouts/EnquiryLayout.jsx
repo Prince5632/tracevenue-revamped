@@ -25,7 +25,6 @@ const EnquiryLayout = () => {
         eventDate,
         foodPreference
     } = params;
-
     const [completedSteps, setCompletedSteps] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [formData, setFormData] = useState({});
@@ -37,7 +36,6 @@ const EnquiryLayout = () => {
     const currentStepIndex = useMemo(() => {
         return getStepIndexFromParams(params);
     }, [params]);
-
     const currentStep = steps[currentStepIndex];
     const isFirstStep = currentStepIndex === 0;
     const isLastStep = currentStepIndex === steps.length - 1;
@@ -167,16 +165,16 @@ const EnquiryLayout = () => {
                 </div>
                 <div className="flex-1 relative  top-20 md:-top-20 min-w-0 md:mt-20 ">
                     <Button className="mb-4 lg:hidden rounded-l-none" onClick={() => setIsSidebarOpen(true)}
-                        size="lg" variant="gradient" >Step {currentStepIndex + 1}/{steps.length}</Button>
+                        size="lg" variant="gradient" >Step {currentStepIndex + 1}/{steps?.length}</Button>
                     <ProgressHeader
                         currentStep={currentStepIndex + 1}
-                        totalSteps={steps.length}
-                        title={currentStep.title}
-                        subtitle={currentStep.description}
+                        totalSteps={steps?.length}
+                        title={currentStep?.title}
+                        subtitle={currentStep?.description}
                     />
                     <div className="mt-6 flex-1 relative">
                         <StepRenderer
-                            stepKey={currentStep.componentKey}
+                            stepKey={currentStep?.componentKey}
                             formData={formData}
                             updateFormData={updateFormData}
                             urlParams={params}

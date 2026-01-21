@@ -300,8 +300,6 @@ export function compareVariants(variants) {
 
     const mainVariant = variants[0];
     const comparisons = [];
-    console.log(variants, "all variants inside function ");
-    console.log(mainVariant, "main variant inside function");
 
     for (let i = 0; i < variants.length; i++) {
         const currentVariant = structuredCloneSafe(variants[i]);
@@ -370,7 +368,6 @@ export function compareVariants(variants) {
             isRejected: isMainVariant ? null : isRejected,
         };
 
-        console.log(comparison, "comparison");
 
         const rawMenu = currentVariant.availableMenuCount || [];
         let menuCountData;
