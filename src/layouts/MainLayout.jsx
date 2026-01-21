@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import Navbar from '../components/common/Navbar';
 
 /**
  * Main layout wrapper
@@ -8,8 +9,9 @@ import { Outlet } from 'react-router-dom';
 const MainLayout = () => {
     return (
         <>
-            {/* Navbar is rendered within EnquiryLayout for now */}
-            <main>
+            {/* Navbar*/}
+            <Navbar />
+            <main className='mt-10 lg:mt-24 sm:mt-10 md:mt-24'>
                 <Outlet />
             </main>
             {/* Footer is optional - can be added here if needed globally */}

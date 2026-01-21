@@ -1,7 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
 import Sidebar from '../components/Sidebar/Sidebar';
 import StepControlFooter from '../components/common/StepControlFooter';
 import StepRenderer from '../components/enquiry/StepRenderer';
@@ -138,12 +136,8 @@ const EnquiryLayout = () => {
 
     return (
         <>
-            <Navbar />
-
-
-
-            <div className="grid grid-cols-1  lg:grid-cols-[280px_1fr]  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
-            gap-7 mt-38 lg:mt-24">
+            <div className="flex gap-7  max-w-7xl mx-auto h-fill
+            gap-7">
                 {isSidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/40 z-40 lg:hidden "
@@ -165,13 +159,13 @@ const EnquiryLayout = () => {
                     <button
                         onClick={() =>
                             setIsSidebarOpen(false)}
-                        className="lg:hidden absolute top-1 -right-2 sm:-right-2 bg-white rounded-full p-1 shadow 
+                        className="lg:hidden absolute top-1 right-2 sm:-right-2 bg-primary text-white  rounded-full p-1 shadow 
                         cursor-pointer z-60"
                     >
                         <X size={20} />
                     </button>
                 </div>
-                <div className="flex-1 relative lg:left-15 top-20 md:-top-20 min-w-0 md:mt-20 ">
+                <div className="flex-1 relative  top-20 md:-top-20 min-w-0 md:mt-20 ">
                     <Button className="mb-4 lg:hidden rounded-l-none" onClick={() => setIsSidebarOpen(true)}
                         size="lg" variant="gradient" >Step {currentStepIndex + 1}/{steps.length}</Button>
                     <ProgressHeader
@@ -180,7 +174,7 @@ const EnquiryLayout = () => {
                         title={currentStep.title}
                         subtitle={currentStep.description}
                     />
-                    <div className="mt-6 flex-1">
+                    <div className="mt-6 flex-1 relative">
                         <StepRenderer
                             stepKey={currentStep.componentKey}
                             formData={formData}
