@@ -4,9 +4,7 @@ import GradientText from './GradientText';
 import Button from './Button';
 import Card from './Card';
 
-
-
-const EnquiryCard = () => {
+const EnquiryCard = ({looking,event,date,day,guest,amount,location,pricingType,enquiryRaised,startTime,endTime,minGuest,maxGuest}) => {
     
   return (
     <div className='rounded-2xl my-6 border border-gray-300 grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]'>
@@ -24,28 +22,35 @@ const EnquiryCard = () => {
 
         {/* content */}
         <div className='cursor-pointer p-4 flex-1'>
-            <h2 className='text-gray-700 text-md lg:text-xl font-medium tracking-tighter'>Looking venue for birthday party for 80 people on 18 january,2025</h2>
+            <h2 className='text-[#212529] font-bold text-md lg:text-xl mt-2'>Looking {looking} for {event} for {maxGuest-minGuest} people on {date}</h2>
 
             <div className='flex gap-2 my-2 items-center '>
                 <MapPin className='w-3 text-primary'/>
-                <p>SAS nagar, mohali</p>
+                <span className='text-secondary font-semibold text-xl'>{location}</span>
             </div>
 
 
-            <div className='border border-gray-200 rounded-xl grid grid-cols-1 sm:grid-cols-3 '>
+            <div className='border border-gray-200 rounded-2xl grid grid-cols-1 lg:grid-cols-[2fr_1fr]'>
+               <div className='flex justify-around'>
                 {/* person budget */}
-                <div className='border-r-2  border-gray-200 flex flex-col justify-center items-center'>
-                    <GradientText className='font-semibold'>Per Person budget</GradientText>
-                    <GradientText className='text-xl font-semibold italic'>₹1,000-₹1,200</GradientText>
+                <div className='border-gray-200 flex flex-col justify-center items-center'>
+                    <GradientText className='font-semibold text-lg capitalize'>{pricingType}</GradientText>
+                    <GradientText className='text-xl font-bold italic'>{amount}</GradientText>
                 </div>
                 {/* guests */}
-                <div className='border-r-2 p-4 border-gray-200 flex justify-center items-center flex-col'>
-                   <GradientText className='font-semibold'>60-80</GradientText>
-                    <p className='text-secondary font-semibold'>No. of guests</p>
-                </div> 
-                <div className='flex p-4 justify-between items-center'>
-                    <div>
-                        <GradientText className='font-semibold'>18th january</GradientText>
+                <div className='border-gray-200 flex justify-center items-center flex-col'>
+                   <GradientText className='font-bold text-2xl'>{minGuest}-{maxGuest}</GradientText>
+                    <span className='text-secondary font-semibold text-xl'>No. of guests</span>
+           
+
+                </div>
+
+               </div>
+                
+                <div className='flex p-4 justify-center gap-4 lg:justify-between items-center'>
+                    <div className='flex flex-col'>
+                        <GradientText className='font-bold text-xl'>{day}</GradientText>
+                        <GradientText className='font-bold text-xl'>{date}</GradientText>
                     </div>
 
                    <div className='flex flex-col items-center'>
@@ -54,9 +59,11 @@ const EnquiryCard = () => {
                         <div className='w-3 h-3 bg-[#15b076] rounded-full'></div>
                    </div>
 
-                   <div>
-                    <p>6:30</p>
-                    <p>10:30</p>
+                   <div className='flex flex-col text-secondary font-bold'>
+                    <span>
+                       {startTime}
+                    </span>
+                    <span>{endTime}</span>
                    </div>
 
                    <div>
@@ -66,9 +73,9 @@ const EnquiryCard = () => {
             </div>
 
             <div className='grid grid-cols-1 lg:grid-cols-3 mt-5 gap-4'>
-                <h2 className='text-success text-md'>Awaiting Quotations</h2>
-                <h2 className='italic text-purple-700'>1 week ago</h2>
-               <Button className="rounded-xl text-sm" variant="primary" children="View Enquiry"/>
+                <h2 className='text-success font-semibold text-xl'>Awaiting Quotations</h2>
+                <h2 className='italic text-[#573bb6] text-xl'>{enquiryRaised}</h2>
+               <Button className="rounded-xl font-bold" variant="primary" children="View Enquiry"/>
             </div>
 
         </div>
