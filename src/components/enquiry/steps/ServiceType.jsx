@@ -7,7 +7,7 @@ const ServiceTypePage = () => {
   const [selectedOption, setSelectedOption] = useState("catering");
   return (
     <>
-      <QuestionTitle />
+      <h1 className="text-xl font-semibold text-[#242424] mb-6">What are you looking for?</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
         {serviceOptions.map((option) => (
           <OptionCard

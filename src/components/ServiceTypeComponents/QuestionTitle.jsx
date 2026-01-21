@@ -1,9 +1,8 @@
 const QuestionTitle = () => {
   return (
     <>
-    <div className="w-full text-[#060606] text-[20px] mt-6 text-md font-semibold">
-      <p>What are you looking for?</p>
-    </div>
+        <h1 className="text-2xl font-bold text-[#060606] mb-1">What are you looking for?</h1>
+     
     </>
   )
 }
