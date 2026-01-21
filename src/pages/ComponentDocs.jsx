@@ -12,7 +12,7 @@ import {
     Divider,
     ProgressBar,
     Tabs,
-} from '../components/common';
+} from '@/components/common';
 
 /**
  * Component Documentation Page

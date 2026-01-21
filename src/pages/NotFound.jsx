@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/common';
+import { Button } from '@/components/common';
 
 /**
  * 404 Not Found Page
