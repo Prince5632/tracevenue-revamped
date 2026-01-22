@@ -2,8 +2,12 @@ import { useState } from "react";
 import { QuestionTitle, OptionCard } from "@features/venue/components";
 import { serviceOptions } from "@features/venue/enquiry/constants";
 
-const ServiceTypePage = () => {
-  const [selectedOption, setSelectedOption] = useState("catering");
+const ServiceTypePage = ({
+  formData,
+  updateFormData,
+  urlParams
+}) => {
+  const { serviceType } = formData;
   return (
     <>
       <h1 className="text-xl font-semibold text-[#242424] mb-6">What are you looking for?</h1>
@@ -12,11 +16,11 @@ const ServiceTypePage = () => {
           <OptionCard
             key={option.id}
             title={option.heading}
-            tag={option.sub_heading}
+            tag={option.serviceType}
             description={option.description}
             image={option.image}
-            selected={selectedOption === option.id}
-            onClick={() => setSelectedOption(option.id)}
+            selected={serviceType === option.id}
+            onClick={() => { updateFormData("serviceType", option.id) }}
           />
         ))}
       </div>

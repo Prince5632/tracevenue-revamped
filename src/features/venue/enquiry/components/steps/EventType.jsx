@@ -4,7 +4,11 @@ import { events, eventCategories } from "@features/venue/enquiry/constants";
 import { flattenEvents } from "@features/venue/enquiry/utils";
 import { IoArrowDownCircleOutline } from "react-icons/io5";
 
-const EventType = () => {
+const EventType = ({ formData,
+  updateFormData,
+  urlParams
+}) => {
+  console.log(formData, urlParams,"event type");
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);

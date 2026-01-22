@@ -3,17 +3,17 @@ import Catering from "@assets/images/catering.png"
 
 export const serviceOptions = [
     {
-        id: 1,
+        id: "venue",
         heading: "Discover",
-        sub_heading: "Venue",
+        serviceType: "Venue",
         description:
             "Discover verified banquet halls, farmhouses, rooftops in Tricity that match your guest list, style, and budget in just a few clicks.",
         image: Venue,
     },
     {
-        id: 2,
+        id: "catering",
         heading: "Plan",
-        sub_heading: "Catering",
+        serviceType: "Catering",
         description:
             "Plan customized catering with complete service teams so your guests enjoy seamless food and hospitality across the tri-city.",
         image: Catering,
