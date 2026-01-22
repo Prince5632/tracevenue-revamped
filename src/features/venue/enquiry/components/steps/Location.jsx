@@ -4,20 +4,20 @@ import { Button, Divider, GradientText, Input, Map } from '@shared/components/ui
 import { LoadScript } from '@react-google-maps/api';
 
 const Location = ({ formData, updateFormData }) => {
-    // Initialize state from formData if available
-    const initialCity = formData.selectedCities?.[0];
-    const initialLocationName = initialCity?.name || '';
-    const initialLat = initialCity?.latitude || 30.7333;
-    const initialLng = initialCity?.longitude || 76.7794;
-    const initialDistance = formData.distance || 20; // Default to 20 as per requirement
+    // Initialize state from formData if available (using flat structure)
+    console.log(formData, "form data")
+    const initialLocationName = formData.locations || '';
+    const initialLat = formData.latitude || 30.7333;
+    const initialLng = formData.longitude || 76.7794;
+    const initialRadius = formData.radius || 20; // Default to 20 as per requirement
 
     const [locationInput, setLocationInput] = useState(initialLocationName);
     const [center, setCenter] = useState({
         lat: initialLat,
         lng: initialLng,
     });
-    const [range, setRange] = useState(initialDistance);
-    
+    const [range, setRange] = useState(initialRadius);
+
     // UI States
     const [suggestions, setSuggestions] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
@@ -35,15 +35,14 @@ const Location = ({ formData, updateFormData }) => {
 
     // Hydrate local state when formData changes (e.g. navigation back)
     useEffect(() => {
-        if (formData.selectedCities?.[0]) {
-            const city = formData.selectedCities[0];
-            setLocationInput(city.name);
-            setCenter({ lat: city.latitude, lng: city.longitude });
-            setRange(formData.distance || 20);
+        if (formData.locations) {
+            setLocationInput(formData.locations);
+            setCenter({ lat: formData.latitude, lng: formData.longitude });
+            setRange(formData.radius || 20);
             setShowRadiusSlider(true);
             setShowMapMarker(true);
         }
-    }, [formData.selectedCities, formData.distance]);
+    }, [formData.locations, formData.latitude, formData.longitude, formData.radius]);
 
     // Helper to extract locality details
     const extractLocationDetails = (addressComponents, formattedAddress, geometry) => {
@@ -77,14 +76,11 @@ const Location = ({ formData, updateFormData }) => {
 
     // Update global form data
     const updateGlobalState = (locationDetails, distanceVal) => {
-        const payload = {
-            selectedCities: [locationDetails],
-            distance: distanceVal
-        };
-        
-        // Update fields individually to match updateFormData signature
-        updateFormData('selectedCities', payload.selectedCities);
-        updateFormData('distance', payload.distance);
+        // Update flat fields individually
+        updateFormData('locations', locationDetails.name || locationDetails.city);
+        updateFormData('latitude', locationDetails.latitude);
+        updateFormData('longitude', locationDetails.longitude);
+        updateFormData('radius', distanceVal);
     };
 
     const handleSelectSuggestion = (prediction) => {
@@ -98,8 +94,8 @@ const Location = ({ formData, updateFormData }) => {
             (place, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
                     const details = extractLocationDetails(
-                        place.address_components, 
-                        place.formatted_address, 
+                        place.address_components,
+                        place.formatted_address,
                         place.geometry
                     );
 
@@ -144,7 +140,7 @@ const Location = ({ formData, updateFormData }) => {
     const handleInputChange = (e) => {
         const value = e.target.value;
         setLocationInput(value);
-        
+
         if (!value.trim()) {
             setSuggestions([]);
             setShowRadiusSlider(false);
@@ -200,16 +196,16 @@ const Location = ({ formData, updateFormData }) => {
     const handleRadiusChange = (e) => {
         const newRange = parseInt(e.target.value, 10);
         setRange(newRange);
-        
+
         // Sync with global state if we have a valid location
-        if (formData.selectedCities?.[0]) {
-            updateFormData('distance', newRange);
+        if (formData.locations) {
+            updateFormData('radius', newRange);
         }
     };
 
     const handleMapLocationChange = (lat, lng) => {
         setCenter({ lat, lng });
-        
+
         if (!geocoderRef.current) {
             geocoderRef.current = new window.google.maps.Geocoder();
         }
@@ -221,7 +217,7 @@ const Location = ({ formData, updateFormData }) => {
                     results[0].formatted_address,
                     { location: { lat: () => lat, lng: () => lng } }
                 );
-                
+
                 setLocationInput(details.name);
                 updateGlobalState(details, range);
             }
@@ -233,7 +229,11 @@ const Location = ({ formData, updateFormData }) => {
         setSuggestions([]);
         setShowRadiusSlider(false);
         setShowMapMarker(false);
-        updateFormData('selectedCities', []);
+        // Clear all location fields
+        updateFormData('locations', '');
+        updateFormData('latitude', '');
+        updateFormData('longitude', '');
+        updateFormData('radius', 20);
     };
 
     // Close suggestions on click outside
@@ -252,21 +252,21 @@ const Location = ({ formData, updateFormData }) => {
             {/* Search Input Section */}
             <div className='relative z-4 w-full'>
                 <div className='relative flex items-center w-full'>
-                    <Input 
-                        type="text" 
+                    <Input
+                        type="text"
                         inputClassName='text-secondary text-[14px] py-2 z-2 pr-20' // Added padding-right for Clear button
-                        placeholder="Enter Your Location" 
+                        placeholder="Enter Your Location"
                         value={locationInput}
                         onChange={handleInputChange}
                         onFocus={() => setShowOptions(true)}
-                        leftIcon={<MapPin size={15} />} 
+                        leftIcon={<MapPin size={15} />}
                         rightIcon={<Search size={18} className='text-primary cursor-pointer' />}
                     />
-                    
+
                     {locationInput && (
-                        <Button 
+                        <Button
                             onClick={clearSelection}
-                            size="sm" 
+                            size="sm"
                             variant="ghost"
                             className='absolute right-10 z-5 text-gray-500 hover:text-red-500 p-1 h-auto'
                         >
@@ -309,7 +309,7 @@ const Location = ({ formData, updateFormData }) => {
                             {isSearching && (
                                 <div className="p-4 text-center text-sm text-gray-400">Searching...</div>
                             )}
-                            
+
                             {!isSearching && locationInput && suggestions.length === 0 && (
                                 <div className="p-4 text-center text-sm text-gray-400">No locations found</div>
                             )}
@@ -355,8 +355,8 @@ const Location = ({ formData, updateFormData }) => {
                         showMarker={showMapMarker}
                         setShowMarker={setShowMapMarker}
                         zoom={11}
-                        // Add marker functionality to Map component if not already present
-                        // Assuming Map component handles the marker logic via props
+                    // Add marker functionality to Map component if not already present
+                    // Assuming Map component handles the marker logic via props
                     />
                 </LoadScript>
             </div>

@@ -11,7 +11,8 @@ import {
   buildStepUrl,
 } from "@features/venue/enquiry/utils";
 import Steps from "@/features/venue/enquiry/components/steps/Steps";
-import useEnquiryStore from "@stores/useEnquiryStore";
+import useEnquiryStore from "@context/useEnquiryStore";
+import { fetchCuisineCombinations } from "@/features/venue/services/cuisineComboService";
 
 const EnquiryLayout = () => {
   const navigate = useNavigate();
@@ -24,12 +25,12 @@ const EnquiryLayout = () => {
     eventDate,
     foodPreference,
   } = params;
-  
+
   // Use global store
-  const { 
-    formData, 
-    completedSteps, 
-    setFormData: setStoreFormData, 
+  const {
+    formData,
+    completedSteps,
+    setFormData: setStoreFormData,
     updateFormData: updateStoreFormData,
     setCompletedSteps: setStoreCompletedSteps,
     addCompletedStep
@@ -62,17 +63,13 @@ const EnquiryLayout = () => {
 
       // Store location data for form - using Store Action
       setStoreFormData({
-        selectedCities: [
-          {
-            name: locationData.name,
-            latitude: locationData.latitude,
-            longitude: locationData.longitude,
-            city: locationData.name, // Ensure city is set
-            locality: locationData.locality, // Hydrate if available from decoder
-            subLocality: locationData.subLocality // Hydrate if available
-          },
-        ],
-        distance: locationData.distance || 20,
+        locations: locationData.name,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        city: locationData.name, // Ensure city is set
+        locality: locationData.locality, // Hydrate if available from decoder
+        subLocality: locationData.subLocality, // Hydrate if available
+        radius: locationData.distance || 20,
       });
     }
 
@@ -120,44 +117,73 @@ const EnquiryLayout = () => {
     setStoreCompletedSteps
   ]);
 
-  const handleNext = () => {
-    // Special handling for Location Step (Index 0)
-    if (currentStepIndex === 0) {
-      // Validate location is selected
-      if (!formData.selectedCities?.length) {
-        alert("Please select a location first");
-        return;
-      }
-      
-      // Mark current step as completed
-      if (currentStep && !completedSteps.includes(currentStep.id)) {
-        addCompletedStep(currentStep.id);
-      }
+  const isEmptyValue = (value) => {
+    if (value === null || value === undefined) return true;
+    if (typeof value === "string" && value.trim() === "") return true;
+    if (Array.isArray(value) && value.length === 0) return true;
+    return false;
+  };
 
-      // Build Next URL specifically for Location Step
-      const nextStepIndex = currentStepIndex + 1;
-      const nextUrl = buildStepUrl(nextStepIndex, formData);
-      navigate(nextUrl);
-      window.scrollTo(0, 0);
+  const validateStep = (stepIndex, formData) => {
+    switch (stepIndex) {
+      case 0: // Location
+        return !isEmptyValue(formData?.locations);
+
+      case 1: // Service Type
+        return !isEmptyValue(formData?.serviceType);
+
+      case 2: // Event Type
+        return !isEmptyValue(formData?.eventType);
+
+      case 3: // Gathering & Budget
+        return (
+          !isEmptyValue(formData?.gatheringAndBudget) ||
+          (!isEmptyValue(formData?.guests) && !isEmptyValue(formData?.budget))
+        );
+
+      case 4: // Event Date
+        return !isEmptyValue(formData?.eventDate);
+
+      case 5: // Food Preference
+        return !isEmptyValue(formData?.foodPreference);
+
+      default:
+        return true;
+    }
+  };
+
+
+  const handleNext = async () => {
+    // 🔒 Validate current step
+    const isValid = validateStep(currentStepIndex, formData);
+    if (!isValid) {
+      alert("Please complete the current step before continuing");
       return;
     }
 
-    // Mark current step as completed
+    // ✅ Mark step completed
     if (currentStep && !completedSteps.includes(currentStep.id)) {
       addCompletedStep(currentStep.id);
     }
 
-    if (!isLastStep) {
-      // Build URL for next step and navigate
-      const nextStepIndex = currentStepIndex + 1;
-      const nextUrl = buildStepUrl(nextStepIndex, formData);
-      navigate(nextUrl);
-      window.scrollTo(0, 0);
-    } else {
-      // Handle finish/submit
+    // 🍽️ Call cuisine combo API on EVERY step
+    await fetchCuisineCombinations(formData);
+
+    // 🏁 Last step
+    if (isLastStep) {
       alert("Enquiry Raised!");
+      return;
     }
+
+    // ➡️ Next step navigation
+    const nextStepIndex = currentStepIndex + 1;
+    const nextUrl = buildStepUrl(nextStepIndex, formData);
+
+    navigate(nextUrl);
+    window.scrollTo(0, 0);
   };
+
+
 
   const handleBack = () => {
     if (!isFirstStep) {
@@ -170,18 +196,18 @@ const EnquiryLayout = () => {
   // Handle sidebar step click
   const handleStepClick = (stepIndex) => {
     // Allow navigation if step is completed or is the current step (or previous steps)
-    
+
     // Simple logic: Allow click if stepIndex <= currentStepIndex (already visited)
     // Or if checking completedSteps
-    
+
     if (stepIndex <= currentStepIndex) {
-        const url = buildStepUrl(stepIndex, formData);
-        navigate(url);
-    } 
+      const url = buildStepUrl(stepIndex, formData);
+      navigate(url);
+    }
     else {
-         // Try checking if we CAN generate a URL (have data)
-         const url = buildStepUrl(stepIndex, formData);
-         navigate(url);
+      // Try checking if we CAN generate a URL (have data)
+      const url = buildStepUrl(stepIndex, formData);
+      navigate(url);
     }
   };
 

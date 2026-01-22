@@ -49,13 +49,13 @@ export const PREDEFINED_LOCATIONS = {
 // Service type options
 export const SERVICE_OPTIONS = [
     {
-        id: 'venue',
+        id: 'Venue',
         name: 'Venue',
         urlSlug: 'venue',
         available: true,
     },
     {
-        id: 'catering',
+        id: 'Catering',
         name: 'Catering',
         urlSlug: 'catering',
         available: true,

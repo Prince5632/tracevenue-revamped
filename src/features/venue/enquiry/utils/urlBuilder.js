@@ -4,24 +4,43 @@ import { PREDEFINED_LOCATIONS, SERVICE_OPTIONS } from './routePaths';
  * Encode location data to URL segment
  * Uses predefined shortcut if available, otherwise full coordinates
  */
-export const encodeLocationToUrl = (cities, distance = 20) => {
-    if (!cities?.length) return null;
-    const city = cities[0];
+export const encodeLocationToUrl = (locationData, radius = 20) => {
+    // Support both flat structure and legacy cities array
+    let locationName, lat, lng, dist;
+
+    if (locationData?.locations) {
+        // New flat structure
+        locationName = locationData.locations;
+        lat = locationData.latitude;
+        lng = locationData.longitude;
+        dist = locationData.radius || radius;
+    } else if (Array.isArray(locationData) && locationData.length > 0) {
+        // Legacy array structure
+        const city = locationData[0];
+        locationName = city.name || city.address;
+        lat = city.latitude;
+        lng = city.longitude;
+        dist = radius;
+    } else {
+        return null;
+    }
+
+    if (!locationName || !lat || !lng) return null;
 
     // Check for predefined location match
     const matchedKey = Object.keys(PREDEFINED_LOCATIONS).find(key => {
         const loc = PREDEFINED_LOCATIONS[key];
-        return loc.latitude === city.latitude && loc.longitude === city.longitude;
+        return loc.latitude === lat && loc.longitude === lng;
     });
 
     if (matchedKey) return matchedKey;
 
     // Fallback to full coordinates format: address+lng+lat+distance
-    const address = (city.name || city.address || '')
+    const address = (locationName || '')
         .split(/[ ,/]+/)
         .filter(Boolean)
         .join('+');
-    return `${address}+${city.longitude}+${city.latitude}+${distance}`;
+    return `${address}+${lng}+${lat}+${dist}`;
 };
 
 /**
@@ -161,8 +180,10 @@ export const encodeFoodPreferencesToUrl = (dietaryRequirements = []) => {
  */
 export const buildStepUrl = (stepIndex, formData) => {
     const {
-        selectedCities,
-        distance,
+        locations,
+        radius,
+        latitude,
+        longitude,
         serviceType,
         selectedEventType,
         selectedPeopleRange,
@@ -175,7 +196,9 @@ export const buildStepUrl = (stepIndex, formData) => {
 
     if (stepIndex === 0) return '/';
 
-    const loc = encodeLocationToUrl(selectedCities, distance);
+    // Pass location data as an object for the encoder
+    const locationData = locations ? { locations, radius, latitude, longitude } : null;
+    const loc = encodeLocationToUrl(locationData, radius);
     if (!loc) return '/';
     if (stepIndex === 1) return `/${loc}`;
 

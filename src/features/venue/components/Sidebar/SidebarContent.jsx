@@ -1,7 +1,6 @@
 const SidebarContent = ({ step, isLast, index, currentStep, formData }) => {
   const isCompleted = index < currentStep;
   const isActive = index === currentStep;
-
   return (
     <div className="flex gap-5 ">
       <div className="flex flex-col items-center">
@@ -26,22 +25,28 @@ const SidebarContent = ({ step, isLast, index, currentStep, formData }) => {
           {step.title}
         </h6>
 
-        {step.id === 'location' && formData?.selectedCities?.[0] ? (
+        {step.id === 'location' && formData?.locations ? (
           <div className="mt-1">
             <p className="text-[#060606] text-[13px] font-medium line-clamp-2">
-              {formData.selectedCities[0].name}
+              {formData.locations}
             </p>
-            {formData.distance && (
+            {formData?.radius && (
               <p className="text-[#5C5F62] text-[12px]">
-                Within {formData.distance} km
+                Within {formData.radius} km
               </p>
             )}
           </div>
-        ) : (
-          <span className="text-[#5C5F62] text-[12px] leading-medium">
-            {step.subtitle}
-          </span>
-        )}
+        ) : step.id === "service_type" && formData?.serviceType ?
+          <div className="mt-1">
+            <p className="text-[#060606] text-[13px] font-medium line-clamp-2">
+              {formData?.serviceType}
+            </p>
+          </div>
+          : (
+            <span className="text-[#5C5F62] text-[12px] leading-medium">
+              {step.subtitle}
+            </span>
+          )}
       </div>
     </div>
   );

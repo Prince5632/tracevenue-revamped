@@ -1,7 +1,7 @@
 export const firstStepValidation = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
     if (!values?.serviceType) {
         showInfoToast("Please select a service type.", {
@@ -17,8 +17,8 @@ export const firstStepValidation = (
 };
 export const secondStepValidation = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
     if (!values?.selectedEventType) {
         showInfoToast("Please select a event type.", {
@@ -35,15 +35,15 @@ export const secondStepValidation = (
 };
 export const thirdStepValidation = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
-    if (!values?.selectedCities?.length) {
+    if (!values?.locations) {
         showInfoToast("Please select your preferred location.", {
             toastId: "atleast_one_city_required",
         });
         setMultipleIndependentValues({
-            errorKey: "selectedCities",
+            errorKey: "locations",
             errorValue: true,
         });
         return false;
@@ -53,8 +53,8 @@ export const thirdStepValidation = (
 };
 export const fourthStepValidation = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
     if (
         Number(values?.selectedPeopleRange?.minPeople) >
@@ -134,8 +134,8 @@ export const fourthStepValidation = (
 
 export const fifthStepValidation = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
     if (!values?.selectedDates?.length) {
         showInfoToast("Please select event date.", {
@@ -170,15 +170,15 @@ export const fifthStepValidation = (
 };
 export const sixthStepValidation = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
-    if (!values?.selectedCities?.length) {
+    if (!values?.locations) {
         showInfoToast("Please select your preferred location.", {
             toastId: "atleast_one_city_required",
         });
         setMultipleIndependentValues({
-            errorKey: "selectedCities",
+            errorKey: "locations",
             errorValue: true,
         });
         return false;
@@ -282,13 +282,13 @@ export const sixthStepValidation = (
 
 export const seventhStepValidations = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
     if (values?.selectedCard === undefined || values?.selectedCard === null) {
         showInfoToast("Please choose a package.", {
             toastId: "card_required",
-            
+
         });
         return false;
     }
@@ -328,8 +328,8 @@ export const seventhStepValidations = (
 };
 export const eighthStepValidations = (
     values,
-    showInfoToast = () => {},
-    setMultipleIndependentValues = () => {}
+    showInfoToast = () => { },
+    setMultipleIndependentValues = () => { }
 ) => {
     // if (!values?.searchQuery) {
     //   showInfoToast("Please search for an event.", {
@@ -459,16 +459,16 @@ export const eighthStepValidations = (
     return true;
 };
 
-export const shouldFetchData = ({ getValue = () => {} }) => {
+export const shouldFetchData = ({ getValue = () => { } }) => {
     const selectedEventType = getValue("selectedEventType");
     const savedSelectedEventType = getValue(
         "savedSelectedEventType",
         "permanent"
     );
-    const selectedCities = getValue("selectedCities");
-    const savedCities = getValue("selectedCities", "permanent");
-    const radius = getValue("distance");
-    const savedRadius = getValue("distance", "permanent");
+    const locations = getValue("locations");
+    const savedLocations = getValue("locations", "permanent");
+    const radius = getValue("radius");
+    const savedRadius = getValue("radius", "permanent");
     const budgetCheck = getValue("check") ?? false;
     const savedBudgetCheck = getValue("check", "permanent") ?? false;
     const budgetType = budgetCheck ? "lumpSum" : "perPerson";
@@ -486,7 +486,7 @@ export const shouldFetchData = ({ getValue = () => {} }) => {
 
     return (
         !isEqual(selectedEventType?.value, savedSelectedEventType?.value) ||
-        !isEqual(selectedCities, savedCities) ||
+        !isEqual(locations, savedLocations) ||
         !isEqual(radius, savedRadius) ||
         !isEqual(budgetType, savedBudgetType) ||
         !isEqual(peopleRange?.maxPeople, savedSelectedPeopleRange?.maxPeople) ||
