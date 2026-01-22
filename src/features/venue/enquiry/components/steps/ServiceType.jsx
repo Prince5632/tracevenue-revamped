@@ -1,13 +1,26 @@
-import { useState } from "react";
-import { QuestionTitle, OptionCard } from "@features/venue/components";
+import { useEffect } from "react";
+import { OptionCard } from "@features/venue/components";
 import { serviceOptions } from "@features/venue/enquiry/constants";
+import { decodeServiceTypeFromUrl } from "@features/venue/enquiry/utils";
+import useEnquiryStore from "../../context/useEnquiryStore";
 
 const ServiceTypePage = ({
-  formData,
-  updateFormData,
-  urlParams
+  urlParams = {}
 }) => {
-  const { serviceType } = formData;
+  // Use global store
+  const {
+    formData,
+    updateFormData,
+  } = useEnquiryStore();
+  // Hydrate from URL params if formData.serviceType is empty (initial mount via URL)
+  useEffect(() => {
+    if (!formData.serviceType && urlParams.serviceType) {
+      const serviceId = decodeServiceTypeFromUrl(urlParams.serviceType);
+      if (serviceId) {
+        updateFormData("serviceType", serviceId);
+      }
+    }
+  }, [urlParams.serviceType]);
   return (
     <>
       <h1 className="text-xl font-semibold text-[#242424] mb-6">What are you looking for?</h1>
@@ -15,14 +28,16 @@ const ServiceTypePage = ({
         {serviceOptions.map((option) => (
           <OptionCard
             key={option.id}
+            id={option.id}
             title={option.heading}
             tag={option.serviceType}
             description={option.description}
             image={option.image}
-            selected={serviceType === option.id}
-            onClick={() => { updateFormData("serviceType", option.id) }}
+            selected={formData.serviceType}
+            onClick={() => updateFormData("serviceType", option.id)}
           />
-        ))}
+        )
+        )}
       </div>
     </>
   );

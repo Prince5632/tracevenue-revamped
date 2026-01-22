@@ -50,6 +50,8 @@ const EnquiryLayout = () => {
   const isLastStep = currentStepIndex === steps.length - 1;
 
   // Validate URL params on mount and redirect if invalid
+  // Smart hydration: only update fields if store doesn't already have values
+  // This preserves manual edits on back navigation
   useEffect(() => {
     // Step validation: if URL has params but they're invalid, redirect to step 1
     if (location) {
@@ -61,16 +63,19 @@ const EnquiryLayout = () => {
         return;
       }
 
-      // Store location data for form - using Store Action
-      setStoreFormData({
-        locations: locationData.name,
-        latitude: locationData.latitude,
-        longitude: locationData.longitude,
-        city: locationData.name, // Ensure city is set
-        locality: locationData.locality, // Hydrate if available from decoder
-        subLocality: locationData.subLocality, // Hydrate if available
-        radius: locationData.distance || 20,
-      });
+      // Only hydrate from URL if store doesn't already have location data
+      // This preserves manual edits when navigating back
+      if (!formData.locations) {
+        setStoreFormData({
+          locations: locationData.name,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+          city: locationData.name,
+          locality: locationData.locality,
+          subLocality: locationData.subLocality,
+          radius: locationData.distance || 20,
+        });
+      }
     }
 
     if (serviceType) {
@@ -89,9 +94,12 @@ const EnquiryLayout = () => {
         return;
       }
 
-      setStoreFormData({
-        serviceType: serviceId,
-      });
+      // Only hydrate from URL if store doesn't already have serviceType
+      if (!formData.serviceType) {
+        setStoreFormData({
+          serviceType: serviceId,
+        });
+      }
     }
 
     // Mark steps as completed based on URL depth
@@ -113,6 +121,8 @@ const EnquiryLayout = () => {
     foodPreference,
     navigate,
     steps,
+    formData.locations,
+    formData.serviceType,
     setStoreFormData,
     setStoreCompletedSteps
   ]);
@@ -159,6 +169,29 @@ const EnquiryLayout = () => {
     if (!isValid) {
       alert("Please complete the current step before continuing");
       return;
+    }
+
+    // 📥 Sync current step's URL params to formData
+    // This ensures data from URL is persisted in the store
+    if (currentStepIndex === 0 && location) {
+      const locationData = decodeLocationFromUrl(location);
+      if (locationData && !formData.locations) {
+        setStoreFormData({
+          locations: locationData.name,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+          city: locationData.name,
+          locality: locationData.locality,
+          subLocality: locationData.subLocality,
+          radius: locationData.distance || 20,
+        });
+      }
+    }
+    if (currentStepIndex === 1 && serviceType) {
+      const serviceId = decodeServiceTypeFromUrl(serviceType);
+      if (serviceId && !formData.serviceType) {
+        updateStoreFormData("serviceType", serviceId);
+      }
     }
 
     // ✅ Mark step completed

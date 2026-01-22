@@ -1,16 +1,15 @@
 import Tick from "@assets/images/tick.png";
 import { Card } from "@shared/components/ui";
-const OptionCard = ({ title, tag, description, image, selected, onClick, key }) => {
+const OptionCard = ({ id, title, tag, description, image, selected, onClick }) => {
   return (
     <Card
-      key={key}
+      key={id}
       variant="bordered"
       padding="md"
       onClick={() => {
         onClick()
-        localStorage.setItem("selectedService", key);
       }}
-      className={`cursor-pointer transition-all duration-200 ${selected === key
+      className={`cursor-pointer transition-all duration-200 ${selected === id
         ? "border border-[#ff8359]"
         : "border-none"
         }`}
@@ -28,7 +27,7 @@ const OptionCard = ({ title, tag, description, image, selected, onClick, key }) 
                 <img
                   src={Tick}
                   alt="Tick"
-                  className={`transition-opacity duration-200 ${selected === key
+                  className={`transition-opacity duration-200 ${selected === id
                     ? "opacity-100"
                     : "opacity-0"
                     }`}

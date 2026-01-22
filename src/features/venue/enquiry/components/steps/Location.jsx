@@ -2,10 +2,16 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { MapPin, Search, LocateFixed, X } from 'lucide-react';
 import { Button, Divider, GradientText, Input, Map } from '@shared/components/ui';
 import { LoadScript } from '@react-google-maps/api';
+import { decodeLocationFromUrl } from '@features/venue/enquiry/utils';
+import useEnquiryStore from '../../context/useEnquiryStore';
 
-const Location = ({ formData, updateFormData }) => {
+const Location = ({ urlParams = {} }) => {
+    // Use global store
+    const {
+        formData,
+        updateFormData,
+    } = useEnquiryStore();
     // Initialize state from formData if available (using flat structure)
-    console.log(formData, "form data")
     const initialLocationName = formData.locations || '';
     const initialLat = formData.latitude || 30.7333;
     const initialLng = formData.longitude || 76.7794;
@@ -32,6 +38,25 @@ const Location = ({ formData, updateFormData }) => {
     const debounceTimer = useRef(null);
     const wrapperRef = useRef(null);
     const libraries = useMemo(() => ["geometry", "places"], []);
+
+    // Hydrate from URL params if formData is empty (initial mount via URL)
+    useEffect(() => {
+        if (!formData.locations && urlParams.location) {
+            const locationData = decodeLocationFromUrl(urlParams.location);
+            if (locationData) {
+                setLocationInput(locationData.name);
+                setCenter({ lat: locationData.latitude, lng: locationData.longitude });
+                setRange(locationData.distance || 20);
+                setShowRadiusSlider(true);
+                setShowMapMarker(true);
+                // Update global state
+                updateFormData('locations', locationData.name);
+                updateFormData('latitude', locationData.latitude);
+                updateFormData('longitude', locationData.longitude);
+                updateFormData('radius', locationData.distance || 20);
+            }
+        }
+    }, [urlParams.location]);
 
     // Hydrate local state when formData changes (e.g. navigation back)
     useEffect(() => {
