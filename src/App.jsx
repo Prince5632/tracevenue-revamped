@@ -2,7 +2,7 @@ import './App.css';
 import { RouterProvider } from 'react-router-dom';
 import { router } from '@routes';
 import { ToastProvider } from './shared';
-import { AuthProvider } from '@/context/useAuthStore.jsx';
+import { AuthProvider } from '@/features/auth/context/useAuthStore.jsx';
 
 /**
  * Main App component

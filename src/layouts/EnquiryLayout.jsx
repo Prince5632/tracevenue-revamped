@@ -11,7 +11,7 @@ import {
   buildStepUrl,
 } from "@features/venue/enquiry/utils";
 import Steps from "@/features/venue/enquiry/components/steps/Steps";
-import useEnquiryStore from "@context/useEnquiryStore";
+import useEnquiryStore from "@/features/venue/enquiry/context/useEnquiryStore";
 import { fetchCuisineCombinations } from "@/features/venue/services/cuisineComboService";
 
 const EnquiryLayout = () => {

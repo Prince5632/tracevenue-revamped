@@ -6,7 +6,7 @@ import { MenuIcon, X, Bell, User, LogOut, Settings } from "lucide-react";
 import Login from "../../../features/auth/components/Login";
 import { logout } from "@/services/userService";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/context/useAuthStore.jsx";
+import { useAuth } from "@/features/auth/context/useAuthStore.jsx";
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);

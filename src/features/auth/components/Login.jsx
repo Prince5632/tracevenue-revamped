@@ -6,7 +6,7 @@ import loginBnr from "@/assets/login-bnr.png";
 import PhoneInput from "./common/PhoneInput";
 import UserDetailsInput from "./common/UserDetailsInput";
 import OtpInput from "./common/OtpInput";
-import { useAuth } from "@/context/useAuthStore.jsx";
+import { useAuth } from "@/features/auth/context/useAuthStore.jsx";
 
 const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration = true }) => {
     const navigate = useNavigate();
