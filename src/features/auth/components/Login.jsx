@@ -9,6 +9,12 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
     const navigate = useNavigate();
     const { showToast } = useToast();
 
+    const [authType, setAuthType] = useState(type);
+
+    useEffect(() => {
+        setAuthType(type);
+    }, [type]);
+
     // State for flow control
     // step: 'PHONE' | 'DETAILS' | 'OTP'
     const [step, setStep] = useState("PHONE");
@@ -68,17 +74,34 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
         try {
             const response = await sendOtp({ phoneNumber });
             if (response?.status === 200) {
-                showToast({ type: "success", message: "OTP sent successfully" });
                 const exists = response.data?.userExists;
                 setUserExists(exists);
 
-                // If user exists, go straight to OTP
-                // If new user, go to DETAILS
-                if (exists) {
-                    setStep("OTP");
-                    startTimer();
+                if (authType === "login") {
+                    if (exists) {
+                        // Normal Login: User exists, proceeding to OTP
+                        showToast({ type: "success", message: "OTP sent successfully" });
+                        setStep("OTP");
+                        startTimer();
+                    } else {
+                        // Login -> New User: Switch to Signup
+                        showToast({ type: "info", message: "You have to create a new account" });
+                        setAuthType("signup");
+                        setStep("DETAILS");
+                    }
                 } else {
-                    setStep("DETAILS");
+                    // authType === "signup"
+                    if (exists) {
+                        // Signup -> Existing User: Switch to Login
+                        showToast({ type: "info", message: "You already have an account" });
+                        setAuthType("login");
+                        setStep("OTP");
+                        startTimer();
+                    } else {
+                        // Normal Signup: User new, proceeding to Details
+                        showToast({ type: "success", message: "OTP sent successfully" });
+                        setStep("DETAILS");
+                    }
                 }
             } else {
                 showToast({ type: "error", message: "Failed to send OTP" });
@@ -101,7 +124,7 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
 
         // Check if we need to send OTP again or just move to OTP step
         // Usually flow is -> Send OTP (done) -> Enter Details -> Verify OTP logic
-        // But some flows send OTP *after* details. 
+        // But some flows send OTP *after* details.
         // Based on TraceVenue-Customer logic:
         // "Handle username input change to show OTP field" -> implies separate OTP send?
         // Actually earlier code sent OTP on phone submit.
@@ -114,7 +137,7 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
     };
 
     // For new user flow: The initial OTP sent might be valid for phone verification.
-    // If not, we might need to trigger sendOtp again? 
+    // If not, we might need to trigger sendOtp again?
     // Usually one OTP per session. We'll assume the one sent at Step 1 is valid.
 
     const handleVerify = async () => {
@@ -259,7 +282,7 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
                 {/* Right Column - Form */}
                 <div className="w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center">
                     <h2 className="text-3xl font-bold text-gray-900 mb-6 font-outfit">
-                        {type === "login" ? "Login" : "Sign Up"}
+                        {authType === "login" ? "Login" : "Sign Up"}
                     </h2>
 
                     <div className="space-y-6">
