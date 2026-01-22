@@ -20,7 +20,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 4000,       // 👈 your custom port
+    port: 5173,       // 👈 Changed to 5173 to match backend CORS
     open: true,       // optional: auto open browser
     strictPort: true, // fail if port is already in use
   },
