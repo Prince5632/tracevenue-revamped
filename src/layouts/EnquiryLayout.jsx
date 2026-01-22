@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Sidebar } from "@features/venue/components";
-import { StepControlFooter } from "@shared/components/layout";
-import { StepRenderer } from "@features/venue/enquiry/components";
 import { getEnquirySteps } from "@features/venue/enquiry/utils";
 import { X } from "lucide-react";
 import { Button } from "@shared/components/ui";
