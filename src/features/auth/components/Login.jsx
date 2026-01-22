@@ -7,7 +7,7 @@ import PhoneInput from "./common/PhoneInput";
 import UserDetailsInput from "./common/UserDetailsInput";
 import OtpInput from "./common/OtpInput";
 
-const Login = ({ onLoginSuccess, onClose, type }) => {
+const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration = true }) => {
     const navigate = useNavigate();
     const { showToast } = useToast();
 
@@ -202,11 +202,11 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
         else navigate("/");
     };
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={handleClose}>
-            <div className="bg-white rounded-[20px] shadow-2xl w-full max-w-[900px] flex overflow-hidden relative animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
+    const Content = () => (
+        <div className={`bg-white rounded-[20px] shadow-2xl w-full ${isModal ? 'max-w-[900px]' : 'max-w-full h-full'} flex overflow-hidden relative animate-in fade-in zoom-in duration-300`} onClick={(e) => e.stopPropagation()}>
 
-                {/* Close Button */}
+            {/* Close Button - Only show if modal */}
+            {isModal && (
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -219,8 +219,10 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
+            )}
 
-                {/* Left Column - Illustration */}
+            {/* Left Column - Illustration */}
+            {withIllustration && (
                 <div className="hidden md:flex w-[45%] bg-indigo-50 items-center justify-center p-8 relative overflow-hidden">
                     <div className="absolute inset-0 bg-blue-50/50"></div>
                     <img
@@ -229,67 +231,77 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
                         className="relative z-10 max-w-full h-auto object-contain drop-shadow-lg transform hover:scale-105 transition-transform duration-500"
                     />
                 </div>
+            )}
 
-                {/* Right Column - Form */}
-                <div className="w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-6 font-outfit">
-                        {authType === "login" ? "Login" : "Sign Up"}
-                    </h2>
+            {/* Right Column - Form */}
+            <div className={`w-full ${withIllustration ? 'md:w-[55%]' : ''} p-8 md:p-12 flex flex-col justify-center`}>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 font-outfit">
+                    {authType === "login" ? "Login" : "Sign Up"}
+                </h2>
 
-                    <div className="space-y-6">
-                        {/* Step 1: Phone */}
-                        {step === "PHONE" && (
-                            <PhoneInput
-                                phoneNumber={phoneNumber}
-                                setPhoneNumber={setPhoneNumber}
-                                onSubmit={handleSendOtp}
-                                loading={loading}
-                                error={errors.phoneNumber}
-                                setError={(val) => setErrors(prev => ({ ...prev, phoneNumber: val }))}
-                            />
-                        )}
+                <div className="space-y-6">
+                    {/* Step 1: Phone */}
+                    {step === "PHONE" && (
+                        <PhoneInput
+                            phoneNumber={phoneNumber}
+                            setPhoneNumber={setPhoneNumber}
+                            onSubmit={handleSendOtp}
+                            loading={loading}
+                            error={errors.phoneNumber}
+                            setError={(val) => setErrors(prev => ({ ...prev, phoneNumber: val }))}
+                        />
+                    )}
 
-                        {/* Step 2a: Details (New User) */}
-                        {step === "DETAILS" && (
-                            <UserDetailsInput
-                                fullName={fullName}
-                                setFullName={setFullName}
-                                email={email}
-                                setEmail={setEmail}
-                                onSubmit={handleDetailsSubmit}
-                                errors={errors}
-                                setErrors={setErrors}
-                            />
-                        )}
+                    {/* Step 2a: Details (New User) */}
+                    {step === "DETAILS" && (
+                        <UserDetailsInput
+                            fullName={fullName}
+                            setFullName={setFullName}
+                            email={email}
+                            setEmail={setEmail}
+                            onSubmit={handleDetailsSubmit}
+                            errors={errors}
+                            setErrors={setErrors}
+                        />
+                    )}
 
-                        {/* Step 2b: OTP */}
-                        {step === "OTP" && (
-                            <OtpInput
-                                phoneNumber={phoneNumber}
-                                otp={otp}
-                                setOtp={setOtp}
-                                error={errors.otp}
-                                setError={(val) => setErrors(prev => ({ ...prev, otp: val }))}
-                                onEditPhone={() => { setStep("PHONE"); setOtp(["", "", "", ""]); setErrors({}); }}
-                                onSubmit={handleVerify}
-                                loading={loading}
-                                canResend={canResend}
-                                timer={timer}
-                                onResend={handleResendOtp}
-                                otpRefs={otpRefs}
-                            />
-                        )}
+                    {/* Step 2b: OTP */}
+                    {step === "OTP" && (
+                        <OtpInput
+                            phoneNumber={phoneNumber}
+                            otp={otp}
+                            setOtp={setOtp}
+                            error={errors.otp}
+                            setError={(val) => setErrors(prev => ({ ...prev, otp: val }))}
+                            onEditPhone={() => { setStep("PHONE"); setOtp(["", "", "", ""]); setErrors({}); }}
+                            onSubmit={handleVerify}
+                            loading={loading}
+                            canResend={canResend}
+                            timer={timer}
+                            onResend={handleResendOtp}
+                            otpRefs={otpRefs}
+                        />
+                    )}
 
-                        {/* Terms */}
-                        <p className="text-[10px] md:text-xs text-center text-gray-400 leading-relaxed px-4">
-                            By clicking continue, you agree to our{" "}
-                            <span className="text-gray-600 hover:text-orange-600 cursor-pointer transition-colors">Terms of Service</span>
-                            {" "}and{" "}
-                            <span className="text-gray-600 hover:text-orange-600 cursor-pointer transition-colors">Privacy Policy</span>
-                        </p>
-                    </div>
+                    {/* Terms */}
+                    <p className="text-[10px] md:text-xs text-center text-gray-400 leading-relaxed px-4">
+                        By clicking continue, you agree to our{" "}
+                        <span className="text-gray-600 hover:text-orange-600 cursor-pointer transition-colors">Terms of Service</span>
+                        {" "}and{" "}
+                        <span className="text-gray-600 hover:text-orange-600 cursor-pointer transition-colors">Privacy Policy</span>
+                    </p>
                 </div>
             </div>
+        </div>
+    );
+
+    if (!isModal) {
+        return <Content />;
+    }
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={handleClose}>
+            <Content />
         </div>
     );
 };

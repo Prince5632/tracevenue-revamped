@@ -142,7 +142,7 @@ const LoginPage = () => {
               </span>
             </div>
 
-            <Login />
+            <Login isModal={false} withIllustration={false} />
 
           </div>
         </div>
