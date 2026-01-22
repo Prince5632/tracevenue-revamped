@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
-    const [cardOpen, setCardOpen] = useState(false);
+    const [cardOpen, setCardOpen] = useState({ show: false, type: "login" });
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileMenuRef = useRef(null);
@@ -42,13 +42,13 @@ const Navbar = () => {
     }, []);
 
     const handleLoginClick = () => {
-        setCardOpen(true);
+        setCardOpen({ show: true, type: "login" });
         setOpen(false);
     };
 
     const handleLoginSuccess = () => {
         setIsLoggedIn(true);
-        setCardOpen(false);
+        setCardOpen({ show: false, type: "login" });
     };
 
     const handleLogout = async () => {
@@ -126,10 +126,10 @@ const Navbar = () => {
                         ) : (
                             <div className="flex gap-3">
                                 <Button size="sm" variant="ghost" className='px-5'
-                                    onClick={() => setCardOpen(true)}>Login</Button>
+                                    onClick={() => setCardOpen({ show: true, type: "login" })}>Login</Button>
 
                                 <Button size="sm" variant="gradient" className='px-5'
-                                    onClick={() => setCardOpen(true)}>Sign up</Button>
+                                    onClick={() => setCardOpen({ show: true, type: "signup" })}>Sign up</Button>
                             </div>
                         )}
                     </div>
@@ -169,22 +169,12 @@ const Navbar = () => {
                 </div>}
             </nav>
 
-            {/* Login Modal */}
-            {cardOpen && (
-                <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4"
-                    onClick={() => setCardOpen(false)}>
-                    <div className="relative w-full max-w-md" onClick={e => e.stopPropagation()}>
-                        <div className="absolute top-4 right-4 z-10">
-                            <button
-                                onClick={() => setCardOpen(false)}
-                                className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                            >
-                                <X size={20} className="text-gray-600" />
-                            </button>
-                        </div>
-                        <Login onLoginSuccess={handleLoginSuccess} />
-                    </div>
-                </div>
+            {cardOpen.show && (
+                <Login
+                    onLoginSuccess={handleLoginSuccess}
+                    onClose={() => setCardOpen({ show: false, type: "login" })}
+                    type={cardOpen.type}
+                />
             )}
         </>
     );
