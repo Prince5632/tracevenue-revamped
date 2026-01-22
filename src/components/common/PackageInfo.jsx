@@ -1,7 +1,9 @@
 import CardImage from "../../assets/packageCard/card1.jpeg";
-import Button from "../../components/common/Button.jsx";
 import PackageCard from "./PackageCard.jsx";
 import PackageFooter from "./PackageFooter.jsx";
+import PackageMenu from "./PackageMenu.jsx";
+import Card from "./Card.jsx";
+import Badge from "./Badge.jsx";
 function PackageInfo(props) {
   return (
     <>
@@ -121,7 +123,7 @@ function PackageInfo(props) {
             {props.services.map((item, index) =>
               item.content == "Services included" ? (
                 <div
-                key={index}
+                  key={index}
                   className="
                     flex
                     px-[10px] py-[4px]
@@ -139,7 +141,7 @@ function PackageInfo(props) {
                   ></i>
                   <span
                     className="
-                      text-[12px] text-[#555555]
+                      text-[12px] text-[#ff6b35]
                     "
                   >
                     {item.content}
@@ -147,6 +149,7 @@ function PackageInfo(props) {
                 </div>
               ) : (
                 <div
+                  key={index}
                   className="
                     flex
                     text-[#ff6b35]
@@ -171,7 +174,13 @@ function PackageInfo(props) {
             )}
           </div>
         </div>
-        <PackageCard cuisines={props.cuisines} cardInfo={props.cardInfo} cardHeading={props.cardHeading} services={props.services} CardImage={CardImage} />
+        <PackageCard
+          cuisines={props.cuisines}
+          cardInfo={props.cardInfo}
+          cardHeading={props.cardHeading}
+          services={props.services}
+          CardImage={CardImage}
+        />
         <div
           className="
             mb-[32px] p-[20px]
@@ -210,7 +219,267 @@ function PackageInfo(props) {
             ))}
           </div>
         </div>
-        <PackageFooter/>
+        <PackageFooter />
+        <div
+          className="
+            flex
+            w-full
+            relative justify-between gap-6
+          "
+        >
+          <div
+            className="
+              overflow-x-auto
+              w-[280px] h-[530px]
+              px-[20px] pb-[20px]
+              text-[16px] text-[#212529]
+              bg-[#ffffff]
+              rounded-[12px] border border-[#e5e7eb]
+              scrollbar-thin sticky top-24 hidden lg:inline
+            "
+          >
+            {props.packageMenu.map((item, index) => (
+              <PackageMenu
+                key={index}
+                heading={item.heading}
+                menuButton={item.menuButton}
+              />
+            ))}
+          </div>
+          <div>
+            <div>
+              {props.packageMenu?.map((item, index) => (
+                <div
+                  key={index}
+                  className="
+                w-full lg:max-w-[805px]
+                p-[24px]
+                bg-[#ffffff]
+                border border-[#e5e7eb] rounded-[12px] mb-8
+              "
+                >
+                  {item.id === 1 ? (
+                    <>
+                      <h4
+                        className="
+                          mb-[16px]
+                          text-[18px] text-[#1a1a1a] tracking-[-0.02em] font-bold
+                        "
+                      >
+                        Food Items
+                      </h4>
+                      {/* <h4>{item.heading}</h4> */}
+                      {item.menuButton?.map((subItem, index) => (
+                        <div key={index}>
+                          <h5
+                            className="
+                              mb-[16px] p-[10px]
+                              text-[#1a1a1a] text-[18.4px] font-bold
+                              bg-white
+                              border-b-[2px] border-[#e29f55]
+                            "
+                          >
+                            {subItem.content}
+                          </h5>
+                          <Card
+                            variant="default"
+                            padding="lg"
+                            className="
+                              w-full md:max-w-[444px]
+                            "
+                          >
+                            <Card.Header>
+                              <h4
+                                className="
+                                  mb-[10px]
+                                  text-[18px] text-[#060606] font-semibold
+                                "
+                              >
+                                {subItem.subHeading}
+                                <Badge
+                                  variant="soft"
+                                  size="sm"
+                                  className="
+                                    ml-3
+                                  "
+                                >
+                                  Any {subItem.count}
+                                </Badge>
+                              </h4>
+                            </Card.Header>
+                            <Card.Body>
+                              <div
+                                className="
+                                  grid grid-cols-2
+                                  w-full
+                                  gap-2
+                                "
+                              >
+                                {subItem.subContent?.map((cardItem, index) => (
+                                  <div
+                                    key={index}
+                                    className="
+                                      flex
+                                      gap-4 mb-4 sm:mb-0
+                                    "
+                                  >
+                                    {subItem.id === 1 ? (
+                                      <>
+                                        <div
+                                          className="
+                                            flex
+                                            h-[20px] w-[20px]
+                                            border rounded-[4px] border-[#683eb8]
+                                            justify-center items-end
+                                          "
+                                        >
+                                          <i
+                                            className="
+                                              text-[14px] text-[#683eb8]
+                                              fa-solid fa-wine-glass
+                                            "
+                                          ></i>
+                                        </div>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <div
+                                          className="
+                                            flex
+                                            h-[20px] w-[20px]
+                                            border rounded-[4px] border-[#15B076]
+                                            justify-center items-center
+                                          "
+                                        >
+                                          <div
+                                            className="
+                                              h-[10px] w-[10px]
+                                              bg-[#15B076]
+                                              rounded-[30px]
+                                            "
+                                          ></div>
+                                        </div>
+                                      </>
+                                    )}
+
+                                    <span
+                                      className="
+                                        text-[#060606] text-[12px] font-semibold
+                                      "
+                                    >
+                                      {cardItem}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      <h4
+                        className="
+                              mb-[16px] p-[10px]
+                              text-[#1a1a1a] text-[18.4px] font-bold
+                              bg-white
+                              border-b-[2px] border-[#e29f55]
+                            "
+                      >
+                        {item.heading}
+                      </h4>
+                      {item.menuButton?.map((subItem, index) => (
+                        <div key={index} className="mb-[8px]">
+                          <h5
+                            className="
+                              mb-[8px] p-[10px]
+                              text-[#212529] text-[16px] font-semibold
+                              bg-white
+                            "
+                          >
+                            {subItem.content}
+                          </h5>
+                          <div
+                            className="
+                              md:grid md:grid-cols-2
+                              w-full
+                              md:gap-4
+                            "
+                          >
+                            {subItem.children?.map((child, index) => (
+                              <Card
+                                key={index}
+                                variant="default"
+                                padding="lg"
+                                hoverable
+                                className="
+                                  w-[100%]
+                                  !bg-[#f8f9fa] !border !border-[#e5e7eb] !p-[16px] !rounded-[10px] hover:!border-[#e29f55] mb-4 md:mb-0
+                                "
+                              >
+                                <Card.Body
+                                  className="
+                                    !w-full !flex !gap-2
+                                  "
+                                >
+                                  <div
+                                    className="
+                                        flex
+                                        h-[48px] w-[48px]
+                                        bg-[#ffffff]
+                                       rounded-[8px]
+                                        justify-center items-center
+                                      "
+                                  >
+                                    <i
+                                      className={`${child.icon} text-[#e29f55] text-[18px]`}
+                                    ></i>
+                                  </div>
+                                  <div className="w-full flex flex-col">
+                                    <div className="flex justify-between">
+                                      <h4
+                                        className="
+                                        mb-[8px]
+                                        text-[15px] text-[#1a1a1a] font-semibold
+                                      "
+                                      >
+                                        {child.subHeading}
+                                      </h4>
+                                      <div>
+                                        <Badge
+                                          variant="softSuccess"
+                                          size="sm"
+                                          className="
+                                      !bg-[#d1fae5] !text-[#065f46] !px-[12px] !py-[4px]
+                                    "
+                                        >
+                                          FREE
+                                        </Badge>
+                                      </div>
+                                    </div>
+                                    <span
+                                      className="
+                                        w-full
+                                        text-[#212529] text-[16px] font-semibold
+                                      "
+                                    >
+                                      {child.subContent}
+                                    </span>
+                                  </div>
+                                </Card.Body>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );

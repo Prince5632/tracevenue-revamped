@@ -4,3 +4,7 @@
 
 /* Import the full design system from styles folder */
 @import "./styles/index.css";
+.scrollbar-thin::-webkit-scrollbar{
+   width: 6px;
+   height: 6px;
+}
