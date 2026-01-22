@@ -18,7 +18,7 @@ export const encodeLocationToUrl = (cities, distance = 20) => {
 
     // Fallback to full coordinates format: address+lng+lat+distance
     const address = (city.name || city.address || '')
-        .split(/[ ,]+/)
+        .split(/[ ,/]+/)
         .filter(Boolean)
         .join('+');
     return `${address}+${city.longitude}+${city.latitude}+${distance}`;
