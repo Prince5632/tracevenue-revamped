@@ -19,24 +19,34 @@ const Navbar = () => {
     const [otp, setOtp] = useState('')
     const [valid, setValid] = useState(false)
     const [otpCard, setOtpCard] = useState(false)
+    const [isPhoneValid, setIsPhoneValid] = useState(true)
     const [isNameValid, setIsNameValid] = useState(true)
     const [isEmailValid, setIsEmailValid] = useState(true)
 
 
     const phoneHandler = () => {
 
-        if(step==="phone" && phone.length==10){
+        if(step==="phone" && phone.length==10 && isPhoneValid){
             setStep("details")
             setTimeout(()=>{
                 setOtpCard(true)
             }, 1000);
         }
-        else if((step==="details" && name.length>=2 && isNameValid) || (step==="details" && name.length>=2 && isNameValid && email !='' && isEmailValid)){
+        else if((step==="details" && name.length>=2 && isNameValid && email=='') || (step==="details" && name.length>=2 && isNameValid && email !='' && isEmailValid)){
             setStep("otpDetail")
         }
         else if(step==="phone" || step==="details" ){
             setValid(true)
         }
+    }
+
+     //phone validation
+    const handlePhoneChange = (e) => {
+        const value = e.target.value;
+        setPhone(value)
+
+        const phoneRegex = /^\d+$/;
+        setIsPhoneValid(phoneRegex.test(value))
     }
 
      // Name validation
@@ -156,6 +166,7 @@ const Navbar = () => {
                        setEmail('')
                        setStep("phone")
                        setValid(false)
+                       setIsPhoneValid(true)
                        setIsNameValid(true)
                        setIsEmailValid(true)
                     }}/>
@@ -174,17 +185,21 @@ const Navbar = () => {
                             <> <h1 className="-ml-1 lg:-ml-22 md:-ml-20 sm:-ml-22 mt-8">Phone Number</h1>
                            
                                <input type="text" 
-                                value={phone}
-                               onChange={(e)=>{
-                               setPhone(e.target.value)
-                               }}
+                                onChange={handlePhoneChange}
                                className="border-1 border-gray-300 rounded lg:px-2 py-3 px-2 w-30 sm:w-auto" />
                            
                                {valid && phone.length==0 ? (<div className="leading-none mr-8 sm:mr-0">
                                <span className="text-red-600 text-[13px] leading-none relative left-8 lg:-left-5 md:-left-3 sm:-left-3 -top-1">Phone Number is required</span></div>
                         
-                               ):(valid && phone.length>0 && (phone.length<10 || phone.length>10) && 
-                               (<div className="leading-none mr-12 sm:mr-0"><span className="text-red-600 text-[13px] leading-none relative left-8 lg:left-1 md:left-3 sm:left-3 -top-1">Phone Number must be of 10 digits</span></div>))}
+                               ):(valid && phone.length>0 && (phone.length<10 || phone.length>10) ? 
+                               (<div className="leading-none mr-12 sm:mr-0"><span className="text-red-600 text-[13px] leading-none relative left-8 lg:left-1 md:left-3 sm:left-3 -top-1">Phone Number must be of 10 digits</span></div>
+
+                               ): ( valid && !isPhoneValid && (
+                                <div className="leading-none mr-8 sm:mr-0">
+                               <span className="text-red-600 text-[13px] leading-none relative left-1 lg:-left-13 md:-left-13 sm:-left-13 -top-1">Invalid Number</span></div>
+                               )
+
+                               ))}
                        
                             </>
                             ): ( step==="details" ?(
