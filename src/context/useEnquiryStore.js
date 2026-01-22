@@ -2,8 +2,10 @@ import { create } from 'zustand';
 
 const useEnquiryStore = create((set) => ({
   formData: {
-    selectedCities: [],
-    distance: 20, // Default distance
+    locations: "",
+    radius: 20,
+    latitude: "",
+    longitude: "",
     serviceType: null,
     selectedEventType: null,
     selectedPeopleRange: null,
@@ -14,18 +16,18 @@ const useEnquiryStore = create((set) => ({
     dietaryRequirements: []
   },
   completedSteps: [],
-  
+
   // Actions
   setFormData: (newData) => set((state) => ({
     formData: { ...state.formData, ...newData }
   })),
-  
+
   updateFormData: (key, value) => set((state) => ({
     formData: { ...state.formData, [key]: value }
   })),
 
   setCompletedSteps: (steps) => set({ completedSteps: steps }),
-  
+
   addCompletedStep: (stepId) => set((state) => {
     if (state.completedSteps.includes(stepId)) return state;
     return { completedSteps: [...state.completedSteps, stepId] };
@@ -33,16 +35,18 @@ const useEnquiryStore = create((set) => ({
 
   resetStore: () => set({
     formData: {
-        selectedCities: [],
-        distance: 20,
-        serviceType: null,
-        selectedEventType: null,
-        selectedPeopleRange: null,
-        minBudgetValue: null,
-        maxBudgetValue: null,
-        budgetType: null,
-        selectedDates: [],
-        dietaryRequirements: []
+      locations: "",
+      radius: 20,
+      latitude: "",
+      longitude: "",
+      serviceType: null,
+      selectedEventType: null,
+      selectedPeopleRange: null,
+      minBudgetValue: null,
+      maxBudgetValue: null,
+      budgetType: null,
+      selectedDates: [],
+      dietaryRequirements: []
     },
     completedSteps: []
   })

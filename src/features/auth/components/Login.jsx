@@ -6,6 +6,7 @@ import loginBnr from "@/assets/login-bnr.png";
 import PhoneInput from "./common/PhoneInput";
 import UserDetailsInput from "./common/UserDetailsInput";
 import OtpInput from "./common/OtpInput";
+import { useAuth } from "@/context/useAuthStore.jsx";
 
 const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration = true }) => {
     const navigate = useNavigate();
@@ -34,7 +35,11 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
     const [timer, setTimer] = useState(60);
 
     // Refs
-    const otpRefs = [useRef(), useRef(), useRef(), useRef()];
+    const otpRefs = useRef([]);
+
+    if (otpRefs.current.length === 0) {
+        otpRefs.current = Array.from({ length: 4 }, () => React.createRef());
+    }
 
     // Errors
     const [errors, setErrors] = useState({});
@@ -162,11 +167,19 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
         }
     };
 
+    const { setIsLoggedIn, fetchUserData } = useAuth();
+
     const performLogin = async (payload) => {
         const tokenRes = await generateToken(payload, (msg) => showToast({ type: "error", message: msg }));
         if (tokenRes?.status === 201) {
-            const userRes = await getUserData((msg) => { });
+            // Fetch and store user data in global state
+            await fetchUserData();
+
             showToast({ type: "success", message: userExists ? "Login successful" : "Account created successfully" });
+
+            // Update global auth state
+            setIsLoggedIn(true);
+
             if (onLoginSuccess) {
                 onLoginSuccess();
             } else {
@@ -202,7 +215,7 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
         else navigate("/");
     };
 
-    const Content = () => (
+    const content = (
         <div className={`bg-white rounded-[20px] shadow-2xl w-full ${isModal ? 'max-w-[900px]' : 'max-w-full h-full'} flex overflow-hidden relative animate-in fade-in zoom-in duration-300`} onClick={(e) => e.stopPropagation()}>
 
             {/* Close Button - Only show if modal */}
@@ -273,13 +286,17 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
                             setOtp={setOtp}
                             error={errors.otp}
                             setError={(val) => setErrors(prev => ({ ...prev, otp: val }))}
-                            onEditPhone={() => { setStep("PHONE"); setOtp(["", "", "", ""]); setErrors({}); }}
+                            onEditPhone={() => {
+                                setStep("PHONE");
+                                setOtp(["", "", "", ""]);
+                                setErrors({});
+                            }}
                             onSubmit={handleVerify}
                             loading={loading}
                             canResend={canResend}
                             timer={timer}
                             onResend={handleResendOtp}
-                            otpRefs={otpRefs}
+                            otpRefs={otpRefs.current}
                         />
                     )}
 
@@ -296,12 +313,12 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
     );
 
     if (!isModal) {
-        return <Content />;
+        return content;
     }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={handleClose}>
-            <Content />
+            {content}
         </div>
     );
 };

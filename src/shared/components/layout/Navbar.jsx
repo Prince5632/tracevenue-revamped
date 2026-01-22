@@ -4,32 +4,16 @@ import tracevenue from "@assets/images/Tracevenue.png"
 import logo from "@assets/images/logo.png"
 import { MenuIcon, X, Bell, User, LogOut, Settings } from "lucide-react";
 import Login from "../../../features/auth/components/Login";
-import { userIsLogged, logout } from "@/services/userService";
+import { logout } from "@/services/userService";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/useAuthStore.jsx";
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const [cardOpen, setCardOpen] = useState({ show: false, type: "login" });
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isLoggedIn, setIsLoggedIn, clearUser } = useAuth();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileMenuRef = useRef(null);
-
-    // Check auth status on mount
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const response = await userIsLogged();
-                // Access denied or no token usually returns 401 or specific message
-                if (response?.status === 200 && response?.data?.message !== "no token") {
-                    setIsLoggedIn(true);
-                }
-            } catch (error) {
-                console.error("Auth check failed", error);
-            }
-        };
-        checkAuth();
-    }, []);
-
     // Close dropdown on click outside
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -53,9 +37,8 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         await logout();
-        setIsLoggedIn(false);
+        clearUser(); // Clears both state and localStorage
         setShowProfileMenu(false);
-        window.location.reload(); // Ensure clean state
     };
 
     return (
