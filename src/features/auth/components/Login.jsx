@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@shared/components/ui";
-import { Spinner, useToast } from "@/shared/components/feedback";
+import { useToast } from "@/shared/components/feedback";
 import { sendOtp, verifyOtp, generateToken, getUserData, checkUser } from "@/services/userService";
 import loginBnr from "@/assets/login-bnr.png";
+import PhoneInput from "./common/PhoneInput";
+import UserDetailsInput from "./common/UserDetailsInput";
+import OtpInput from "./common/OtpInput";
 
 const Login = ({ onLoginSuccess, onClose, type }) => {
     const navigate = useNavigate();
@@ -79,26 +81,21 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
 
                 if (authType === "login") {
                     if (exists) {
-                        // Normal Login: User exists, proceeding to OTP
                         showToast({ type: "success", message: "OTP sent successfully" });
                         setStep("OTP");
                         startTimer();
                     } else {
-                        // Login -> New User: Switch to Signup
                         showToast({ type: "info", message: "You have to create a new account" });
                         setAuthType("signup");
                         setStep("DETAILS");
                     }
                 } else {
-                    // authType === "signup"
                     if (exists) {
-                        // Signup -> Existing User: Switch to Login
                         showToast({ type: "info", message: "You already have an account" });
                         setAuthType("login");
                         setStep("OTP");
                         startTimer();
                     } else {
-                        // Normal Signup: User new, proceeding to Details
                         showToast({ type: "success", message: "OTP sent successfully" });
                         setStep("DETAILS");
                     }
@@ -121,24 +118,9 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
             return;
         }
         setErrors({});
-
-        // Check if we need to send OTP again or just move to OTP step
-        // Usually flow is -> Send OTP (done) -> Enter Details -> Verify OTP logic
-        // But some flows send OTP *after* details.
-        // Based on TraceVenue-Customer logic:
-        // "Handle username input change to show OTP field" -> implies separate OTP send?
-        // Actually earlier code sent OTP on phone submit.
-        // Let's assume OTP was sent at step 1. We just move to OTP screen now.
-        // However, if the session expired or logic requires, strict flow might be needed.
-        // We'll proceed to OTP step.
-
         setStep("OTP");
         startTimer();
     };
-
-    // For new user flow: The initial OTP sent might be valid for phone verification.
-    // If not, we might need to trigger sendOtp again?
-    // Usually one OTP per session. We'll assume the one sent at Step 1 is valid.
 
     const handleVerify = async () => {
         const otpValue = otp.join("");
@@ -151,26 +133,20 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
         const payload = {
             phoneNumber,
             otp: otpValue,
-            // distinct fields for registration
             userName: fullName,
             email: email,
             isVerified: true
         };
 
         try {
-            // 1. Verify OTP
             const verifyRes = await verifyOtp({ phoneNumber, otp: otpValue });
 
             if (verifyRes?.status === 200) {
                 if (userExists) {
-                    // Login Flow
                     await performLogin(payload);
                 } else {
-                    // Registration Flow
-                    // 2. Check/Create User
                     const checkRes = await checkUser(payload, (msg) => showToast({ type: "error", message: msg }));
                     if (checkRes?.status === 201) {
-                        // 3. Generate Token
                         await performLogin(payload);
                     }
                 }
@@ -202,7 +178,6 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
     const handleResendOtp = async () => {
         setLoading(true);
         try {
-            // Logic for resend
             const response = await sendOtp({ phoneNumber });
             if (response?.status === 200) {
                 showToast({ type: "success", message: "OTP resent successfully" });
@@ -221,33 +196,10 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
         setCanResend(false);
     };
 
-    const handleOtpChange = (index, value) => {
-        if (!/^\d*$/.test(value)) return;
-        const newOtp = [...otp];
-        newOtp[index] = value.slice(-1);
-        setOtp(newOtp);
-        setErrors((prev) => ({ ...prev, otp: "" }));
-        if (value && index < 3) otpRefs[index + 1].current?.focus();
-    };
-
-    const handleOtpKeyDown = (index, e) => {
-        if (e.key === "Backspace" && !otp[index] && index > 0) {
-            otpRefs[index - 1].current?.focus();
-        }
-    };
-
-    const handleOtpPaste = (e) => {
-        e.preventDefault();
-        const pasted = e.clipboardData.getData("text").slice(0, 4);
-        if (!/^\d+$/.test(pasted)) return;
-        const newOtp = pasted.split("").slice(0, 4).concat(Array(4).fill("")).slice(0, 4);
-        setOtp(newOtp);
-    };
-
     // Close handler
     const handleClose = () => {
         if (onClose) onClose();
-        else navigate("/"); // Default fallback if no close prop
+        else navigate("/");
     };
 
     return (
@@ -270,7 +222,6 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
 
                 {/* Left Column - Illustration */}
                 <div className="hidden md:flex w-[45%] bg-indigo-50 items-center justify-center p-8 relative overflow-hidden">
-                    {/* Background decorations or just the image */}
                     <div className="absolute inset-0 bg-blue-50/50"></div>
                     <img
                         src={loginBnr}
@@ -288,142 +239,45 @@ const Login = ({ onLoginSuccess, onClose, type }) => {
                     <div className="space-y-6">
                         {/* Step 1: Phone */}
                         {step === "PHONE" && (
-                            <div className="space-y-4 animate-in slide-in-from-right duration-300">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">Phone Number</label>
-                                    <div className={`flex items-center h-12 rounded-lg border focus-within:ring-2 focus-within:ring-orange-200 transition-all ${errors.phoneNumber ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-orange-500'}`}>
-                                        <div className="pl-4 pr-3 text-gray-500 font-medium border-r border-gray-200 h-[60%] flex items-center">
-                                            +91
-                                        </div>
-                                        <input
-                                            type="tel"
-                                            placeholder="Enter phone number"
-                                            className="flex-1 h-full px-3 outline-none bg-transparent text-gray-900 font-medium placeholder:text-gray-400"
-                                            value={phoneNumber}
-                                            onChange={(e) => {
-                                                const val = e.target.value.replace(/\D/g, "");
-                                                if (val.length <= 10) setPhoneNumber(val);
-                                                if (errors.phoneNumber) setErrors(prev => ({ ...prev, phoneNumber: "" }));
-                                            }}
-                                            onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
-                                            autoFocus
-                                        />
-                                    </div>
-                                    {errors.phoneNumber && <p className="text-xs text-red-500 font-medium mt-1">{errors.phoneNumber}</p>}
-                                </div>
-
-                                <Button
-                                    onClick={handleSendOtp}
-                                    disabled={loading}
-                                    className="w-full h-12 bg-orange-600 hover:bg-orange-700 active:scale-[0.98] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
-                                >
-                                    {loading ? <Spinner size="sm" color="white" /> : "Continue"}
-                                </Button>
-                            </div>
+                            <PhoneInput
+                                phoneNumber={phoneNumber}
+                                setPhoneNumber={setPhoneNumber}
+                                onSubmit={handleSendOtp}
+                                loading={loading}
+                                error={errors.phoneNumber}
+                                setError={(val) => setErrors(prev => ({ ...prev, phoneNumber: val }))}
+                            />
                         )}
 
                         {/* Step 2a: Details (New User) */}
                         {step === "DETAILS" && (
-                            <div className="space-y-4 animate-in slide-in-from-right duration-300">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">Full Name</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter full name"
-                                        className={`w-full h-12 rounded-lg border px-4 outline-none focus:ring-2 focus:ring-orange-200 transition-all ${errors.fullName ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-orange-500'}`}
-                                        value={fullName}
-                                        onChange={(e) => {
-                                            setFullName(e.target.value);
-                                            if (errors.fullName) setErrors(prev => ({ ...prev, fullName: "" }))
-                                        }}
-                                    />
-                                    {errors.fullName && <p className="text-xs text-red-500 font-medium mt-1">{errors.fullName}</p>}
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">Email (Optional)</label>
-                                    <input
-                                        type="email"
-                                        placeholder="Enter email address"
-                                        className={`w-full h-12 rounded-lg border px-4 outline-none focus:ring-2 focus:ring-orange-200 transition-all ${errors.email ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-orange-500'}`}
-                                        value={email}
-                                        onChange={(e) => {
-                                            setEmail(e.target.value);
-                                            if (errors.email) setErrors(prev => ({ ...prev, email: "" }))
-                                        }}
-                                    />
-                                    {errors.email && <p className="text-xs text-red-500 font-medium mt-1">{errors.email}</p>}
-                                </div>
-
-                                <Button
-                                    onClick={handleDetailsSubmit}
-                                    className="w-full h-12 bg-orange-600 hover:bg-orange-700 active:scale-[0.98] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
-                                >
-                                    Continue
-                                </Button>
-                            </div>
+                            <UserDetailsInput
+                                fullName={fullName}
+                                setFullName={setFullName}
+                                email={email}
+                                setEmail={setEmail}
+                                onSubmit={handleDetailsSubmit}
+                                errors={errors}
+                                setErrors={setErrors}
+                            />
                         )}
 
                         {/* Step 2b: OTP */}
                         {step === "OTP" && (
-                            <div className="space-y-6 animate-in slide-in-from-right duration-300">
-                                <div className="text-center">
-                                    <p className="text-gray-500 text-sm">
-                                        Enter the 4-digit code sent to
-                                    </p>
-                                    <p className="text-gray-900 font-semibold mt-1 flex items-center justify-center gap-2">
-                                        +91 {phoneNumber}
-                                        <button
-                                            onClick={() => { setStep("PHONE"); setOtp(["", "", "", ""]); setErrors({}); }}
-                                            className="text-orange-600 hover:text-orange-700 text-xs font-normal underline cursor-pointer"
-                                        >
-                                            Edit
-                                        </button>
-                                    </p>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <div className="flex gap-4 justify-center" onPaste={handleOtpPaste}>
-                                        {otp.map((digit, i) => (
-                                            <input
-                                                key={i}
-                                                ref={otpRefs[i]}
-                                                type="text"
-                                                maxLength={1}
-                                                className={`w-12 h-12 md:w-14 md:h-14 text-center text-xl font-bold rounded-lg border-2 outline-none focus:border-orange-500 focus:bg-orange-50 transition-all ${errors.otp ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}
-                                                value={digit}
-                                                onChange={(e) => handleOtpChange(i, e.target.value)}
-                                                onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                                                autoFocus={i === 0}
-                                            />
-                                        ))}
-                                    </div>
-                                    {errors.otp && <p className="text-xs text-red-500 font-medium text-center">{errors.otp}</p>}
-                                </div>
-
-                                <Button
-                                    onClick={handleVerify}
-                                    disabled={loading}
-                                    className="w-full h-12 bg-orange-600 hover:bg-orange-700 active:scale-[0.98] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70 flex items-center justify-center"
-                                >
-                                    {loading ? <Spinner size="sm" color="white" /> : "Verify & Login"}
-                                </Button>
-
-                                <div className="text-center">
-                                    {canResend ? (
-                                        <button
-                                            onClick={handleResendOtp}
-                                            className="text-orange-600 hover:text-orange-700 font-medium text-sm transition-colors cursor-pointer"
-                                        >
-                                            Resend OTP
-                                        </button>
-                                    ) : (
-                                        <p className="text-gray-400 text-sm">
-                                            Resend OTP in <span className="text-gray-900 font-medium">{timer}s</span>
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
+                            <OtpInput
+                                phoneNumber={phoneNumber}
+                                otp={otp}
+                                setOtp={setOtp}
+                                error={errors.otp}
+                                setError={(val) => setErrors(prev => ({ ...prev, otp: val }))}
+                                onEditPhone={() => { setStep("PHONE"); setOtp(["", "", "", ""]); setErrors({}); }}
+                                onSubmit={handleVerify}
+                                loading={loading}
+                                canResend={canResend}
+                                timer={timer}
+                                onResend={handleResendOtp}
+                                otpRefs={otpRefs}
+                            />
                         )}
 
                         {/* Terms */}
