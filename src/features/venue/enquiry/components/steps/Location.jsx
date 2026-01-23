@@ -106,6 +106,21 @@ const Location = ({ urlParams = {} }) => {
         updateFormData('latitude', locationDetails.latitude);
         updateFormData('longitude', locationDetails.longitude);
         updateFormData('radius', distanceVal);
+
+        // Update complex objects for API payload
+        updateFormData('location', {
+            latitude: locationDetails.latitude,
+            longitude: locationDetails.longitude
+        });
+
+        updateFormData('selectedCities', [{
+            name: locationDetails.name,
+            city: locationDetails.city,
+            latitude: locationDetails.latitude,
+            longitude: locationDetails.longitude,
+            locality: locationDetails.locality,
+            subLocality: locationDetails.subLocality
+        }]);
     };
 
     const handleSelectSuggestion = (prediction) => {

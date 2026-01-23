@@ -1,3 +1,5 @@
+import { serviceOptions } from "@features/venue/enquiry/constants";
+
 const SidebarContent = ({ step, isLast, index, currentStep, formData }) => {
   const isCompleted = index < currentStep;
   const isActive = index === currentStep;
@@ -39,7 +41,7 @@ const SidebarContent = ({ step, isLast, index, currentStep, formData }) => {
         ) : step.id === "service_type" && formData?.serviceType ?
           <div className="mt-1">
             <p className="text-[#060606] text-[13px] font-medium line-clamp-2">
-              {formData?.serviceType}
+              {serviceOptions.find(opt => opt.id === formData.serviceType)?.serviceType || formData.serviceType}
             </p>
           </div>
           : (

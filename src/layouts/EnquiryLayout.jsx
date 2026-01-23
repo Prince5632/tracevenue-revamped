@@ -33,7 +33,7 @@ const EnquiryLayout = () => {
     setFormData: setStoreFormData,
     updateFormData: updateStoreFormData,
     setCompletedSteps: setStoreCompletedSteps,
-    addCompletedStep
+    addCompletedStep,
   } = useEnquiryStore();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -124,7 +124,7 @@ const EnquiryLayout = () => {
     formData.locations,
     formData.serviceType,
     setStoreFormData,
-    setStoreCompletedSteps
+    setStoreCompletedSteps,
   ]);
 
   const isEmptyValue = (value) => {
@@ -162,8 +162,10 @@ const EnquiryLayout = () => {
     }
   };
 
+  const [footerMessage, setFooterMessage] = useState(null);
 
   const handleNext = async () => {
+    setFooterMessage(null); // Reset message on new attempt
     // 🔒 Validate current step
     const isValid = validateStep(currentStepIndex, formData);
     if (!isValid) {
@@ -184,6 +186,19 @@ const EnquiryLayout = () => {
           locality: locationData.locality,
           subLocality: locationData.subLocality,
           radius: locationData.distance || 20,
+          // Hydrate complex objects as well for consistency if starting from URL
+          location: {
+              latitude: locationData.latitude,
+              longitude: locationData.longitude
+          },
+          selectedCities: [{
+              name: locationData.name,
+              city: locationData.name,
+              latitude: locationData.latitude,
+              longitude: locationData.longitude,
+              locality: locationData.locality,
+              subLocality: locationData.subLocality
+          }]
         });
       }
     }
@@ -200,7 +215,63 @@ const EnquiryLayout = () => {
     }
 
     // 🍽️ Call cuisine combo API on EVERY step
-    await fetchCuisineCombinations(formData);
+    try {
+        const response = await fetchCuisineCombinations(formData);
+        
+        // Step 1 Verification Logic
+        if (currentStepIndex === 0) {
+             const data = response?.data;
+             // Check based on specific response structure
+             if (data) {
+                 const isSuccess = data.success === true;
+                 const isValid = data.validation_passed === true;
+
+                 if (isSuccess && isValid) {
+                     // All good, proceed
+                 } else {
+                     // Failure case
+                     // User requested to show 'message' field primarily
+                     const suggestionMsg = data.message || data.suggestions?.solution || "Location not available";
+                     // Format message nicely if needed, or just use as is
+                     setFooterMessage(suggestionMsg); 
+                     return; // prevent navigation
+                 }
+             } else {
+                 // Fallback if no data?
+                 // assume failure if no data returned
+                 setFooterMessage("Unable to verify location. Please try again.");
+                 return;
+             }
+        }
+
+        // Step 2 Verification Logic (Service Type)
+        if (currentStepIndex === 1) {
+             const data = response?.data;
+              if (data) {
+                 const isSuccess = data.success === true;
+                 const isValid = data.validation_passed === true;
+
+                 if (isSuccess && isValid) {
+                     // All good
+                 } else {
+                     // Failure case
+                     const suggestionMsg = data.message || data.suggestions?.solution || "Service not available";
+                     setFooterMessage(suggestionMsg); 
+                     return; 
+                 }
+             } else {
+                 setFooterMessage("Unable to verify service. Please try again.");
+                 return;
+             }
+        }
+
+    } catch (error) {
+        console.error("Verification failed", error);
+        if (currentStepIndex === 0 || currentStepIndex === 1) {
+             setFooterMessage("Something went wrong. Please try again.");
+             return; 
+        }
+    }
 
     // 🏁 Last step
     if (isLastStep) {
@@ -215,8 +286,6 @@ const EnquiryLayout = () => {
     navigate(nextUrl);
     window.scrollTo(0, 0);
   };
-
-
 
   const handleBack = () => {
     if (!isFirstStep) {
@@ -236,8 +305,7 @@ const EnquiryLayout = () => {
     if (stepIndex <= currentStepIndex) {
       const url = buildStepUrl(stepIndex, formData);
       navigate(url);
-    }
-    else {
+    } else {
       // Try checking if we CAN generate a URL (have data)
       const url = buildStepUrl(stepIndex, formData);
       navigate(url);
@@ -312,6 +380,7 @@ const EnquiryLayout = () => {
             onBack={handleBack}
             isFirstStep={isFirstStep}
             isLastStep={isLastStep}
+            footerMessage={footerMessage}
           />
         </div>
       </div>

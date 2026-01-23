@@ -16,6 +16,7 @@ const Steps = ({
   onBack,
   isFirstStep,
   isLastStep,
+  footerMessage,
 }) => {
   return (
     <>
@@ -36,6 +37,7 @@ const Steps = ({
         onBack={onBack}
         isFirstStep={isFirstStep}
         isLastStep={isLastStep}
+        message={footerMessage}
       />
     </>
   );

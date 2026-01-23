@@ -1,28 +1,26 @@
 import { useState, useMemo } from "react";
-import { EventCard, SearchBar, EventTab } from "@features/venue/components";
 import { events, eventCategories } from "@features/venue/enquiry/constants";
 import { flattenEvents } from "@features/venue/enquiry/utils";
 import { IoArrowDownCircleOutline } from "react-icons/io5";
+import EventCard from "../EventTypeComponents/EventCard";
+import EventTab from "../EventTypeComponents/EventTab";
+import SearchBar from "../EventTypeComponents/SearchBar";
 
-const EventType = ({ formData,
-  updateFormData,
-  urlParams
-}) => {
-  console.log(formData, urlParams,"event type");
+const EventType = ({ formData, updateFormData, urlParams }) => {
+  console.log(formData, urlParams, "event type");
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const openSearch = () => setIsSearchOpen(true);
-  const toggleSearch = () => setIsSearchOpen(prev => !prev);
+  const toggleSearch = () => setIsSearchOpen((prev) => !prev);
   const closeSearch = () => setIsSearchOpen(false);
-
 
   const allEvents = useMemo(() => flattenEvents(eventCategories), []);
 
   const searchResults = useMemo(() => {
     if (!searchValue.trim()) return [];
     return allEvents.filter((e) =>
-      e.label.toLowerCase().includes(searchValue.toLowerCase())
+      e.label.toLowerCase().includes(searchValue.toLowerCase()),
     );
   }, [searchValue, allEvents]);
 
@@ -56,7 +54,6 @@ const EventType = ({ formData,
         }}
         onToggle={toggleSearch}
       />
-
 
       <div className="py-5 px-2">
         <p className="!font-bold !text-[18px] !text-black">Popular Events</p>
