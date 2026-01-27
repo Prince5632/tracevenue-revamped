@@ -10,10 +10,45 @@ import Venue from '../../assets/images/venue.png';
 import Catering from '../../assets/images/catering.png';
 import Icon from '../../assets/images/dotLine.svg';
 import { CircleArrowLeft } from "lucide-react";
+import { id } from 'date-fns/locale';
 
 const EnquiriesDetail = () => {
   const [location, setLocation] = useState('');
   const [center, setCenter] = useState(null);
+  const cuisinesData =[
+    {
+      id:1,
+      label:'North Indian',
+    },
+    {
+      id:2,
+      label:'Indian',
+    },
+    {
+      id:3,
+      label:'Continental',
+    },
+    {
+      id:4,
+      label:'Indo-Chainese',
+    },
+    {
+      id:5,
+      label:'Mughlai',
+    },
+    {
+      id:6,
+      label:'Indian / Continental',
+    },
+    {
+      id:7,
+      label:'Chinese',
+    },
+    {
+      id:8,
+      label:'Italian'
+    },
+  ];
 
  const menuData = [
   {
@@ -153,27 +188,50 @@ const EnquiriesDetail = () => {
   const sectionRefs = useRef([]);
   const [activeSection, setActiveSection] = useState(0);
 
-useEffect(() => {
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       entries.forEach((entry) => {
+  //         if (entry.isIntersecting) {
+  //           setActiveSection(Number(entry.target.dataset.index));
+  //         }
+  //       });
+  //     },
+  //     {
+  //       root: null,    
+  //       threshold: 0.4,
+  //     });
+
+  //   sectionRefs.current.forEach((el) => el && observer.observe(el));
+  //   return () => observer.disconnect();
+  // }, []);
+
+   useEffect(() => {
+  const scrollContainer = document.getElementById("food-scroll");
+
+  if (!scrollContainer) return;
+
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
           setActiveSection(Number(entry.target.dataset.index));
         }
       });
     },
     {
-      root: null,    
+      root: scrollContainer,
+        rootMargin: "-40% 0px -40% 0px",   
       threshold: 0.4,
     }
   );
 
-  sectionRefs.current.forEach((el) => el && observer.observe(el));
+  sectionRefs.current.forEach(el => el && observer.observe(el));
 
   return () => observer.disconnect();
 }, []);
 
-
+ 
   const [selectedService, setSelectedService] = useState(() => {
     const saved = localStorage.getItem('selectedService');
     return saved ? Number(saved) : null;
@@ -199,22 +257,18 @@ useEffect(() => {
 
   return (
     <div className="w-full flex gap-7.5">
- 
-
-
-      {/*SIDEBAR */}
+    {/*SIDEBAR */}
       <div className="hidden lg:block bg-amber-200 w-[25%]">
         <h1>Sidebar</h1>
       </div>
 
-     {/**Main Content */}
+    {/**Main Content */}
       <div className="w-full lg:w-[75%]">
-
-
         <div className="p-4">
           <h1 className="font-bold text-2xl mb-2 flex flex-row gap-5">
-            <CircleArrowLeft size={40} color="#fc4103" strokeWidth={1} />
-            <span>
+            {/* <CircleArrowLeft size={40} color="#fc4103" strokeWidth={1} /> */}
+            <CircleArrowLeft size={40} color='#fd4304' strokeWidth={1.5}/>
+            <span className='text-base md:text-2xl'>
             Looking venue for kitty party for 30 people on 10 Jan, 2026
             </span>
           </h1>
@@ -272,13 +326,14 @@ useEffect(() => {
 
                     <Card
                       padding="sm"
-                      className="font-semibold py-1 px-1 text-sm flex items-center whitespace-nowrap w-fit"
+                      className="font-semibold py-1 px-1 text-lg flex items-center whitespace-nowrap w-fit"
                     >
                       <span className="text-gray-500 mx-1.5">₹</span>
-                      2500
+                      2,500
                       <span className="text-gray-500 mx-1">-</span>
                       <span className="text-gray-500 mx-1.5">₹</span>
-                      5500
+                      5,500
+                      
                     </Card>
                   </div>
                 </Card>
@@ -303,7 +358,7 @@ useEffect(() => {
             {/* RIGHT : LOCATION */}
             <div className="w-full ">
               <h3 className="font-bold text-lg mb-2 text-gray-400">Location (10 km)</h3>
-              <div className="h-85! rounded-2xl overflow-hidden">
+              <div className="h-87! rounded-2xl overflow-hidden">
                 <Map
                   center={center}
                   radius={center ? 10000 : 0}
@@ -315,14 +370,13 @@ useEffect(() => {
           </div>
         </div>
 
-{/* DATE & TIME + FOOD PREFERENCE  */}
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+    {/* DATE & TIME + FOOD PREFERENCE  */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
 
-  {/* DATE & TIME  */}
-  <div className="p-6 text-white rounded-xl">
-    <h2 className="font-semibold text-xl mb-6 text-gray-400">Date & Time</h2>
-
-    <div className="grid grid-row-2 sm:grid-row-2 gap-5">
+    {/* DATE & TIME  */}
+    <div className="p-6 text-white rounded-xl">
+      <h2 className="font-semibold text-xl mb-6 text-gray-400">Date & Time</h2>
+        <div className="grid grid-row-2 sm:grid-row-2 gap-5">
       
       {/* Preferred Date */}
       <Card variant="default" padding="md" className="flex items-center justify-between gap-5">
@@ -369,94 +423,63 @@ useEffect(() => {
   </div>
 
   {/*FOOD PREFERENCE  */}
- <div className="p-6">
-  <h2 className="font-bold text-xl mb-6 text-gray-400">Food Preference</h2>
+  <div className="p-6">
+    <h2 className="font-bold text-xl mb-6 text-gray-400">Food Preference</h2>
+    <div className="grid grid-cols-2 gap-4">
+      <Card>
+        <Card.Header className="text-lg font-bold">
+          Eating
+        </Card.Header>
+        <Card.Body className="flex items-center text-lg font-bold whitespace-nowrap">
+          <img
+            src={NonVeg}
+            alt="Veg Non Veg"
+            className="w-8 h-8"
+          />
+          <span className='text-sm lg:text-base'>Veg &amp; Non Veg</span>
+        </Card.Body>
+      </Card>
 
-  <div className="grid grid-cols-2 gap-4">
-    
-    <Card>
-      <Card.Header className="text-lg font-bold">
-        Eating
-      </Card.Header>
-      <Card.Body className="flex items-center text-lg font-bold whitespace-nowrap">
-        <img
-          src={NonVeg}
-          alt="Veg Non Veg"
-          className="w-8 h-8"
-        />
-        <span className='text-sm lg:text-base'>Veg &amp; Non Veg</span>
-      </Card.Body>
-    </Card>
-
-    <Card>
-      <Card.Header className="text-lg font-bold">
-        Alcohol
-      </Card.Header>
-      <Card.Body className="flex items-center  text-lg font-bold whitespace-nowrap">
-        <img
-          src={ColdDrink}
-          alt="Non Alcohol"
-          className="w-8 h-8"
-        />
-        <span className='text-sm lg:text-base'>Non Alcohol</span>
-      </Card.Body>
-    </Card>
-
+      <Card>
+        <Card.Header className="text-lg font-bold">
+          Alcohol
+        </Card.Header>
+        <Card.Body className="flex items-center  text-lg font-bold whitespace-nowrap">
+          <img
+            src={ColdDrink}
+            alt="Non Alcohol"
+            className="w-8 h-8"
+          />
+          <span className='text-sm lg:text-base'>Non Alcohol</span>
+        </Card.Body>
+      </Card>
+    </div>
   </div>
 </div>
 
-
-</div>
-
-
-
-        {/* CUISINES */}
-<div className="p-6">
-
-  <Card className="flex flex-wrap items-center gap-3">
+{/* CUISINES */}
+<div className='p-6'>
+  <Card className='flex flex-wrap items-center gap-3'>
     <div>
-  <h2 className="font-bold text-xl mr-3">Cuisines</h2>
+      <h2 className='font-bold text-xl mr-3'>Cuisines</h2>
     </div>
     <div className='flex flex-wrap item-center gap-3'>
-<Card className="w-fit py-2 px-3">
-      <p>North Indian</p>
-    </Card>
-
-    <Card className="w-fit py-2 px-3">
-      <p>Indian</p>
-    </Card>
-
-    <Card className="w-fit py-2 px-3">
-      <p>Continental</p>
-    </Card>
-
-    <Card className="w-fit py-2 px-3">
-      <p>Indo-Chinese</p>
-    </Card>
-
-    <Card className="w-fit py-2 px-3">
-      <p>Mughlai</p>
-    </Card>
-
-    <Card className="w-fit py-2 px-3">
-      <p>Indian / Continental</p>
-    </Card>
-
-    <Card className="w-fit py-2 px-3">
-      <p>Chinese</p>
-    </Card>
-
-    <Card className="w-fit py-2 px-3">
-      <p>Italian</p>
-    </Card>
+     
+        {cuisinesData.map((cuisines)=>(
+           <Card 
+           key={cuisines.id}
+           className='w-fit py-2 px-3'>
+            <span className='text-sm font-semibold text-gray-800'>
+              {cuisines.label}
+            </span>
+           </Card>
+        ))}
+      
     </div>
-    
-
   </Card>
 </div>
-
 {/*  MENU + FOOD */}
-<div className="p-6 flex gap-7.5">
+<div className="p-6 flex gap-7.5 h-[calc(100vh-100px)] overflow-hidden">
 
   {/* LEFT MENU */}
   <div className="w-[35%] hidden lg:block">
@@ -491,11 +514,63 @@ useEffect(() => {
   </div>
 
   {/* RIGHT FOOD */}
-  <div id="food-scroll" className=" w-full lg:w-[65%] space-y-6 grid grid-cols-1">
-    <Card>
+  <div
+  id="food-scroll"
+  className="w-full lg:w-[65%] h-[calc(100vh-100px)] overflow-y-auto space-y-6"
+>
+    <div className='hidden lg:block'>
+    <Card >
       <h1 className="font-bold text-xl mb-6">Food Items</h1>
 
       {menuData.map((section, index) => (
+        <div
+          key={index}
+          ref={(el) => (sectionRefs.current[index] = el)}
+          data-index={index}
+          className="mb-10"
+        >
+   
+          <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+            {section.section}
+          </h2>
+
+          {section.groups.map((group, gIndex) => (
+            <Card key={gIndex} className="mb-4">
+              <div className="flex items-center gap-3 mb-3">
+                <h3 className="font-semibold text-lg">{group.title}</h3>
+                <span className="bg-[#f3e2dd] text-[#FF6A3D] px-1.5 rounded-full text-xs font-semibold">Any 2</span>
+                </div>
+
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                {group.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-1">
+                    <img src={section.icon} className="w-8 h-8" />
+                    <span className="font-semibold text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul >
+            </Card>
+          ))}
+        </div>
+      ))}
+    </Card>
+     {/**Mobile */}
+      <div className='mt-8'>
+        <Card>
+          <div className="mt-5">
+           <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+             Amenities & Services
+            </h2>
+          </div>
+          <p className="text-sm font-semibold text-gray-400">
+            No Amenities & Services
+          </p>
+        </Card>
+      </div>
+    </div>
+    <div className='lg:hidden'>
+      <h1 className="font-bold text-xl mb-6">Food Items</h1>
+        {menuData.map((section, index) => (
         <div
           key={index}
           ref={(el) => (sectionRefs.current[index] = el)}
@@ -521,34 +596,28 @@ useEffect(() => {
                   </li>
                 ))}
               </ul >
-
             </Card>
-          
           ))}
         </div>
       ))}
-
-    </Card>
       <div>
-      <Card>
-      <div className="mt-5">
-      <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
-        Amenities & Services
-      </h2>
+        <Card>
+          <div className="mt-5">
+           <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+             Amenities & Services
+            </h2>
+          </div>
+          <p className="text-sm font-semibold text-gray-400">
+            No Amenities & Services
+          </p>
+        </Card>
       </div>
-        <p className="text-sm font-semibold text-gray-400">
-          No Amenities & Services
-        </p>
-      </Card>
-      </div>
+    </div>
   </div>
-  </div>
-
-
 </div>
-
 </div>
-  );
+</div>
+);
 };
 
 export default EnquiriesDetail;
