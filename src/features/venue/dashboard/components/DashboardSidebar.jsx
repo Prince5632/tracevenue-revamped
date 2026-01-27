@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import carbonDocumentIcon from "../../../../assets/dashboard/carbon_document-signed.svg";
 import mageDashboardIcon from "../../../../assets/dashboard/mage_dashboard.svg";
 import tableListDetails from "../../../../assets/dashboard/tabler_list-details.svg";
+import userProfile from "../../../../assets/dashboard/user-profile.svg";
 import settings from "../../../../assets/dashboard/setting.svg";
 import logout from "../../../../assets/dashboard/switch.svg";
 
