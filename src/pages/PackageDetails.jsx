@@ -1,11 +1,12 @@
 import { Navbar } from "@shared/components/layout";
-// import { PackageInfo } from "../components/common";
+import { PackageInfo } from "@shared/components/ui";
+import {packageInformation} from "@shared/services";
 // import { packageInformation } from "../data/packageData";
 function PackageDetails() {
   return (
     <>
       <Navbar />
-      {/* {packageInformation.map((item, index) => (
+      {packageInformation.map((item, index) => (
         <PackageInfo
           key={index}
           step={item.step}
@@ -18,7 +19,7 @@ function PackageDetails() {
           cuisines={item.cuisines}
           packageMenu={item.packageMenu}
         />
-      ))} */}
+      ))}
     </>
   );
 }
