@@ -1,0 +1,15 @@
+import React from 'react'
+
+const DashboardHeader = () => {
+  return (
+   <>
+   <div className='flex flex-col mt-8'>
+    <h1 className='font-bold text-3xl text-[#212529]'>Dashboard Home</h1>
+    <p className='text-md font-semibold text-secondary mt-2'>Overview of events,enquiries and recommendations.</p>
+    <div className='h-1 w-full bg-gray-200 mt-3'></div>
+   </div>
+   </>
+  )
+}
+
+export default DashboardHeader
