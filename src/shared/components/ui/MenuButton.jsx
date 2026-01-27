@@ -3,22 +3,23 @@ function MenuButton(props) {
     <>
       <button
       onClick={props.onclick}
-        className="
+        className={`
           flex
           w-full
           px-[16px] py-[12px]
           text-[16px] font-semibold
-          bg-transparent
-          border-l-[3px] border-l-transparent rounded-[6px]
+          border-l-[3px] rounded-[6px]
           cursor-pointer transition-all
-          hover:bg-[#f8f9fa] justify-between items-center hover:border-l-[#e29f55] duration-300 ease-initial
-        "
+          hover:bg-[#f8f9fa] justify-between items-center  duration-300 ease-initial
+          ${props.isActive?"bg-[#fff8f0] text-[#ff6b35] border-l-[#e29f55] text-[#e29f55]":"bg-transparent border-l-transparent hover:border-l-[#e29f55] "}
+  `}
       >
         <span
-          className="
-            text-[#333333] text-[16px] font-semibold
+          className={`
+             text-[16px] font-semibold
             cursor-pointer text-left
-          "
+            ${props.isActive?"text-[#e29f55]":"text-[#333333]"}
+          `}
         >
           {props.content}
         </span>

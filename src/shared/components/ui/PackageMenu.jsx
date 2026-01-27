@@ -19,7 +19,7 @@ function PackageMenu(props) {
         "
       >
         {props.menuButton.map((item, index) => (
-          <MenuButton key={index} content={item.content} count={item.count} onclick={()=>handleMenuClick(item.id)} />
+          <MenuButton key={index} content={item.content} count={item.count} isActive={props.active===item.id} onclick={()=>handleMenuClick(item.id)} />
         ))}
       </div>
     </>

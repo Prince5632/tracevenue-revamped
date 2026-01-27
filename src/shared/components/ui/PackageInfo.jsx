@@ -4,12 +4,14 @@ import PackageFooter from "./PackageFooter.jsx";
 import PackageMenu from "./PackageMenu.jsx";
 import Card from "./Card.jsx";
 import Badge from "./Badge.jsx";
-import { useRef } from "react";
+import { useRef,useState } from "react";
 
 function PackageInfo(props) {
     const sectionRefs = useRef({});
+    const [active, setActive] = useState(null);
 
     const handleMenuClick = (id) => {
+        setActive(id);
   sectionRefs.current[id]?.scrollIntoView({
     behavior: "smooth",
     block: "start",
@@ -254,6 +256,7 @@ function PackageInfo(props) {
                 key={index}
                 heading={item.heading}
                 menuButton={item.menuButton}
+                active={active}
                 onclick={handleMenuClick}
               />
             ))}
