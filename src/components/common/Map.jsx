@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 
 const containerStyle = {
   width: "100%",
-  height: "280px",
+  height: "480px",
 };
 
 function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setShowMarker}) {
