@@ -6,7 +6,7 @@ import { DashboardProvider } from "@/features/venue/dashboard/context/DashboardC
 const DashboardLayout = () => {
   return (
     <DashboardProvider>
-      <main className="flex gap-2">
+      <main className="flex gap-2 mt-22">
         <DashboardSidebar />
         <DashboardContent />
       </main>
