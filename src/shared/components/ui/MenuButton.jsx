@@ -2,6 +2,7 @@ function MenuButton(props) {
   return (
     <>
       <button
+      onClick={props.onclick}
         className="
           flex
           w-full

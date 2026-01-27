@@ -4,7 +4,18 @@ import PackageFooter from "./PackageFooter.jsx";
 import PackageMenu from "./PackageMenu.jsx";
 import Card from "./Card.jsx";
 import Badge from "./Badge.jsx";
+import { useRef } from "react";
+
 function PackageInfo(props) {
+    const sectionRefs = useRef({});
+
+    const handleMenuClick = (id) => {
+  sectionRefs.current[id]?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+};
+
   return (
     <>
       <main
@@ -243,6 +254,7 @@ function PackageInfo(props) {
                 key={index}
                 heading={item.heading}
                 menuButton={item.menuButton}
+                onclick={handleMenuClick}
               />
             ))}
           </div>
@@ -270,7 +282,11 @@ function PackageInfo(props) {
                       </h4>
                       {/* <h4>{item.heading}</h4> */}
                       {item.menuButton?.map((subItem, index) => (
-                        <div key={index}>
+                        <div 
+                        key={index} 
+                        ref={(el)=>(sectionRefs.current[subItem.id]=el)}
+                        className="mt-[20px] scroll-mt-[80px]"
+                        >
                           <h5
                             className="
                               mb-[16px] p-[10px]
@@ -390,7 +406,9 @@ function PackageInfo(props) {
                         {item.heading}
                       </h4>
                       {item.menuButton?.map((subItem, index) => (
-                        <div key={index} className="mb-[8px]">
+                        <div key={index}
+                        ref={(el)=>(sectionRefs.current[subItem.id]=el)}
+                         className="mb-[8px] scroll-mt-[80px]">
                           <h5
                             className="
                               mb-[8px] p-[10px]

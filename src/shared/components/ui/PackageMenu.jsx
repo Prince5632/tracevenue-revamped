@@ -1,5 +1,6 @@
 import MenuButton from "./MenuButton";
 function PackageMenu(props) {
+    const handleMenuClick = props.onclick;
   return (
     <>
       <h4
@@ -18,7 +19,7 @@ function PackageMenu(props) {
         "
       >
         {props.menuButton.map((item, index) => (
-          <MenuButton key={index} content={item.content} count={item.count} />
+          <MenuButton key={index} content={item.content} count={item.count} onclick={()=>handleMenuClick(item.id)} />
         ))}
       </div>
     </>

@@ -109,6 +109,7 @@ export const packageInformation = [
         heading: "Amenities & Services",
         menuButton: [
           {
+            id: 101,
             content: "Decoration & Setup",
             children: [
               {
@@ -120,6 +121,7 @@ export const packageInformation = [
             count: "1",
           },
           {
+            id: 102,
             content: "Food & Catering",
             children: [
               {
@@ -137,6 +139,7 @@ export const packageInformation = [
             count: "2",
           },
           {
+            id: 103,
             content: "Photography & Videography",
             children: [
               {
@@ -153,6 +156,7 @@ export const packageInformation = [
             count: "2",
           },
           {
+            id: 104,
             content: "Entertainment",
             children: [
               {
