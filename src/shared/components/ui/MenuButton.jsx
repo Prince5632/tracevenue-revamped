@@ -11,7 +11,7 @@ function MenuButton(props) {
           border-l-[3px] rounded-[6px]
           cursor-pointer transition-all
           hover:bg-[#f8f9fa] justify-between items-center  duration-300 ease-initial
-          ${props.isActive?"bg-[#fff8f0] text-[#ff6b35] border-l-[#e29f55] text-[#e29f55]":"bg-transparent border-l-transparent hover:border-l-[#e29f55] "}
+          ${props.isActive?"bg-[#fff8f0] hover:bg-[#fff8f0] text-[#ff6b35] border-l-[#e29f55] text-[#e29f55]":"bg-transparent border-l-transparent hover:border-l-[#e29f55] "}
   `}
       >
         <span

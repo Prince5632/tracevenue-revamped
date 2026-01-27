@@ -267,10 +267,10 @@ function PackageInfo(props) {
                 <div
                   key={index}
                   className="
-                w-full lg:max-w-[805px]
-                p-[24px]
+                w-full lg:max-w-[805px] p-[6px]
+                sm:p-[24px]
                 bg-[#ffffff]
-                border border-[#e5e7eb] rounded-[12px] mb-8
+                sm:border sm:border-[#e5e7eb] rounded-[12px] mb-8
               "
                 >
                   {item.id === 1 ? (
