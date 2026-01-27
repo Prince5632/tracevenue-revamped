@@ -1,4 +1,5 @@
 import './App.css'
+import EnquiriesDetail from './components/Enquiries/EnquiriesDetail'
 import EnquiryLayout from './layouts/EnquiryLayout'
 import ComponentDocs from './pages/ComponentDocs'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
     path: '/docs',
     element: <ComponentDocs />,
   },
+  {
+    path:'/enquiriesDetail',
+    element:<EnquiriesDetail/>
+  }
 ])
 
 function App() {

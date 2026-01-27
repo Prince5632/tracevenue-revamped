@@ -1,4 +1,4 @@
-import API from "./API";
+import { API } from "@shared/services";
 
 const dashboardServices = {
     getDashboardData: async () => {

@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ],
+            "@shared/*": [
+                "src/shared/*"
+            ],
+            "@features/*": [
+                "src/features/*"
+            ],
+            "@assets/*": [
+                "src/assets/*"
+            ],
+            "@layouts/*": [
+                "src/layouts/*"
+            ],
+            "@pages/*": [
+                "src/pages/*"
+            ],
+            "@routes/*": [
+                "src/routes/*"
+            ],
+            "@styles/*": [
+                "src/styles/*"
+            ],
+         
+        }
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
