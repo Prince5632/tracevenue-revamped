@@ -161,3 +161,15 @@ input[type="search"]::-webkit-search-results-decoration {
     font-weight: 700 !important;
     color: var(--color-text-primary) !important;
 }
+.scrollbar-thin::-webkit-scrollbar{
+    width: 6px;
+    height:6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--color-scrollbar-thumb);
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: var(--color-scrollbar-track);
+}
