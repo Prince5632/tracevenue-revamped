@@ -4,11 +4,32 @@ import PackageFooter from "./PackageFooter.jsx";
 import PackageMenu from "./PackageMenu.jsx";
 import Card from "./Card.jsx";
 import Badge from "./Badge.jsx";
-import { useRef,useState } from "react";
+import { useRef,useState, useEffect } from "react";
 
 function PackageInfo(props) {
     const sectionRefs = useRef({});
     const [active, setActive] = useState(null);
+    useEffect(()=>{
+      const observer = new IntersectionObserver(
+        (entries)=>{
+          entries.forEach((entry)=>{
+            if(entry.isIntersecting){
+              const id = entry.target.getAttribute("data-id");
+              setActive(Number(id));
+            }
+          });
+        },
+        {
+          root: null,
+          rootMargin: "-15% 0px -70% 0px",
+          threshold: 0,
+        }
+      );
+      Object.values(sectionRefs.current).forEach((section)=>{
+        if (section) observer.observe(section);
+      });
+      return ()=>observer.disconnect();
+    },[]);
 
     const handleMenuClick = (id) => {
         setActive(id);
@@ -196,7 +217,7 @@ function PackageInfo(props) {
         />
         <div
           className="
-            mb-[32px] p-[20px]
+            mb-[16px] p-[20px]
             bg-[#f8f9fa]
             rounded-[12px]
           "
@@ -242,8 +263,8 @@ function PackageInfo(props) {
         >
           <div
             className="
-              overflow-x-auto
-              w-[280px] h-[530px]
+              overflow-y-auto
+              w-[280px] max-h-[calc(100vh-6rem)]
               px-[20px] pb-[20px]
               text-[16px] text-[#212529]
               bg-[#ffffff]
@@ -261,16 +282,16 @@ function PackageInfo(props) {
               />
             ))}
           </div>
-          <div>
+          <div className="flex-1 w-full">
             <div>
               {props.packageMenu?.map((item, index) => (
                 <div
                   key={index}
                   className="
-                w-full lg:max-w-[805px] p-[6px]
-                sm:p-[24px]
+                w-full max-w-full lg:max-w-[805px] p-[6px]
+                lg:p-[24px]
                 bg-[#ffffff]
-                sm:border sm:border-[#e5e7eb] rounded-[12px] mb-8
+                lg:border lg:border-[#e5e7eb] rounded-[12px] mb-8
               "
                 >
                   {item.id === 1 ? (
@@ -288,7 +309,8 @@ function PackageInfo(props) {
                         <div 
                         key={index} 
                         ref={(el)=>(sectionRefs.current[subItem.id]=el)}
-                        className="mt-[20px] scroll-mt-[80px]"
+                        data-id={subItem.id}
+                        className="scroll-mt-[80px]"
                         >
                           <h5
                             className="
@@ -304,7 +326,7 @@ function PackageInfo(props) {
                             variant="default"
                             padding="lg"
                             className="
-                              w-full md:max-w-[444px]
+                              max-w-[444px] p-[20px] mb-[20px]
                             "
                           >
                             <Card.Header>
@@ -317,9 +339,8 @@ function PackageInfo(props) {
                                 {subItem.subHeading}
                                 <Badge
                                   variant="soft"
-                                  size="sm"
                                   className="
-                                    ml-3
+                                    ml-[6px] px-[6px] py-[2px] text-[11.2px] !font-bold
                                   "
                                 >
                                   Any {subItem.count}
@@ -339,7 +360,7 @@ function PackageInfo(props) {
                                     key={index}
                                     className="
                                       flex
-                                      gap-4 mb-4 sm:mb-0
+                                      gap-4 mt-[10px] sm:mb-0
                                     "
                                   >
                                     {subItem.id === 1 ? (
@@ -411,7 +432,8 @@ function PackageInfo(props) {
                       {item.menuButton?.map((subItem, index) => (
                         <div key={index}
                         ref={(el)=>(sectionRefs.current[subItem.id]=el)}
-                         className="mb-[8px] scroll-mt-[80px]">
+                        data-id={subItem.id}
+                         className="mb-[8px] scroll-mt-[80px] w-full">
                           <h5
                             className="
                               mb-[8px] p-[10px]
@@ -423,9 +445,8 @@ function PackageInfo(props) {
                           </h5>
                           <div
                             className="
-                              md:grid md:grid-cols-2
-                              w-full
-                              md:gap-4
+                              w-full sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2
+                              sm:gap-4
                             "
                           >
                             {subItem.children?.map((child, index) => (

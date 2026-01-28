@@ -200,7 +200,7 @@ function PackageCard(props){
             <div
               className="
                 flex flex-wrap
-                py-[8px] px-[12px] mb-[10px]
+                py-[8px] px-[12px] mx-[16px] mb-[10px]
                 bg-[#f8f9fa]
                 rounded-[6px]
                 gap-3
