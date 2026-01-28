@@ -13,7 +13,7 @@ const EnquiryLayout = () => {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [completedSteps, setCompletedSteps] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-   
+
 
     // Load steps configuration
     const steps = useMemo(() => getEnquirySteps(), []);
@@ -52,7 +52,7 @@ const EnquiryLayout = () => {
                
             
             <div className="grid grid-cols-1  lg:grid-cols-[280px_1fr]  max-w-7xl mx-auto px-4 sm:px-6 lg:px-7  
-            gap-23 mt-38 lg:mt-24">   
+            gap-23 mt-38 lg:mt-24">
                 {isSidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/40 z-40 lg:hidden "
@@ -70,9 +70,9 @@ const EnquiryLayout = () => {
                         isSidebarOpen={
                             isSidebarOpen
                         }
-                    /> 
+                    />
                     <button
-                        onClick={() => 
+                        onClick={() =>
                             setIsSidebarOpen(false)}
                         className="lg:hidden absolute top-1 -right-2 sm:-right-2 bg-white rounded-full p-1 shadow 
                         cursor-pointer z-60"
