@@ -1,7 +1,7 @@
 import { Navbar } from "@shared/components/layout";
-import { PackageInfo } from "@shared/components/ui";
+import PackageInfo from "@/features/package/components/PackageInfo";
 import {packageInformation} from "@shared/services";
-// import { packageInformation } from "../data/packageData";
+
 function PackageDetails() {
   return (
     <>

@@ -10,7 +10,7 @@ function PackageCard(props){
           <div
             style={{ background: `url(${props.CardImage})` }}
             className="
-              h-[200px] w-full
+              h-[200px] w-full lg:max-w-[400px]
               bg-center bg-no-repeat
               rounded-[30px]
               relative group !bg-cover
@@ -200,7 +200,7 @@ function PackageCard(props){
             <div
               className="
                 flex flex-wrap
-                py-[8px] px-[12px] mx-[16px] mb-[10px]
+                py-[8px] px-[12px] ml-[16px] mb-[10px]
                 bg-[#f8f9fa]
                 rounded-[6px]
                 gap-3

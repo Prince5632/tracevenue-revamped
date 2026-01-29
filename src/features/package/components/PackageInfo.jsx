@@ -1,9 +1,9 @@
-import CardImage from "../../../assets/package images/card1.jpeg";
-import PackageCard from "./PackageCard.jsx";
-import PackageFooter from "./PackageFooter.jsx";
-import PackageMenu from "./PackageMenu.jsx";
-import Card from "./Card.jsx";
-import Badge from "./Badge.jsx";
+import CardImage from "@/assets/package images/card1.jpeg";
+import PackageCard from "@/features/package/components/PackageCard";
+import PackageFooter from "@/features/package/components/PackageFooter";
+import PackageMenu from "@/features/package/components/PackageMenu";
+import Card from "@/shared/components/ui/Card";
+import Badge from "@/shared/components/ui/Badge";
 import { useRef,useState, useEffect } from "react";
 
 function PackageInfo(props) {
@@ -43,7 +43,7 @@ function PackageInfo(props) {
     <>
       <main
         className="
-          pt-[65px] p-[10px] pb-[200px]
+          max-w-full pt-[65px] p-[10px] pb-[200px]
           lg:px-[40px]
         "
       >
@@ -145,68 +145,6 @@ function PackageInfo(props) {
               </span>
             </div>
           </div>
-          <div
-            className="
-              flex flex-wrap
-              py-[8px] px-[12px] mb-[10px]
-              bg-[#f8f9fa]
-              rounded-[6px]
-              gap-3
-            "
-          >
-            {props.services.map((item, index) =>
-              item.content == "Services included" ? (
-                <div
-                  key={index}
-                  className="
-                    flex
-                    px-[10px] py-[4px]
-                    text-[#ff6b35]
-                    bg-[#fff5f0]
-                    rounded-[12px]
-                    justify-center items-center gap-[6px]
-                  "
-                >
-                  <i
-                    className={`
-                      text-[14px]
-                      ${item.class}
-                    `}
-                  ></i>
-                  <span
-                    className="
-                      text-[12px] text-[#ff6b35]
-                    "
-                  >
-                    {item.content}
-                  </span>
-                </div>
-              ) : (
-                <div
-                  key={index}
-                  className="
-                    flex
-                    text-[#ff6b35]
-                    justify-center items-center gap-[6px]
-                  "
-                >
-                  <i
-                    className={`
-                      text-[14px]
-                      ${item.class}
-                    `}
-                  ></i>
-                  <span
-                    className="
-                      text-[12px] text-[#555555]
-                    "
-                  >
-                    {item.content}
-                  </span>
-                </div>
-              ),
-            )}
-          </div>
         </div>
         <PackageCard
           cuisines={props.cuisines}
@@ -282,13 +220,13 @@ function PackageInfo(props) {
               />
             ))}
           </div>
-          <div className="flex-1 w-full">
-            <div>
+          <div className="flex-1 w-full ">
+            <div className="w-full ">
               {props.packageMenu?.map((item, index) => (
                 <div
                   key={index}
                   className="
-                w-full max-w-full lg:max-w-[805px] p-[6px]
+                w-full p-[6px]
                 lg:p-[24px]
                 bg-[#ffffff]
                 lg:border lg:border-[#e5e7eb] rounded-[12px] mb-8
@@ -304,7 +242,6 @@ function PackageInfo(props) {
                       >
                         Food Items
                       </h4>
-                      {/* <h4>{item.heading}</h4> */}
                       {item.menuButton?.map((subItem, index) => (
                         <div 
                         key={index} 
@@ -326,7 +263,7 @@ function PackageInfo(props) {
                             variant="default"
                             padding="lg"
                             className="
-                              max-w-[444px] p-[20px] mb-[20px]
+                              max-w-[444px] p-[20px] mb-[20px] shadow-[0_4px_10px_#0000000d]
                             "
                           >
                             <Card.Header>
@@ -457,7 +394,7 @@ function PackageInfo(props) {
                                 hoverable
                                 className="
                                   w-[100%]
-                                  !bg-[#f8f9fa] !border !border-[#e5e7eb] !p-[16px] !rounded-[10px] hover:!border-[#e29f55] mb-4 md:mb-0
+                                  !bg-[#f8f9fa] !border !border-[#e5e7eb] !p-[16px] !rounded-[10px] hover:!border-[#e29f55] shadow-none hover:!shadow-[0_4px_12px_#00000014] mb-4 md:mb-0
                                 "
                               >
                                 <Card.Body
