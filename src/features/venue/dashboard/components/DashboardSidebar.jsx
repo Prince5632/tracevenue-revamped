@@ -24,19 +24,24 @@ const DashboardSidebar = () => {
   const [active, setActive] = useState(null);
 
   return (
-    <div className="w-80 pb-8 rounded-3xl border  border-[#D7D9DA] bg-[#FFFFFF] shadow-[0px_4px_10px_0px_#0000000D] ">
-      <h1
-        className=" text-2xl leading-none tracking-normal  font-semibold
-  font-gilroy mb-4 pt-5 pl-5 text-black"
-      >
-        {/* h-6 */}
-        Welcome back!
-      </h1>
+    <div
+      className="w-85.5 h-202.5 rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.05)]
+
+    "
+    >
+      <div className="h-20 flex items-center px-7.5">
+        <h1
+          className="w-45.25 h-6   font-semibold text-[24px] leading-none tracking-normal rotate-0 opacity-100 text-black
+"
+        >
+          Welcome back!
+        </h1>
+      </div>
 
       {/* Dashboard */}
       <div
         onClick={() => setActive("dashboard")}
-        className={`border-b border-[#D7D9DA] flex items-center gap-4 px-5 h-14 w-full cursor-pointer 
+        className={`border-[#D7D9DA] flex items-center gap-4 w-85 h-14.5 border-t border-b px-7.5
                   ${
                     active === "dashboard"
                       ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -44,32 +49,46 @@ const DashboardSidebar = () => {
                   }
                   `}
       >
-        <img src={mageDashboardIcon} alt="Dashboard" />
-        <div className="py-4 font-semibold rounded-lg cursor-pointer">
+        <img 
+          src={mageDashboardIcon} 
+          alt="Dashboard" 
+          className="w-6 h-6" 
+        />
+        <div
+          className="
+         h-4.5 font-semibold text-[18px] leading-none tracking-normal 
+        "
+        >
           Dashboard
-        </div>             
+        </div>
       </div>
 
       {/* Enquiries */}
-      <div className="border-b border-[#D7D9DA]  px-5 ">
+      <div className="border-b border-[#D7D9DA]">
         <button
           onClick={() => toggleMenu("enquiries")}
-          className="w-full flex justify-between items-center py-4 font-medium"
+          className="w-full flex justify-between items-center   font-medium h-14.5 px-7.5"
         >
-          <div className="flex gap-4 font-semibold">
-            <img src={tableListDetails} alt="Table List Detail" />
-            Enquiries
+          <div className="flex gap-4 font-semibold items-center">
+            <img
+              src={tableListDetails}
+              alt="Table List Detail"
+              className="w-6 h-6"
+            />
+            <span className="text-[18px] leading-none text-black">
+              Enquiries
+            </span>
           </div>
 
           <ChevronDown
-            className={`transition-transform ${
+            className={`transition-transform duration-300 ${
               openMenu.enquiries ? "rotate-180" : ""
             }`}
           />
         </button>
 
         {openMenu.enquiries && (
-          <div className="">
+          <div className="w-full">
             {[
               "Active Enquiries (4)",
               "Draft Enquiries (7)",
@@ -79,7 +98,7 @@ const DashboardSidebar = () => {
               <div
                 key={item}
                 onClick={() => setActive(item)}
-                className={`px-8 py-2 text-sm cursor-pointer
+                className={`w-full h-12 flex items-center cursor-pointer font-medium text-[18px] pl-18
                   ${
                     active === item
                       ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -95,25 +114,31 @@ const DashboardSidebar = () => {
       </div>
 
       {/* Contracts */}
-      <div className="border-b border-[#D7D9DA]  px-5">
+      <div className="border-b border-[#D7D9DA] ">
         <button
           onClick={() => toggleMenu("contracts")}
-          className="w-full flex justify-between items-center py-4 font-medium"
+          className="w-full flex justify-between items-center  h-14.5 font-medium px-7.5"
         >
           <div className="flex gap-4 font-semibold">
-            <img src={carbonDocumentIcon} alt="Carbon Document" />
-            Contracts
+            <img
+              src={carbonDocumentIcon}
+              alt="Carbon Document"
+              className="w-6 h-6"
+            />
+            <span className=" text-[18px] leading-none text-black">
+              Contracts
+            </span>
           </div>
 
           <ChevronDown
-            className={`transition-transform ${
+            className={`transition-transform duration-300 ${
               openMenu.contracts ? "rotate-180" : ""
             }`}
           />
         </button>
 
         {openMenu.contracts && (
-          <div className="">
+          <div className="w-full">
             {[
               "Active Contracts (0)",
               "Proposed Contracts (0)",
@@ -122,7 +147,7 @@ const DashboardSidebar = () => {
               <div
                 key={item}
                 onClick={() => setActive(item)}
-                className={`px-8 py-2 text-sm cursor-pointer 
+                className={`w-full flex items-center text-[18px] h-12  pl-18 cursor-pointer
                   ${
                     active === item
                       ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -138,30 +163,30 @@ const DashboardSidebar = () => {
       </div>
 
       {/* Profile */}
-      <div className="border-b border-[#D7D9DA]  px-5 ">
+      <div className="border-b border-[#D7D9DA]">
         <button
           onClick={() => toggleMenu("profile")}
-          className="w-full flex justify-between items-center py-4 font-medium"
+          className="w-full flex justify-between items-center h-14.5 font-medium px-7.5"
         >
           <div className="flex gap-4 font-semibold">
-            <img src={userProfile} alt="Profile" />
-            Profile
+            <img src={userProfile} alt="Profile" className="h-6 w-6" />
+            <span className="text-[18px] leading-none text-black">Profile</span>
           </div>
 
           <ChevronDown
-            className={`transition-transform ${
+            className={`transition-transform duration-300 ${
               openMenu.profile ? "rotate-180" : ""
             }`}
           />
         </button>
 
         {openMenu.profile && (
-          <div className="">
+          <div className="w-full">
             {[].map((item) => (
               <div
                 key={item}
                 onClick={() => setActive(item)}
-                className={`px-8 py-2 text-sm cursor-pointer 
+                className={`w-full h-12 flex items-center text-[18px]  pl-18 cursor-pointer
                   ${
                     active === item
                       ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -177,30 +202,32 @@ const DashboardSidebar = () => {
       </div>
 
       {/* Settings */}
-      <div className="border-b border-[#D7D9DA]  px-5">
+      <div className="border-b border-[#D7D9DA] ">
         <button
           onClick={() => toggleMenu("setting")}
-          className="w-full flex justify-between items-center py-4 font-medium"
+          className="w-full flex justify-between items-center font-medium h-14.5 px-7.5"
         >
           <div className="flex gap-4 font-semibold">
-            <img src={settings} alt="Setting" />
-            Settings
+            <img src={settings} alt="Setting" className="h-6 w-6" />
+            <span className="text-[18px] leading-none text-black">
+              Settings
+            </span>
           </div>
 
           <ChevronDown
-            className={`transition-transform ${
+            className={`transition-transform duration-300 ${
               openMenu.setting ? "rotate-180" : ""
             }`}
           />
         </button>
 
         {openMenu.setting && (
-          <div className="">
+          <div className="w-full">
             {[].map((item) => (
-              <div                          
+              <div
                 key={item}
                 onClick={() => setActive(item)}
-                className={`px-8 py-2 text-sm cursor-pointer 
+                className={`w-full h-12 flex items-center text-[18px] pl-18
                   ${
                     active === item
                       ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -215,10 +242,11 @@ const DashboardSidebar = () => {
         )}
       </div>
 
-      <div className="border-b border-[#D7D9DA] px-5 py-4 flex gap-4 text-[#FF4000] font-semibold cursor-pointer ">
-        <img src={logout} alt="Logout" />
-        Logout
-        
+      <div className="border-b border-[#D7D9DA] flex items-center gap-4 h-14.5 px-7.5">
+        <img src={logout} alt="Logout" className="h-6 w-6" />
+        <div className="h-4.5 font-semibold text-[18px] leading-none tracking-normal text-[#FF4000]">
+          Logout
+        </div>
       </div>
     </div>
   );
