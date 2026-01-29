@@ -1,15 +1,15 @@
 import React from 'react'
 
-const DashboardHeader = () => {
+const DashboardTitle = () => {
   return (
-   <>
-   <div className='flex flex-col mt-8'>
-    <h1 className='font-bold text-3xl text-[#212529]'>Dashboard Home</h1>
-    <p className='text-md font-semibold text-secondary mt-2'>Overview of events,enquiries and recommendations.</p>
-    <div className='h-1 w-full bg-gray-200 mt-3'></div>
-   </div>
-   </>
+    <>
+      <div className='flex flex-col mt-8'>
+        <h1 className='font-bold text-[30px] text-gray-800 leading-9'>Dashboard Home</h1>
+        <p className='text-[14px] font-semibold text-secondary mt-2 tracking-wide'>Overview of events,enquiries and recommendations.</p>
+        <div className='h-1 w-full bg-gray-200 mt-3'></div>
+      </div>
+    </>
   )
 }
 
-export default DashboardHeader
+export default DashboardTitle
