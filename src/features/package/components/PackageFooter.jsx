@@ -1,15 +1,13 @@
-function PackageFooter(){
-    return<>
-         <div
-          className="
-            flex z-50
-            px-2
-            fixed bottom-0 right-0 left-0 justify-center
-            md:bottom-8
-          "
-        >
-          <div
-            className="
+function PackageFooter() {
+  return <>
+    <div
+      className="fixed inset-x-0 bottom-0
+    md:bottom-8
+    z-50
+    flex justify-center"
+    >
+      <div
+        className="
               flex flex-col
               w-full max-w-[800px]
               py-[12px] px-[24px]
@@ -18,10 +16,11 @@ function PackageFooter(){
               shadow-[0_8px_32px_#0000001f]
               items-center gap-[20px]
               md:rounded-[16px] md:!flex-row md:justify-between
+              mx-auto 
             "
-          >
-            <div
-              className="
+      >
+        <div
+          className="
                 flex
                 w-full
                 font-semibold
@@ -29,9 +28,9 @@ function PackageFooter(){
                 sm:justify-start
                 md:w-auto md:justify-between
               "
-            >
-              <div
-                className="
+        >
+          <div
+            className="
                   flex
                   h-[48px] w-[48px]
                   text-[16px] text-[#ff4000]
@@ -40,50 +39,50 @@ function PackageFooter(){
                   justify-center items-center
                   sm:text-[20px]
                 "
-              >
-                <i
-                  class="
+          >
+            <i
+              class="
                     fa-solid fa-paper-plane
                   "
-                ></i>
-              </div>
-              <div
-                className="
+            ></i>
+          </div>
+          <div
+            className="
                   sm:w-full
                   md:w-auto
                 "
-              >
-                <h4
-                  className="
+          >
+            <h4
+              className="
                     mb-[4px]
                     text-[#1a1a1a] text-[13px] font-bold
                     sm:text-[16px]
                   "
-                >
-                  Send to Match Venues
-                </h4>
-                <p
-                  className="
+            >
+              Send to Match Venues
+            </h4>
+            <p
+              className="
                     hidden
                     text-[#666666] text-[13px] font-semibold
                     md:inline
                   "
-                >
-                  Get personalized quotes from venues
-                </p>
-              </div>
-            </div>
-            <div
-              className="
+            >
+              Get personalized quotes from venues
+            </p>
+          </div>
+        </div>
+        <div
+          className="
                 flex flex-col
                 w-full
                 items-center gap-[12px]
                 md:w-auto
                 lg:!flex-row
               "
-            >
-              <button
-                className="
+        >
+          <button
+            className="
                   w-full
                   px-[20px] py-[12px]
                   text-[#ff4000] text-[16px]
@@ -93,11 +92,11 @@ function PackageFooter(){
                   sm:px-[32px] sm:py-[16px]
                   md:w-auto
                 "
-              >
-                Preview Enquiry
-              </button>
-              <button
-                className="
+          >
+            Preview Enquiry
+          </button>
+          <button
+            className="
                   flex items-center justify-center
                   w-full
                   px-[20px] py-[12px]
@@ -109,20 +108,20 @@ function PackageFooter(){
                   sm:px-[32px] sm:py-[16px]
                   md:w-auto
                 "
-              >
-                Raise Enquiry
-                <i
-                  class="
+          >
+            Raise Enquiry
+            <i
+              class="
                     ml-1
                     text-[14px] text-[#ffffff]
                     transition-transform transition-all
                     fa-solid fa-arrow-right group-hover:translate-x-1 duration-300 ease-in !font-extrabold
                   "
-                ></i>
-              </button>
-            </div>
-          </div>
+            ></i>
+          </button>
         </div>
-    </>
+      </div>
+    </div>
+  </>
 }
 export default PackageFooter;
