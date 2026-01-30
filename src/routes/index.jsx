@@ -7,6 +7,7 @@ import { dashboardRoutes } from "@routes/dashboardRoutes";
 import { LoginPage } from "@features/auth";
 import NotFound from "@pages/NotFound";
 import Unauthorized from "@pages/Unauthorized";
+import PackageDetails from "@/pages/PackageDetails";
 
 /**
  * Main router configuration
@@ -24,4 +25,5 @@ export const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
   { path: "/401", element: <Unauthorized /> },
   { path: "*", element: <NotFound /> },
+  { path: "/package-details", element: <PackageDetails/> }
 ]);
