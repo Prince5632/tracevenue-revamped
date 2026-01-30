@@ -1,5 +1,5 @@
 import React from 'react';
-import  Card  from '../../shared/components/ui/Card';
+import  Card  from '@shared/components/ui/Card';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const steps = [
