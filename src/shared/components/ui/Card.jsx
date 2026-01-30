@@ -32,6 +32,7 @@ const Card = ({
         elevated: 'bg-white border border-[#d7d9da] shadow-[0_4px_10px_0_rgba(0,0,0,0.05)]',
         bordered: 'bg-gradient-to-r from-[#fdeaed] to-[#fff3ea] border border-[#ff8359]',
         flat: 'bg-[#f0f0f4] border border-[#d7d9da]',
+        borderless: 'bg-[#f0f0f9] border-0 shadow-none',
     };
 
     const hoverStyles = hoverable

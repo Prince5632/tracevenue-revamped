@@ -1,22 +1,31 @@
-import './App.css';
-import { RouterProvider } from 'react-router-dom';
-import { router } from '@routes';
-import { ToastProvider } from './shared';
-import { AuthProvider } from '@/features/auth/context/useAuthStore.jsx';
+import './App.css'
+import EnquiriesDetail from './features/venue/enquiry/components/Enquiries/EnquiriesDetail'
+import EnquiryLayout from './layouts/EnquiryLayout'
+import ComponentDocs from './pages/ComponentDocs'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-/**
- * Main App component
- * Uses centralized router configuration from routes/index.jsx
- */
+// Define routes using createBrowserRouter
+const router = createBrowserRouter([
+  // {
+  //   path: '/',
+  //   element: <Home />,
+  // },
+  {
+    path: '/',
+    element: <EnquiryLayout />,
+  },
+  {
+    path: '/docs',
+    element: <ComponentDocs />,
+  },
+  {
+    path:'/enquiriesDetail',
+    element:<EnquiriesDetail/>
+  }
+])
+
 function App() {
-  return (
-    <AuthProvider>
-      <ToastProvider>
-        <RouterProvider router={router} />
-      </ToastProvider>
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />
 }
 
-export default App;
-
+export default App
