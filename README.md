@@ -4,6 +4,7 @@ A modern React application for venue booking and management, built with Vite, Re
 
 ## 🚀 Quick Start
 
+
 ```bash
 # Install dependencies
 npm install
@@ -132,3 +133,5 @@ git push origin feat/your-feature
 - **Component Docs**: `http://localhost:5174/docs` (local) or `/docs` (production)
 - **Vite Docs**: https://vitejs.dev/
 - **React Router**: https://reactrouter.com/
+
+
