@@ -41,7 +41,7 @@ const DashboardSidebar = () => {
 
       {/* Dashboard */}
       <div
-        onClick={() => setActive("dashboard")}
+        onClick={() => { setActive("dashboard"); navigate("/dashboard") }}
         className={`border-[#D7D9DA] flex items-center gap-4 w-85 h-14.5 border-t border-b px-7.5
                   ${active === "dashboard"
             ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
