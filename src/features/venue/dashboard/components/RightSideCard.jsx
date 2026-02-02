@@ -46,7 +46,7 @@ const RightSideCard = () => {
             
             {/* image section start*/}
             <div className='relative'>
-                <img src={restaurant} alt="restaurant" className='rounded-[20px] !h-[300px] sm:!h-[220px] w-full' />
+                <img src={restaurant} alt="restaurant" className='rounded-[20px] !h-[300px] sm:!h-[220px] md:!h-[260px] lg:!h-[225px] w-[100%]' />
                 
                 <div className='absolute top-[15px] !right-[15px] flex gap-1 bg-[#FFFFFF] !h-[28px] w-[64px] rounded-[500px] py-1 px-2'>
                     <img src={star} alt="star" className='!h-[20px] !w-[20px]'/>
@@ -54,7 +54,7 @@ const RightSideCard = () => {
                 </div>
 
                 <div className='absolute inset-0 top-[120px] sm:top-[85px] md:top-[85px] lg:top-[85px] left-[12px] flex flex-col sm:!flex-row'>
-
+                
                     <div className=' h-[128px] w-[300px] sm:w-[340px] bg-[#FFFFFF] rounded-[20px] border-[1px] border-[#D7D9DA]'>
                     
                         <div className='flex justify-between px-[20px] pt-[15px]'>
@@ -93,7 +93,7 @@ const RightSideCard = () => {
 
                     </div>
 
-                    <div className='flex gap-1 ml-12 sm:ml-auto md:ml-auto lg:ml-auto mr-3 mt-2 sm:mt-25 md:mt-25 lg:mt-25'>
+                    <div className='flex gap-1 ml-12 sm:ml-auto md:-ml-60 lg:ml-auto mr-3 mt-2 sm:mt-25 md:mt-35 lg:mt-25'>
                         
                         <div className='w-[101px] h-[27px] bg-[#FFFFFFE5] rounded-[20px] border-1 border-[#D7D9DA] py-[1px] px-[12px]'>
                             <span className='text-[14px] text-[#060606] font-semibold'>Continental</span>
