@@ -11,10 +11,12 @@ import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
 import { CircleArrowLeft } from "lucide-react";
 import { id } from 'date-fns/locale';
+import { useNavigate } from 'react-router-dom';
 
 const EnquiriesDetail = () => {
   const [location, setLocation] = useState('');
   const [center, setCenter] = useState(null);
+  const navigate = useNavigate();
   const cuisinesData = [
     {
       id: 1,
@@ -250,7 +252,7 @@ const EnquiriesDetail = () => {
       <div className="w-full lg:w-[75%]">
         <div className="p-4">
           <h1 className="font-bold text-2xl mb-2 flex flex-row gap-3">
-            <CircleArrowLeft size={37} color='#fd4304' strokeWidth={1.2} />
+            <CircleArrowLeft size={37} color='#fd4304' strokeWidth={1.2} className='cursor-pointer' onClick={() => navigate('/service/venues/enquiry/active')} />
             <h2 className='text-base text-[#060600] font-bold md:text-2xl '>
               Looking venue for kitty party for 30 people on 10 Jan, 2026
             </h2>

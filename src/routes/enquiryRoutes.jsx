@@ -1,5 +1,4 @@
 import RestaurantDetailModal from '@/features/venue/dashboard/components/RestaurantDetailModal';
-import EnquiriesDetail from '@/features/venue/enquiry/pages/EnquiriesDetail';
 import PackageDetails from '@/pages/PackageDetails';
 import EnquiryLayout from '@layouts/EnquiryLayout';
 import ComponentDocs from '@pages/ComponentDocs';
@@ -24,7 +23,6 @@ export const enquiryRoutes = [
 
     // Package details route
     // { path: '/package/:id/:jobId', element: <PackageDetails /> },
-    { path: '/enquiry-detail', element: <EnquiriesDetail /> },
     { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
     { path: "/package-details", element: <PackageDetails /> },
 

@@ -52,7 +52,7 @@ export const dashboardRoutes = [
         element: <Contract />,
       },
       {
-        path: "/service/venues/enquiry-detail",
+        path: "/service/venues/enquiry/enquiry-detail",
         element: <EnquiriesDetail />,
       },
     ],

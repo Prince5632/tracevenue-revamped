@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { MapPin } from 'lucide-react';
 import { Button, Card, GradientText } from '@/shared';
+import { useNavigate } from 'react-router-dom';
 
 const EnquiryCard = ({ looking, event, date, day, guest, amount, location, pricingType, enquiryRaised, startTime, endTime, minGuest, maxGuest }) => {
-
+    const navigate = useNavigate()
     return (
         <div className='rounded-2xl my-6 border border-gray-300 grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]'>
             {/* image */}
@@ -73,7 +74,7 @@ const EnquiryCard = ({ looking, event, date, day, guest, amount, location, prici
                 <div className='grid grid-cols-1 lg:grid-cols-3 mt-5 gap-4'>
                     <h2 className='text-success font-semibold text-xl'>Awaiting Quotations</h2>
                     <h2 className='italic text-[#573bb6] text-xl'>{enquiryRaised}</h2>
-                    <Button className="rounded-xl font-bold" variant="primary" children="View Enquiry" onClick={() => navigate(`/enquiry/${enquiryId}`)} />
+                    <Button className="rounded-xl font-bold" variant="primary" children="View Enquiry" onClick={() => navigate(`/service/venues/enquiry/enquiry-detail`)} />
                 </div>
 
             </div>
