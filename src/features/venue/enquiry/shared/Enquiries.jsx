@@ -155,7 +155,7 @@ const Enquiries = ({ heading, subheading }) => {
 
   return (
     <div>
-      <Header heading={apiStatus} subheading={subheading} sortBy={sortBy} setSortBy={setSortBy} />
+      <Header heading={heading} subheading={subheading} sortBy={sortBy} setSortBy={setSortBy} />
       {sortedData.map((elem) => {
         return <EnquiryCard key={elem.id} looking={elem.lookingFor} event={elem.event} date={elem.date} day={elem.day} minGuest={elem.minGuests} maxGuest={elem.maxGuests} amount={elem.amountRange} location={elem.location} pricingType={elem.pricingType} enquiryRaised={elem.enquiryRaised} startTime={elem.startTime} endTime={elem.endTime} />
       })}

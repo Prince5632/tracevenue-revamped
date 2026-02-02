@@ -6,6 +6,7 @@ import tableListDetails from "../../../../assets/dashboard/tabler_list-details.s
 import userProfile from "../../../../assets/dashboard/user-profile.svg";
 import settings from "../../../../assets/dashboard/setting.svg";
 import logout from "../../../../assets/dashboard/switch.svg";
+import { useNavigate } from "react-router-dom";
 
 const DashboardSidebar = () => {
   const [openMenu, setOpenMenu] = useState({
@@ -14,7 +15,7 @@ const DashboardSidebar = () => {
     profile: false,
     setting: false,
   });
-
+  const navigate = useNavigate();
   const toggleMenu = (menu) => {
     setOpenMenu((openMenu) => ({
       ...openMenu,
@@ -42,17 +43,16 @@ const DashboardSidebar = () => {
       <div
         onClick={() => setActive("dashboard")}
         className={`border-[#D7D9DA] flex items-center gap-4 w-85 h-14.5 border-t border-b px-7.5
-                  ${
-                    active === "dashboard"
-                      ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                      : "text-black"
-                  }
+                  ${active === "dashboard"
+            ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+            : "text-black"
+          }
                   `}
       >
-        <img 
-          src={mageDashboardIcon} 
-          alt="Dashboard" 
-          className="w-6 h-6" 
+        <img
+          src={mageDashboardIcon}
+          alt="Dashboard"
+          className="w-6 h-6"
         />
         <div
           className="
@@ -81,9 +81,8 @@ const DashboardSidebar = () => {
           </div>
 
           <ChevronDown
-            className={`transition-transform duration-300 ${
-              openMenu.enquiries ? "rotate-180" : ""
-            }`}
+            className={`transition-transform duration-300 ${openMenu.enquiries ? "rotate-180" : ""
+              }`}
           />
         </button>
 
@@ -97,12 +96,15 @@ const DashboardSidebar = () => {
             ].map((item) => (
               <div
                 key={item}
-                onClick={() => setActive(item)}
+                onClick={() => {
+                  setActive(item)
+                  navigate(`/service/venues/enquiry/${item.toLowerCase().split(" ")[0]}`)
+                }
+                }
                 className={`w-full h-12 flex items-center cursor-pointer font-medium text-[18px] pl-18
-                  ${
-                    active === item
-                      ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                      : "text-black"
+                  ${active === item
+                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+                    : "text-black"
                   }
                   `}
               >
@@ -131,9 +133,8 @@ const DashboardSidebar = () => {
           </div>
 
           <ChevronDown
-            className={`transition-transform duration-300 ${
-              openMenu.contracts ? "rotate-180" : ""
-            }`}
+            className={`transition-transform duration-300 ${openMenu.contracts ? "rotate-180" : ""
+              }`}
           />
         </button>
 
@@ -148,10 +149,9 @@ const DashboardSidebar = () => {
                 key={item}
                 onClick={() => setActive(item)}
                 className={`w-full flex items-center text-[18px] h-12  pl-18 cursor-pointer
-                  ${
-                    active === item
-                      ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                      : "text-black"
+                  ${active === item
+                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+                    : "text-black"
                   }
                   `}
               >
@@ -174,9 +174,8 @@ const DashboardSidebar = () => {
           </div>
 
           <ChevronDown
-            className={`transition-transform duration-300 ${
-              openMenu.profile ? "rotate-180" : ""
-            }`}
+            className={`transition-transform duration-300 ${openMenu.profile ? "rotate-180" : ""
+              }`}
           />
         </button>
 
@@ -187,10 +186,9 @@ const DashboardSidebar = () => {
                 key={item}
                 onClick={() => setActive(item)}
                 className={`w-full h-12 flex items-center text-[18px]  pl-18 cursor-pointer
-                  ${
-                    active === item
-                      ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                      : "text-black"
+                  ${active === item
+                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+                    : "text-black"
                   }
                   `}
               >
@@ -215,9 +213,8 @@ const DashboardSidebar = () => {
           </div>
 
           <ChevronDown
-            className={`transition-transform duration-300 ${
-              openMenu.setting ? "rotate-180" : ""
-            }`}
+            className={`transition-transform duration-300 ${openMenu.setting ? "rotate-180" : ""
+              }`}
           />
         </button>
 
@@ -228,10 +225,9 @@ const DashboardSidebar = () => {
                 key={item}
                 onClick={() => setActive(item)}
                 className={`w-full h-12 flex items-center text-[18px] pl-18
-                  ${
-                    active === item
-                      ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                      : "text-black"
+                  ${active === item
+                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+                    : "text-black"
                   }
                   `}
               >
