@@ -26,7 +26,7 @@ const Dashboard = () => {
 
   return <>
 
-    <div className="flex flex-col mt-8 gap-4 w-full">
+    <div className="flex flex-col mt-8 gap-4 w-full ml-18">
 
       <DashboardTitle />
 
@@ -49,7 +49,7 @@ const Dashboard = () => {
           <Button
             variant="outline"
             rightIcon={<ArrowRight />}
-            className="bg-white hover:!text-[#ff4000]  hover:!bg-white absolute whitespace-nowrap"
+            className="bg-white hover:text-[#ff4000]! hover:bg-white! absolute whitespace-nowrap"
           >
             Plan My Event
           </Button>
@@ -135,7 +135,7 @@ const Dashboard = () => {
 
         {/* Recent Activity Card */}
         <Card>
-          <Card.Header className="font-semibold text-2xl">Recent Activity</Card.Header>
+          <Card.Header className="font-semibold text-2xl text-gray-800">Recent Activity</Card.Header>
           <Card.Body className="font-bold text-secondary">No Recent Activity</Card.Body>
         </Card>
       </div>
