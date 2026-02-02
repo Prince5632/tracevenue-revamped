@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { useDashboard } from "@/features/venue/dashboard/context/DashboardContext";
+import RightSideCard from '../components/RightSideCard';
 
 const Enquiries = () => {
   const { status } = useParams();
@@ -33,7 +34,10 @@ const Enquiries = () => {
   if (error) return <div>Error loading enquiries</div>;
 
   return (
+    <>
     <div>Enquiries - {apiStatus}</div>
+    <RightSideCard />
+    </>
   )
 }
 
