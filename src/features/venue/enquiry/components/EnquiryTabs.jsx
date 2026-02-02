@@ -1,5 +1,5 @@
 import React from 'react';
-import  Card  from '@shared/components/ui/Card';
+import Card from '@shared/components/ui/Card';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const steps = [
@@ -10,12 +10,12 @@ const steps = [
   { label: 'Offer & Booking', path: '/offer-booking' },
 ];
 
-const EnquiryTopview = () => {
+const EnquiryTabs = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
 
-    const activeIndex = 0;
+  const activeIndex = 0;
 
   return (
     <div className="w-full">
@@ -53,10 +53,9 @@ const EnquiryTopview = () => {
                     text-xs
                     font-semibold
                     transition-all
-                    ${
-                      isActive
-                        ? 'bg-orange-500 text-white'
-                        : 'bg-gray-300 border border-gray-300 text-gray-600'
+                    ${isActive
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-300 border border-gray-300 text-gray-600'
                     }
                   `}
                 >
@@ -69,15 +68,15 @@ const EnquiryTopview = () => {
 
 
         {/* DESKTOP  */}
-<div className="hidden sm:flex gap-1">
-  {steps.map((step, index) => {
-    const isActive = step.path === window.location.pathname;
+        <div className="hidden sm:flex gap-1">
+          {steps.map((step, index) => {
+            const isActive = step.path === window.location.pathname;
 
-    return (
-      <button
-        key={index}
-        onClick={() => navigate(step.path)}
-        className="
+            return (
+              <button
+                key={index}
+                onClick={() => navigate(step.path)}
+                className="
           flex-1
           py-1
           flex
@@ -85,28 +84,27 @@ const EnquiryTopview = () => {
           justify-center
           text-gray-300
         "
-      >
-        <span
-          className={`
+              >
+                <span
+                  className={`
             px-3              /* ⬅ reduced width */
             py-1.5            /* ⬅ reduced height */
             rounded-lg
             text-sm
             font-semibold
             transition-all
-            ${
-              isActive
-                ? 'bg-orange-500 text-white'
-                : 'text-gray-800 hover:bg-orange-500 hover:text-white'
-            }
+            ${isActive
+                      ? 'bg-orange-500 text-white'
+                      : 'text-gray-800 hover:bg-orange-500 hover:text-white'
+                    }
           `}
-        >
-          {step.label}
-        </span>
-      </button>
-    );
-  })}
-</div>
+                >
+                  {step.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
 
       </Card>
@@ -114,4 +112,4 @@ const EnquiryTopview = () => {
   );
 };
 
-export default EnquiryTopview;
+export default EnquiryTabs;
