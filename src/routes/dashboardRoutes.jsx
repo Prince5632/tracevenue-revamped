@@ -1,6 +1,6 @@
 import Contract from "@/features/venue/dashboard/pages/Contract";
 import Dashboard from "@/features/venue/dashboard/pages/Dashboard";
-import Enquiries from "@/features/venue/dashboard/pages/Enquiries";
+import Enquiries from "@/features/venue/dashboard/shared/Enquiries";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import ProtectedRoute from "@routes/ProtectedRoute";
 import { Children } from "react";

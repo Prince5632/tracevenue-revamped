@@ -24,9 +24,9 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading dashboard data</div>;
 
-return <>
+  return <>
 
-    <div className="flex flex-col mt-8 gap-4 w-full ml-18">
+    <div className="flex flex-col gap-4 w-full">
 
       <DashboardTitle />
 
@@ -36,8 +36,8 @@ return <>
         {/* Text Section */}
         <div className="md:text-left">
           <h1 className="font-bold text-3xl text-white">
-           <span className="bg-linear-to-r from-[#ffd145] to-[#fff9e7] bg-clip-text text-transparent">Hi Prince! </span>
-           Ready to plan your next event?
+            <span className="bg-linear-to-r from-[#ffd145] to-[#fff9e7] bg-clip-text text-transparent">Hi Prince! </span>
+            Ready to plan your next event?
           </h1>
           <h2 className="text-white font-semibold text-md mt-2">
             Quick actions to start planning or view your activity.
