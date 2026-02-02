@@ -24,7 +24,7 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading dashboard data</div>;
 
-  return <>
+return <>
 
     <div className="flex flex-col mt-8 gap-4 w-full ml-18">
 
