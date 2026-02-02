@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@shared/components/ui";
 import tracevenue from "@assets/images/Tracevenue.png"
 import logo from "@assets/images/logo.png"
-import { MenuIcon, X, Bell, User, LogOut, Settings } from "lucide-react";
+import { MenuIcon, X, Bell, User, LogOut, Settings, LayoutDashboard, ClipboardList } from "lucide-react";
 import Login from "../../../features/auth/components/Login";
 import { logout } from "@/services/userService";
 import { Link } from "react-router-dom";
@@ -69,6 +69,12 @@ const Navbar = () => {
                     <div className='hidden lg:flex items-center gap-6 p-4'  >
                         {isLoggedIn ? (
                             <>
+                                <Link to="/dashboard" className="cursor-pointer hover:text-orange-500 transition-colors" title="Dashboard">
+                                    <LayoutDashboard size={20} />
+                                </Link>
+                                <Link to="/service/venues/enquiry/all" className="cursor-pointer hover:text-orange-500 transition-colors" title="Enquiries">
+                                    <ClipboardList size={20} />
+                                </Link>
                                 <div className="relative cursor-pointer hover:text-orange-500 transition-colors">
                                     <Bell size={20} />
                                     {/* Notification Badge Example */}
