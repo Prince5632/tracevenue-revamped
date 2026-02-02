@@ -72,7 +72,7 @@ const Navbar = () => {
                                 <Link to="/dashboard" className="cursor-pointer hover:text-orange-500 transition-colors" title="Dashboard">
                                     <LayoutDashboard size={20} />
                                 </Link>
-                                <Link to="/service/venues/enquiry/all" className="cursor-pointer hover:text-orange-500 transition-colors" title="Enquiries">
+                                <Link to="/service/venues/enquiry/active" className="cursor-pointer hover:text-orange-500 transition-colors" title="Enquiries">
                                     <ClipboardList size={20} />
                                 </Link>
                                 <div className="relative cursor-pointer hover:text-orange-500 transition-colors">
