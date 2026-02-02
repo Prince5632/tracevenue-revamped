@@ -11,7 +11,7 @@ import user from "../../../../assets/images/user.png"
 import direction from "../../../../assets/images/direction.png"
 import tick from "../../../../assets/images/tick.png"
 
-const RightSideCard = () => {
+const RestaurantDetailModal = () => {
     
   return (
     <> 
@@ -162,4 +162,4 @@ const RightSideCard = () => {
   )
 }
 
-export default RightSideCard
+export default RestaurantDetailModal
