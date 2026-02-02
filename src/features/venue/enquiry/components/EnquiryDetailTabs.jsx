@@ -10,7 +10,7 @@ const steps = [
   { label: 'Offer & Booking', path: '/offer-booking' },
 ];
 
-const EnquiryTabs = () => {
+const EnquiryDetailTabs = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -112,4 +112,4 @@ const EnquiryTabs = () => {
   );
 };
 
-export default EnquiryTabs;
+export default EnquiryDetailTabs;

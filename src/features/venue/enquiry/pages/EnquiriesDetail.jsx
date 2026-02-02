@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import EnquiryTopview from '@/features/venue/enquiry/components/EnquiryTabs';
+import EnquiryTopview from '@/features/venue/enquiry/components/EnquiryDetailTabs';
 import Map from '@/components/common/Map';
 import Card from '@shared/components/ui/Card';
 import Alcohol from '@assets/images/alcohol.svg';
