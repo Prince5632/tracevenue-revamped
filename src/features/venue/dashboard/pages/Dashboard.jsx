@@ -5,12 +5,13 @@ import { ArrowRight } from 'lucide-react'
 import { Button, Card, Divider, GradientText } from "@/shared";
 import DashboardAnalytics from "../components/DashboardAnalytics";
 import DashboardEventCard from "../components/DashboardEventCard";
+import { useNavigate } from "react-router-dom";
 
 
 const Dashboard = () => {
   const { fetchDashboardStats, dashboardStats, error, isLoading } =
     useDashboard();
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetchDashboardStats();
   }, [fetchDashboardStats]);
@@ -50,6 +51,7 @@ const Dashboard = () => {
             variant="outline"
             rightIcon={<ArrowRight />}
             className="bg-white hover:text-[#ff4000]! hover:bg-white! absolute whitespace-nowrap"
+            onClick={() => navigate("/")}
           >
             Plan My Event
           </Button>
