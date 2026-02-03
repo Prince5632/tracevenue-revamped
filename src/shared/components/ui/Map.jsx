@@ -6,7 +6,7 @@ const containerStyle = {
   height: "280px",
 };
 
-function Map({ center, radius, handleLocation, showRadiusSlider, showMarker, setShowMarker, onLocationSelector }) {
+function Map({ center, radius, handleLocation, showRadiusSlider, showMarker, setShowMarker, onLocationSelector, setCenter }) {
   const mapRef = useRef(null);
   const isLoaded = useRef(false);
 
@@ -66,8 +66,9 @@ function Map({ center, radius, handleLocation, showRadiusSlider, showMarker, set
             const lat = e.latLng.lat();
             const lng = e.latLng.lng();
             handleLocation(lat, lng);
-            setShowMarker();
+            setShowMarker(true);
             showRadiusSlider();
+            setCenter({lat, lng});
             onLocationSelector(lat, lng);
           }}
         >
@@ -80,6 +81,7 @@ function Map({ center, radius, handleLocation, showRadiusSlider, showMarker, set
                   const lat = e.latLng.lat();
                   const lng = e.latLng.lng();
 
+                  setCenter({lat, lng});
                   onLocationSelector(lat, lng);
                 }}
               />

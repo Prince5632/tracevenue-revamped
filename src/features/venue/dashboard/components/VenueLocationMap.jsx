@@ -1,16 +1,25 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Map } from '@shared/components/ui';
 import { LoadScript } from '@react-google-maps/api';
+import useEnquiryStore from '../../enquiry/context/useEnquiryStore';
 
 
 function VenueLocationMap() {
+    // Use global store
+    const {
+        formData,
+        updateFormData,
+    } = useEnquiryStore();
     let [click, setClick] = useState(false);
     let [indicator, setIndicator] = useState({
         left: 0,
         width: 0
     });
-    const initialLat = 30.7333;
-    const initialLng = 76.7794;
+     const initialLocationName = formData.locations || '';
+    const initialLat = formData.latitude || 30.7333;
+    const initialLng = formData.longitude || 76.7794;
+    const initialRadius = formData.radius || 20; // 
+    const [showMapMarker, setShowMapMarker] = useState(!!initialLocationName);
     const [center, setCenter] = useState({
         lat: initialLat,
         lng: initialLng,
@@ -29,7 +38,6 @@ function VenueLocationMap() {
     const placeDetailsServiceRef = useRef(null);
     const libraries = useMemo(() => ["geometry", "places"], []);
 
-    const initialRadius = 20;
     const [range, setRange] = useState(initialRadius);
 
     const handleClick = () => {
@@ -136,6 +144,9 @@ function VenueLocationMap() {
                                     center={center}
                                     radius={range * 1000} // Convert km to meters
                                     zoom={11}
+                                    showMarker={showMapMarker}
+                        setShowMarker={setShowMapMarker}
+                                    setCenter={setCenter}
                                     onLocationSelector={getAddressFromLngLat}
                                 // Add marker functionality to Map component if not already present
                                 // Assuming Map component handles the marker logic via props
