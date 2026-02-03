@@ -6,7 +6,8 @@ const containerStyle = {
   height: "280px",
 };
 
-function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setShowMarker}) {
+function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setShowMarker, mapTypeId,}) {
+  console.log("Map rendering")
   const mapRef = useRef(null);
   const isLoaded = useRef(false);
 
@@ -45,11 +46,13 @@ function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setSho
     <div className="rounded-xl overflow-hidden ">
     <GoogleMap
       mapContainerStyle={containerStyle}
+       mapTypeId={mapTypeId}  
       center={center}
       zoom={8}
       onLoad={onLoad}
       options={{
-          mapTypeControl: true, 
+       
+          mapTypeControl: false, 
           fullscreenControl: false,   
           streetViewControl: false,  
           zoomControl: true,

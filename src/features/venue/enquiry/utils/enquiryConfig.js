@@ -2,38 +2,38 @@
 const STEP_DEFINITIONS = {
     location: {
         id: 'location',
-        title: 'Location',
-        description: 'Where would you like to host your event?',
+        title: 'Specify the Location',
+        description: 'Tell us where you want to host your event in Mohali, Chandigarh, or Panchkula',
         componentKey: 'Location'
     },
     service_type: {
         id: 'service_type',
         title: 'Specify the service type',
-        description: 'Tell us which service you’re looking for',
+        description: 'Choose whether you need only a venue, only catering, or a complete event solution',
         componentKey: 'ServiceType'
     },
     event_type: {
         id: 'event_type',
         title: 'Event Type',
-        description: "Select the type of event you're planning",
+        description: "Select whether it's a wedding, birthday, corporate meet, or any other celebration",
         componentKey: 'EventType'
     },
     gathering_budget: {
         id: 'gathering_budget',
-        title: 'Gathering & Budget',
-        description: 'Tell us about your expected guests and budget',
+        title: 'Specify the gathering & budget',
+        description: 'We can suggest the right venues & catering options that fit your guests and stay within budget',
         componentKey: 'GatheringBudget'
     },
     event_date: {
         id: 'event_date',
-        title: 'Event Date',
-        description: 'Pick your preferred dates and times',
+        title: 'Specify the event date',
+        description: 'Select your preferred date and add a few alternate dates so we can lock in the best venues and caterers available',
         componentKey: 'EventDate'
     },
     food_preferences: {
         id: 'food_preferences',
         title: 'Specify the food preferences',
-        description: 'Veg & Non-Veg',
+        description: 'Choose pure veg or a mix of veg and non‑veg, and alcohol preferences to match you with suitable caterers or venues',
         componentKey: 'FoodPreferences'
     },
 };
