@@ -3,8 +3,6 @@ import  Card  from '@shared/components/ui/Card';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const steps = [
-  { label: 'Enquiry', path: '/enquiry' },
-  { label: 'Invite for Quotes', path: '/invite-quotes' },
   { label: 'Quotations', path: '/quotations' },
   { label: 'Compare Package', path: '/compare-package' },
   { label: 'Offer & Booking', path: '/offer-booking' },
