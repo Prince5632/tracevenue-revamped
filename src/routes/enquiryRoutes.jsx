@@ -2,7 +2,7 @@ import RestaurantDetailModal from '@/features/venue/dashboard/components/Restaur
 import PackageDetails from '@/pages/PackageDetails';
 import EnquiryLayout from '@layouts/EnquiryLayout';
 import ComponentDocs from '@pages/ComponentDocs';
-
+import QuotationCard from '@/features/venue/enquiry/components/Quotation/QuotationCard';
 /**
  * Enquiry step routes with URL-based step progression
  * Each route segment adds to the URL path as user progresses through steps:
@@ -25,6 +25,8 @@ export const enquiryRoutes = [
     // { path: '/package/:id/:jobId', element: <PackageDetails /> },
     { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
     { path: "/package-details", element: <PackageDetails /> },
+    {path: '/Quotation' , element:<QuotationCard/>},
+    
 
     // Component documentation (dev only)
     { path: '/docs', element: <ComponentDocs /> },
