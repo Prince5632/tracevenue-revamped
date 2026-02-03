@@ -5,8 +5,12 @@ const FoodPreferences = () => {
     return (
         <>
             <main>
-                <div className='w-full sm:flex  sm:items-stretch sm:flex-col sm:gap-2 px-2 pb-30'>
-                    <Card variant="default" padding="md" className='sm:w-[50%] sm:min-h-26 mb-4 sm:mb-0'>
+                <div className='w-full sm:flex  sm:items-stretch sm:flex-col sm:gap-2 px-2 pb-30 md:pb-6'>
+                    <div className='mb-2'>
+                        <h3 className='!text-[18px] text-[#060606] font-bold mb-[8px]'>Food & Venue Preferences</h3>
+                        <p className='!text-[14px] text-[#85878C] font-semibold'>Select your food preference &#40;Veg / Non-Veg&#41;. You may also share any special dietary needs or venue-related preferences.</p>
+                    </div>
+                    <Card variant="default" padding="md" className='sm:w-[50%] sm:min-h-26 !mb-4 sm:mb-0'>
                         <Card.Header>
                             <h4 className='font-semibold'>Eating</h4>
                         </Card.Header>
@@ -31,7 +35,7 @@ const FoodPreferences = () => {
                             </div>
                         </Card.Body>
                     </Card>
-                    <Card variant="default" padding="md" className='sm:w-1/2 sm:min-h-26 '>
+                    <Card variant="default" padding="md" className='sm:w-1/2 sm:min-h-26 !mb-4'>
                         <Card.Header>
                             <h4 className='font-semibold'>Alcohol</h4>
                         </Card.Header>
