@@ -2,21 +2,21 @@ function PackageCard(props){
     return<>
         <div
           className="
-            py-[16px]
+            py-[20px]
             gap-[20px]
-            lg:flex
+            lg:flex border-b border-[#D7D9DA] mb-2
           "
         >
           <div
-            style={{ background: `url(${props.CardImage})` }}
+            style={{ backgroundImage: `url(${props.CardImage})`, backgroundPosition: "center bottom 20%" }}
             className="
-              h-[200px] w-full lg:max-w-[400px]
+              h-[294px] w-full lg:max-w-[630px]
               bg-center bg-no-repeat
               rounded-[30px]
               relative group !bg-cover
               sm:min-w-[400px]
               lg:h-[272px]
-              2xl:max-w-[600px]
+              2xl:max-w-[830px]
             "
           >
             <div
@@ -143,17 +143,42 @@ function PackageCard(props){
           <div
             className="
               w-full
-              mt-6
+              mx-2
               sm:mt-0
             "
           >
             <div
               className="
-                m-[16px] px-[16px]
-                border-l-[3px] border-[#ff6b35]
               "
             >
-              <h4
+              <h2
+              className="
+                text-[18px] text-[#060606] font-bold
+                md:text-[20px]
+              "
+            >
+              {props.subHeading}
+            </h2>
+            <p className="text-[12px] font-semibold text-[#85878C]">
+              {props.cardDescription} 
+            </p>
+            <div className="flex items-center my-4">
+              <i className="fa-solid fa-tag mr-2 text-[#15B076] text-[12px]"></i>
+              <p className="!text-[#15B076] text-[12px] font-semibold italic mb-2 ">1 restaurant offering this package.</p>
+            </div>
+            <div className="h-[85px] w-[393px] mt-[10px] rounded-[20px] flex items-center justify-between py-[15px] px-[20px] bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)]">
+              <div className="w-[100px]">
+                <p className="text-[14px] bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)] font-bold italic bg-clip-text !text-transparent ">Starts from</p>
+                <div className="flex w-full">
+                  <span className="text-[30px] bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)] font-semibold bg-clip-text text-transparent italic">&#8377;</span>
+                  <h1 className="text-[30px] bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)] font-extrabold bg-clip-text text-transparent italic pr-4">1,300</h1>
+                </div>
+              </div>
+              <div className="flex-1 w-full pl-6 text-[#5C5F62] text-[14px] font-semibold">
+                Diverse multi-cuisine meal with Indian, Italian, and more
+              </div>
+            </div>
+              {/* <h4
                 className="
                   mb-[8px]
                   text-[13px] text-[#ff6b35]
@@ -195,9 +220,9 @@ function PackageCard(props){
                     </ul>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
-            <div
+            {/* <div
               className="
                 flex flex-wrap
                 py-[8px] px-[12px] ml-[16px] mb-[10px]
@@ -256,7 +281,7 @@ function PackageCard(props){
                   </div>
                 ),
               )}
-            </div>
+            </div> */}
           </div>
         </div>
     </>

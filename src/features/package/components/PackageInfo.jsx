@@ -1,4 +1,4 @@
-import CardImage from "@/assets/package images/card1.jpeg";
+import CardImage from "@/assets/package images/card2.jpg";
 import PackageCard from "@/features/package/components/PackageCard";
 import PackageFooter from "@/features/package/components/PackageFooter";
 import PackageMenu from "@/features/package/components/PackageMenu";
@@ -43,13 +43,12 @@ function PackageInfo(props) {
     <>
       <main
         className="
-          max-w-full pt-[65px] p-[10px] pb-[200px]
+          max-w-full p-[10px] pb-[200px]
           lg:px-[40px]
         "
       >
         <div
           className="
-            pt-[32px]
             lg:flex lg:justify-between
           "
         >
@@ -113,15 +112,8 @@ function PackageInfo(props) {
               md:flex md:justify-between
             "
           >
-            <h2
-              className="
-                text-[18px] text-[#000000] font-semibold
-                md:text-[20px]
-              "
-            >
-              {props.subHeading}
-            </h2>
-            <div
+            
+            {/* <div
               className="
                 flex flex-col
                 mt-2
@@ -143,7 +135,7 @@ function PackageInfo(props) {
               >
                 Lumpsum
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
         <PackageCard
@@ -152,18 +144,19 @@ function PackageInfo(props) {
           cardHeading={props.cardHeading}
           services={props.services}
           CardImage={CardImage}
+          subHeading={props.subHeading}
+          cardDescription={props.cardDescription}
         />
         <div
           className="
-            mb-[16px] p-[20px]
-            bg-[#f8f9fa]
+            my-[16px]
             rounded-[12px]
           "
         >
           <h4
             className="
-              mb-[16px]
-              text-[#1a1a1a] text-[18px] font-bold
+            mb-2
+              text-[#060606] text-[18px] font-bold
             "
           >
             Cuisines
@@ -178,10 +171,10 @@ function PackageInfo(props) {
               <span
                 key={index}
                 className="
-                  px-[16px] py-[8px]
-                  text-[#333333] text-[14px] font-semibold
+                  px-[12px] py-[4px]
+                  text-[#060606] text-[12px] font-semibold
                   bg-[#ffffff]
-                  rounded-[30px] border border-[#e0e0e0]
+                  rounded-[30px] border border-[#D7D9DA]
                   transition-all
                   duration-200 ease-in gam
                 "
@@ -191,15 +184,40 @@ function PackageInfo(props) {
             ))}
           </div>
         </div>
-        <PackageFooter />
+        {/* <PackageFooter /> */}
         <div
-          className="
-            flex
-            w-full
-            relative justify-between gap-6
-          "
+          // className="
+          //   flex
+          //   w-full
+          //   relative justify-between gap-6
+          // "
         >
-          <div
+          {/* menu categories */}
+            <div className="flex flex-col w-[200px] items-center justify-center bg-amber-400">
+              <h2 className="text-[18px] text-[#060606] font-bold mb-2 ">Menu Categories</h2>
+              <div className="w-[180px] h-[280px] rounded-[30px] border border-[#D7D9DA] shadow-[0_4px_10px_#00000005] flex flex-col py-8">
+
+                {
+                  props.packageMenu?.map((item, index)=>(
+                    item.menuButton?.map((subItems, index)=>(
+                      <span key={index} className="h-[20px] p-[12px] border-l-4 border-l-[#ff4000] mb-[14px] w-full flex items-center justify-center">{subItems.content}</span>
+                    ))
+                  ))
+                }
+              </div>
+            </div>
+            {/* food items */}
+            <div>
+              <h2>Food Items</h2>
+              <div></div>
+            </div>
+            {/* Amenities & Services */}
+            <div>Amenities & Services</div>
+
+
+
+          {/* <div className="w-[180px] max-h-[calc(100vh-6rem)] rounded-[30px] border border-[#D7D9DA] shadow-[0_4px_10px_#00000005] sticky top-24 "> */}
+          {/* <div
             className="
               overflow-y-auto
               w-[280px] max-h-[calc(100vh-6rem)]
@@ -457,7 +475,7 @@ function PackageInfo(props) {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </main>
     </>
