@@ -5,7 +5,7 @@ const FoodPreferences = () => {
     return (
         <>
             <main>
-                <div className='w-full sm:flex  sm:items-stretch sm:flex-col sm:gap-2 px-2'>
+                <div className='w-full sm:flex  sm:items-stretch sm:flex-col sm:gap-2 px-2 pb-30'>
                     <Card variant="default" padding="md" className='sm:w-[50%] sm:min-h-26 mb-4 sm:mb-0'>
                         <Card.Header>
                             <h4 className='font-semibold'>Eating</h4>
