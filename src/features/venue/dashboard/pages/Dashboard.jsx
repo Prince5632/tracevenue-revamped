@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDashboard } from "@/features/venue/dashboard/context/DashboardContext";
+import ComparePackages from "./ComparePackages";
 
 const Dashboard = () => {
   const { fetchDashboardStats, dashboardStats, error, isLoading } =
@@ -18,7 +19,7 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading dashboard data</div>;
 
-  return <div>Dashboard</div>;
+  return <ComparePackages/>
 };
 
 export default Dashboard;
