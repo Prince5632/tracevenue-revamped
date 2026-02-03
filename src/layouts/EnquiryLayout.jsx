@@ -354,15 +354,15 @@ const EnquiryLayout = () => {
           {/*  cross icon on small screen */}
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className={`lg:hidden absolute top-1 ${isSidebarOpen ? "-right-2" : "!right-0"} sm:-right-2 bg-primary text-white  rounded-full p-1 shadow 
-                        cursor-pointer z-60`}
+            className="lg:hidden absolute top-1 right-2 sm:-right-2 bg-primary text-white  rounded-full p-1 shadow 
+                        cursor-pointer z-60"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* right steps sections */}
-        <div className="flex-1 relative top-14 sm:top-14 md:top-0 ">
+        <div className="flex-1 relative  top-20 md:-top-20 min-w-0 md:mt-20 ">
           {/* this button hide on large screen */}
           <Button
             className="mb-4 lg:hidden rounded-l-none"
