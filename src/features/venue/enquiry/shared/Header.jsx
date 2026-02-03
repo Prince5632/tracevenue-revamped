@@ -3,11 +3,13 @@ import { ArrowRight } from 'lucide-react';
 import { ChevronDown } from 'lucide-react';
 import { SlidersHorizontal } from 'lucide-react';
 import { Button, Input } from '@/shared';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ heading, subheading, sortBy, setSortBy }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [event, setEvent] = useState('Latest Enquiries');
     const inputRef = useRef(null);
+    const navigate = useNavigate();
 
     // to handle outside clicks 
     useEffect(() => {
@@ -35,6 +37,7 @@ const Header = ({ heading, subheading, sortBy, setSortBy }) => {
                     </div>
                     <div className='mt-2 lg:justify-self-end'>
                         <Button variant="outline" children="Plan My Event"
+                            onClick={() => navigate("/")}
                             rightIcon={<ArrowRight />} />
                     </div>
                 </div>
