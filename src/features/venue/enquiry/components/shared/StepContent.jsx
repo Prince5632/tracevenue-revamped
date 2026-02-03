@@ -4,7 +4,7 @@ import { StepRenderer } from "..";
 const StepContent = ({ stepKey, formData, updateFormData, urlParams }) => {
   return (
     <>
-      <div className="mt-6 flex-1 relative">
+      <div className="mt-6 flex-1 relative left-3 lg:left-0">
         <StepRenderer
           stepKey={stepKey}
           formData={formData}
