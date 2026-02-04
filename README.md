@@ -67,7 +67,6 @@ color: var(--color-primary);
 background: var(--color-background);
 border-radius: var(--radius-lg);
 ```
-
 ### 📚 Component Documentation
 Visit `/docs` route to see live examples of all components with code snippets.
 
@@ -102,6 +101,9 @@ git commit -m "feat: add venue search filter - prince"
 git commit -m "fix: resolve date picker error - john"
 git commit -m "docs: update component examples - sarah"
 ```
+
+
+
 
 ### Workflow Steps
 ```bash
