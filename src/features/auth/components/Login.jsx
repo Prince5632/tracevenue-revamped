@@ -216,8 +216,7 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
     };
 
     const content = (
-        <div className={`bg-white rounded-[20px] shadow-2xl w-full ${isModal ? 'max-w-[900px]' : 'max-w-full h-full'} flex overflow-hidden relative animate-in fade-in zoom-in duration-300`} onClick={(e) => e.stopPropagation()}>
-
+        <div className={`bg-white rounded-[24px] shadow-2xl min-h-[320px] w-full ${isModal ? 'max-w-[650px]' : 'max-w-full h-full'} flex overflow-hidden relative animate-in fade-in zoom-in duration-300`} onClick={(e) => e.stopPropagation()}>
             {/* Close Button - Only show if modal */}
             {isModal && (
                 <button
@@ -225,7 +224,7 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
                         e.stopPropagation();
                         handleClose();
                     }}
-                    className="absolute top-4 right-4 z-10 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                    className="absolute top-6 right-6 z-20 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer p-1"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -236,19 +235,18 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
 
             {/* Left Column - Illustration */}
             {withIllustration && (
-                <div className="hidden md:flex w-[45%] bg-indigo-50 items-center justify-center p-8 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-blue-50/50"></div>
+                <div className="hidden md:flex w-[45%] items-center justify-center p-1 relative overflow-hidden">
                     <img
                         src={loginBnr}
                         alt="Login Illustration"
-                        className="relative z-10 max-w-full h-auto object-contain drop-shadow-lg transform hover:scale-105 transition-transform duration-500"
+                        className="relative z-10 w-full max-w-[340px] h-auto object-contain drop-shadow-md "
                     />
                 </div>
             )}
 
             {/* Right Column - Form */}
-            <div className={`w-full ${withIllustration ? 'md:w-[55%]' : ''} p-8 md:p-12 flex flex-col justify-center`}>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 font-outfit">
+            <div className={`w-full ${withIllustration ? 'md:w-[55%]' : ''} p-4 md:p-8 flex flex-col justify-center`}>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 font-outfit">
                     {authType === "login" ? "Login" : "Sign Up"}
                 </h2>
 
@@ -299,23 +297,13 @@ const Login = ({ onLoginSuccess, onClose, type, isModal = true, withIllustration
                             otpRefs={otpRefs.current}
                         />
                     )}
-
-                    {/* Terms */}
-                    <p className="text-[10px] md:text-xs text-center text-gray-400 leading-relaxed px-4">
-                        By clicking continue, you agree to our{" "}
-                        <span className="text-gray-600 hover:text-orange-600 cursor-pointer transition-colors">Terms of Service</span>
-                        {" "}and{" "}
-                        <span className="text-gray-600 hover:text-orange-600 cursor-pointer transition-colors">Privacy Policy</span>
-                    </p>
                 </div>
             </div>
         </div>
     );
-
     if (!isModal) {
         return content;
     }
-
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={handleClose}>
             {content}

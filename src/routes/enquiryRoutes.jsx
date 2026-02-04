@@ -1,3 +1,5 @@
+import RestaurantDetailModal from '@/features/venue/dashboard/components/RestaurantDetailModal';
+import PackageDetails from '@/pages/PackageDetails';
 import EnquiryLayout from '@layouts/EnquiryLayout';
 import ComponentDocs from '@pages/ComponentDocs';
 import QuotationCard from '@/features/venue/enquiry/components/Quotation/QuotationCard';
@@ -25,6 +27,8 @@ export const enquiryRoutes = [
     { path: "/package-details", element: <PackageDetails /> },
     {path: '/Quotation' , element:<QuotationCard/>},
     
+    { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
+    { path: "/package-details", element: <PackageDetails /> },
 
     // Component documentation (dev only)
     { path: '/docs', element: <ComponentDocs /> },
