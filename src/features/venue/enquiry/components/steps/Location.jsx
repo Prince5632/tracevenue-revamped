@@ -428,7 +428,7 @@ const Location = ({ urlParams = {} }) => {
             </div>
 
 
-            <div className='h-80 rounded-2xl mt-8 relative z-0 w-full overflow-hidden border border-gray-200'>
+            <div className='rounded-2xl mt-8 relative z-0 w-full overflow-hidden border border-gray-200 h-80'>
                 {isLoading && (
                     <div className="absolute inset-0 z-50 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center gap-3">
                         <Spinner size='lg' color='gray' />
@@ -437,6 +437,24 @@ const Location = ({ urlParams = {} }) => {
                         </span>
                     </div>
                 )}
+               <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+    <div className="flex bg-white rounded shadow-md border border-gray-200 overflow-hidden">
+        {['roadmap', 'satellite'].map((type) => (
+            <button
+                key={type}
+                onClick={() => setMapType(type)}
+                className={`px-4 py-1 text-sm font-medium transition-colors ${
+                    mapType === type
+                        ? 'text-[#f15a24]'
+                        : 'text-gray-600 hover:text-[#f15a24]'
+                }`}
+            >
+                {type === 'roadmap' ? 'Street' : 'Satellite'}
+            </button>
+        ))}
+    </div>
+</div>
+
                 <LoadScript
                     googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
                     libraries={libraries}
@@ -446,24 +464,7 @@ const Location = ({ urlParams = {} }) => {
                         geocoderRef.current = new window.google.maps.Geocoder();
                     }}
                 >
-                    <div className="absolute top-65 right-80 z-50 bg-white rounded shadow-lg flex p-1">
-                        {['roadmap', 'satellite'].map((type) => (
-                            <button
-                                key={type}
-                                onClick={() => {
-                                    setMapType(type)}}
-                                className={`px-4 py-1 rounded text-[5px] font-extrabold cursor-pointer tracking-tighter transition-all ${mapType === type
-                                        ? 'bg-orange-100 text-primary'
-                                        : 'text-gray-500 !hover:text-primary'
-                                    }`}
-                            >
-                                {type === 'roadmap' ? 'Street' : 'Satellite'}
-                            </button>
-                        ))}
-                    </div>
 
-
-                      
                     <Map
                         mapTypeId={mapType}
                         onMapLoad={(map) => {

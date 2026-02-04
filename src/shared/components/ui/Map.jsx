@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 
 const containerStyle = {
   width: "100%",
-  height: "280px",
+  height: "100%",
 };
 
 function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setShowMarker, mapTypeId,}) {
@@ -13,7 +13,7 @@ function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setSho
 
 
   const onLoad = (map) => {
-    if (isLoaded.current) return; // StrictMode guard
+    if (isLoaded.current) return; 
     isLoaded.current = true;
     mapRef.current = map;
   };
@@ -43,10 +43,10 @@ function Map({ center, radius, handleLocation,showRadiusSlider,showMarker,setSho
 
   return (
   <>
-    <div className="rounded-xl overflow-hidden ">
+    <div className="rounded-xl overflow-hidden h-[100%]">
     <GoogleMap
       mapContainerStyle={containerStyle}
-       mapTypeId={mapTypeId}  
+      mapTypeId={mapTypeId}  
       center={center}
       zoom={8}
       onLoad={onLoad}
