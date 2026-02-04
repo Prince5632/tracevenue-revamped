@@ -4,6 +4,8 @@ import { ChevronDown } from 'lucide-react';
 import { SlidersHorizontal } from 'lucide-react';
 import { Button, Input } from '@/shared';
 import { useNavigate } from 'react-router-dom';
+import filters from "../../../../assets/dashboard/filters.png";
+import tabler from "../../../../assets/dashboard/tabler_list-details.png";
 
 const Header = ({ heading, subheading, sortBy, setSortBy }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -46,26 +48,26 @@ const Header = ({ heading, subheading, sortBy, setSortBy }) => {
 
                 {/* input fields */}
 
-                <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 mt-3'>
-                    <Input placeholder="Search enquiries" leftIcon={<SlidersHorizontal />} />
+                <div className='grid grid-cols-1 lg:grid-cols-[55%_35%_5%] gap-4 mt-3'>
+                    <Input placeholder="Search enquiries" leftIcon={<img src={tabler} alt="tabler" />} />
 
-                    <div ref={inputRef} className='rounded-xl border border-gray-300 flex gap-5 flex-colitems-center hover:border-orange-600 relative
-        cursor-pointer h-12 justify-between p-4'>
-                        <div className='relative w-full'>
-                            <div className='flex justify-between items-center'>
-                                <div className='flex gap-2 items-center relative'>
-                                    <div className='text-secondary font-semibold'>Sort by:</div>
-                                    <div className='text-primary text-sm md:text-xl font-semibold'>{event}</div>
-                                </div>
-
-                                <button className="cursor-pointer ml-20" onClick={() => {
-                                    setIsOpen(!isOpen)
-                                }}><ChevronDown /></button>
-
+                    <div ref={inputRef} className='rounded-[30px] border border-[1px] border-[#D7D9DA] hover:border-orange-600
+                        cursor-pointer h-[47px] py-[10px] px-4'>
+                        <div className='flex justify-between'>
+                            <div className='flex gap-2'>
+                                <div className='text-[16px] text-[#85878C] font-semibold'>Sort by:</div>
+                                <div className={`text-[16px] text-[#060606] font-semibold ${event === 'Latest Enquiries' ? "text-orange-600" : ""}`}>{event}</div>
                             </div>
 
-                            {isOpen &&
-                                <div className='bg-white h-25 rounded-xl border border-gray-400 absolute right-0 top-6 p-2 mt-2 w-[60%] ml-10'>
+                            <button className="cursor-pointer" onClick={() => {
+                                    setIsOpen(!isOpen)
+                                }}><ChevronDown className='h-[16px] w-[16px]'/>
+                            </button>
+
+                            
+
+                            {/* {isOpen &&
+                                <div className='bg-white h-25 rounded-xl border border-gray-400 absolute right-0 top-20 p-2 mt-2 w-[60%] ml-10'>
                                     <div className='flex justify-between items-center'>
                                         <button onClick={() => {
                                             setEvent('Latest Enquiries')
@@ -87,8 +89,36 @@ const Header = ({ heading, subheading, sortBy, setSortBy }) => {
                                     </div>
 
                                 </div>
+                            } */}
+
+                            {isOpen &&
+                                <div className='bg-white h-[100px] rounded-[20px] border border-[1px] border-[#D7D9DA] absolute right-37 top-70 w-60 px-4 py-auto'>
+                                    <div className='flex justify-between items-center'>
+                                        <button onClick={() => {
+                                            setEvent('Latest Enquiries')
+                                            setSortBy('latest')
+                                        }} className='my-2 text-gray-600 font-semibold hover:text-orange-600 cursor-pointer'>Latest Enquiries</button>
+
+                                        {/* {event === 'Latest Enquiries' && <img src="src\assets\images\tick.png" />} */}
+
+                                    </div>
+                                    <div className='flex justify-between items-center'>
+                                        <button onClick={() => {
+                                            setEvent('Nearest Event date')
+                                            setSortBy('nearest')
+                                        }} className='text-gray-600 font-semibold hover:text-orange-600 cursor-pointer'>Nearest Event date</button>
+                                        {/* {event === 'Nearest Event date' && <img src="src\assets\images\tick.png" />} */}
+
+                                    </div>
+
+                                </div>
                             }
+
                         </div>
+                    </div>
+
+                    <div className='w-[64px] h-[47px] border border-[1px] border-[#D7D9DA] rounded-[30px] px-5 py-[10px]'>
+                        <img src={filters} alt="filters" />
                     </div>
                 </div>
             </div>
