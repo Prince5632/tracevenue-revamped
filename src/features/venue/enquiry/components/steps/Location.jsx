@@ -4,6 +4,8 @@ import { Button, Divider, GradientText, Input, Map } from '@shared/components/ui
 import { LoadScript } from '@react-google-maps/api';
 import { decodeLocationFromUrl } from '@features/venue/enquiry/utils';
 import useEnquiryStore from '../../context/useEnquiryStore';
+import { Spinner } from '@/shared';
+
 
 const Location = ({ urlParams = {} }) => {
     // Use global store
@@ -30,6 +32,8 @@ const Location = ({ urlParams = {} }) => {
     const [showOptions, setShowOptions] = useState(false);
     const [showRadiusSlider, setShowRadiusSlider] = useState(!!initialLocationName);
     const [showMapMarker, setShowMapMarker] = useState(!!initialLocationName);
+    const [isLoading, setIsLoading] = useState(false)
+    const [mapType, setMapType] = useState('roadmap');
 
     // Refs
     const placesServiceRef = useRef(null);
@@ -38,6 +42,7 @@ const Location = ({ urlParams = {} }) => {
     const debounceTimer = useRef(null);
     const wrapperRef = useRef(null);
     const libraries = useMemo(() => ["geometry", "places"], []);
+    const mapInstanceRef = useRef(null);
 
     // Hydrate from URL params if formData is empty (initial mount via URL)
     useEffect(() => {
@@ -129,7 +134,7 @@ const Location = ({ urlParams = {} }) => {
         placeDetailsServiceRef.current.getDetails(
             {
                 placeId: prediction.place_id,
-                fields: ["username", "formatted_address", "geometry", "address_components"],
+                fields: ["name", "formatted_address", "geometry", "address_components"],
             },
             (place, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
@@ -199,14 +204,14 @@ const Location = ({ urlParams = {} }) => {
             alert("Geolocation not supported");
             return;
         }
-
+        setIsLoading(true)
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const lat = position.coords.latitude;
                 const lng = position.coords.longitude;
                 setCenter({ lat, lng });
                 setShowMapMarker(true);
-
+                setIsLoading(false);
                 if (!geocoderRef.current) {
                     geocoderRef.current = new window.google.maps.Geocoder();
                 }
@@ -288,18 +293,18 @@ const Location = ({ urlParams = {} }) => {
     }, []);
 
     return (
-        <div ref={wrapperRef} className="w-full">
+        <div ref={wrapperRef} className="w-full relative">
             {/* Search Input Section */}
             <div className='relative z-4 w-full'>
                 <div className='relative flex items-center w-full'>
                     <Input
                         type="text"
-                        inputClassName='text-secondary text-[14px] py-2 z-2 pr-20' // Added padding-right for Clear button
-                        placeholder="Enter Your Location"
+                        inputClassName='text-secondary text-[14px] py-2 z-2 pr-20 font-normal' // Added padding-right for Clear button
+                        placeholder="Enter Location"
                         value={locationInput}
                         onChange={handleInputChange}
                         onFocus={() => setShowOptions(true)}
-                        leftIcon={<MapPin size={15} />}
+                        leftIcon={<img src="src\assets\dashboard\location.svg" />}
                         rightIcon={<Search size={18} className='text-primary cursor-pointer' />}
                     />
 
@@ -307,17 +312,17 @@ const Location = ({ urlParams = {} }) => {
                         <Button
                             onClick={clearSelection}
                             size="sm"
-                            variant="ghost"
-                            className='absolute right-10 z-5 text-gray-500 hover:text-red-500 p-1 h-auto'
+                            children="Clear"
+                            className='absolute right-10 z-5 text-gray-500 p-1 h-auto'
                         >
-                            <X size={16} />
+
                         </Button>
                     )}
                 </div>
 
                 {/* Suggestions Dropdown */}
                 {showOptions && (
-                    <div className="absolute top-full left-0 w-full mt-2 z-50 bg-white rounded-2xl shadow-lg border border-[#d7d9da] overflow-hidden">
+                    <div className="absolute top-full left-0 w-full mt-0 z-100 bg-white rounded-2xl shadow-lg border border-[#d7d9da] overflow-hidden">
                         <div className="p-4 bg-gray-50 border-b border-gray-100 cursor-pointer hover:bg-gray-100 transition-colors" onClick={detectCurrentLocation}>
                             <div className='flex items-center gap-3 text-primary font-medium'>
                                 <LocateFixed size={18} />
@@ -325,12 +330,16 @@ const Location = ({ urlParams = {} }) => {
                             </div>
                         </div>
 
-                        <div className="max-h-60 overflow-y-auto">
+                        <Divider />
+
+                        <div className="max-h-60 overflow-y-auto z-120">
                             {suggestions.map((item) => (
                                 <div
                                     key={item.place_id}
                                     className="px-4 py-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-0 transition-colors"
-                                    onClick={() => handleSelectSuggestion(item)}
+                                    onClick={() => handleSelectSuggestion(item)
+
+                                    }
                                 >
                                     <div className="flex gap-3 items-start">
                                         <MapPin size={16} className="mt-1 text-gray-400 shrink-0" />
@@ -356,27 +365,95 @@ const Location = ({ urlParams = {} }) => {
                         </div>
                     </div>
                 )}
-            </div>
 
-            {/* Map Section */}
-            <div className='h-80 rounded-2xl mt-4 relative z-0 w-full overflow-hidden border border-gray-200'>
-                {/* Radius Slider Float */}
                 {showRadiusSlider && (
-                    <div className="absolute top-4 left-4 z-50 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-full shadow-lg px-6 py-3 flex flex-col items-center gap-1 min-w-[200px]">
-                        <div className="flex items-center gap-2 text-sm font-medium">
-                            <span className="text-gray-600">Radius:</span>
-                            <GradientText className="font-bold text-lg">{range} km</GradientText>
+                    <div className="absolute  left-4 z-50 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-4xl shadow-lg flex justify-between items-center px-4 py-3 w-60 mt-3 h-11">
+
+                        {/* Label */}
+                        <div className="shrink-0">
+                            <GradientText className="font-bold text-sm flex flex-col leading-[0.9]">
+                                <span className='pt-2'>Within</span>
+                                <span className="text-xl">{range}km</span>
+                            </GradientText>
                         </div>
-                        <input
-                            type="range"
-                            min="1"
-                            max="50"
-                            className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#e63900]"
-                            value={range}
-                            onChange={handleRadiusChange}
-                        />
+
+                        {/* Slider */}
+                        <div className="relative flex-1">
+                            <input
+                                type="range"
+                                min="1"
+                                max="50"
+                                value={range}
+                                onChange={handleRadiusChange}
+                                className="w-full h-4 rounded-full appearance-none cursor-pointer"
+                                style={{
+                                    background: `linear-gradient(to right, #f08e45 0%, #ee5763 ${(range / 50) * 100}%, #e5e5e5 ${(range / 50) * 100}%, #e5e5e5 100%)`
+                                }}
+                            />
+                            {/* Custom thumb for Webkit browsers */}
+                            <style>
+                                {`
+                                        input[type=range]::-webkit-slider-thumb {
+                                            -webkit-appearance: none;
+                                            appearance: none;
+                                            width: 25px;
+                                            height: 25px;
+                                            background: #e63900;
+                                            border-radius: 50%;
+                                            border: 2px solid white;
+                                            cursor: pointer;
+                                            margin-top: -1px; /* Center thumb on track */
+                                        }
+                                        input[type=range]::-moz-range-thumb {
+                                            width: 25px;
+                                            height: 25px;
+                                            background: #e63900;
+                                            border-radius: 50%;
+                                            border: 2px solid white;
+                                            cursor: pointer;
+                                        }
+                                        input[type=range]::-ms-thumb {
+                                            width: 25px;
+                                            height: 25px;
+                                            background: #e63900;
+                                            border-radius: 50%;
+                                            border: 2px solid white;
+                                            cursor: pointer;
+                                        }
+                                    `}
+                            </style>
+                        </div>
                     </div>
                 )}
+            </div>
+
+
+            <div className='rounded-2xl mt-8 relative z-0 w-full overflow-hidden border border-gray-200 h-80'>
+                {isLoading && (
+                    <div className="absolute inset-0 z-50 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center gap-3">
+                        <Spinner size='lg' color='gray' />
+                        <span className="text-sm text-gray-600 font-medium">
+                            Detecting your location…
+                        </span>
+                    </div>
+                )}
+               <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+    <div className="flex bg-white rounded shadow-md border border-gray-200 overflow-hidden">
+        {['roadmap', 'satellite'].map((type) => (
+            <button
+                key={type}
+                onClick={() => setMapType(type)}
+                className={`px-4 py-1 text-sm font-medium transition-colors ${
+                    mapType === type
+                        ? 'text-[#f15a24]'
+                        : 'text-gray-600 hover:text-[#f15a24]'
+                }`}
+            >
+                {type === 'roadmap' ? 'Street' : 'Satellite'}
+            </button>
+        ))}
+    </div>
+</div>
 
                 <LoadScript
                     googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
@@ -387,7 +464,12 @@ const Location = ({ urlParams = {} }) => {
                         geocoderRef.current = new window.google.maps.Geocoder();
                     }}
                 >
+
                     <Map
+                        mapTypeId={mapType}
+                        onMapLoad={(map) => {
+                            mapInstanceRef.current = map;
+                        }}
                         center={center}
                         radius={range * 1000} // Convert km to meters
                         handleLocation={handleMapLocationChange}
