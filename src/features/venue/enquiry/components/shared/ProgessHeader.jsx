@@ -9,7 +9,7 @@ const ProgressHeader = ({ currentStep, totalSteps, title, subtitle }) => {
         Step {currentStep}/{totalSteps}
       </p>
       <h1 className="text-2xl font-bold text-[#060606] mb-1">{title}</h1>
-      <p className="text-gray-500 font-semibold text-2xl max-w-2xl mb-5">
+      <p className="text-gray-400 font-medium text-2xl max-w-2xl mb-5 tracking-loose">
         {subtitle}
       </p>
       <ProgressBar
