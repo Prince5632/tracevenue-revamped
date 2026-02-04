@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 
 const containerStyle = {
   width: "100%",
-  height: "280px",
+  height: "100%",
 };
 
 function Map({ center, radius, handleLocation, showRadiusSlider, showMarker, setShowMarker, onLocationSelector }) {
@@ -12,7 +12,7 @@ function Map({ center, radius, handleLocation, showRadiusSlider, showMarker, set
 
 
   const onLoad = (map) => {
-    if (isLoaded.current) return; // StrictMode guard
+    if (isLoaded.current) return; 
     isLoaded.current = true;
     mapRef.current = map;
   };
