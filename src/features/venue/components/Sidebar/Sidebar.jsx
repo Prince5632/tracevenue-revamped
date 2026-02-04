@@ -39,7 +39,7 @@ const Sidebar = ({
               onClick={() => onStepClick && onStepClick(index)}
             >
               <SidebarContent
-                step={{ ...step, subtitle: step.description }}
+                step={{ ...step, subtitle: step.shortDescription }}
                 index={index + 1}
                 currentStep={currentStep}
                 isLast={index === steps.length - 1}
