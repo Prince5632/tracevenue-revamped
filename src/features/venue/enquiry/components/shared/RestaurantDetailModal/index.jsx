@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import Overview from "../../Overview";
 import Gallery from "../../Gallery";
-import Map from "../../Map";
+import VenueMap from "../../VenueMap";
 
 const RestaurantDetailModal = () => {
     const [click, setClick] = useState(false);
     const [tab, setTab] = useState("overview");
 
-    const handleClick = () => {
+    const handleClick = (data) => {
         setClick(true);
+        console.log(data);
     };
 
     return (
@@ -81,7 +82,7 @@ const RestaurantDetailModal = () => {
 
                         {tab === "overview" && <Overview />}
                         {tab === "gallery" && <Gallery />}
-                        {tab === "map" && <Map />}
+                        {tab === "map" && <VenueMap onTabClick={handleClick} click={click} setClick={setClick} />}
                     </div>
                 </div>
             )}
