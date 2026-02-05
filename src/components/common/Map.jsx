@@ -16,12 +16,9 @@ function Map({
   zoom = 11,
 }) {
   const mapRef = useRef(null);
-  console.log("map rendering")
-   console.log(mapTypeId);
 
   return (
     <GoogleMap
-     
       mapContainerStyle={containerStyle}
       center={center}
       zoom={zoom}
