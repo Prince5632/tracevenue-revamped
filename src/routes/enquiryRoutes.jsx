@@ -1,8 +1,9 @@
+import PackageCard from '@/features/package/components/PackageCard';
 import RestaurantDetailModal from '@/features/venue/dashboard/components/RestaurantDetailModal';
 import PackageDetails from '@/pages/PackageDetails';
 import EnquiryLayout from '@layouts/EnquiryLayout';
 import ComponentDocs from '@pages/ComponentDocs';
-
+import CustomerCard from '@/features/venue/enquiry/components/CustomerCard'
 /**
  * Enquiry step routes with URL-based step progression
  * Each route segment adds to the URL path as user progresses through steps:
@@ -28,4 +29,5 @@ export const enquiryRoutes = [
 
     // Component documentation (dev only)
     { path: '/docs', element: <ComponentDocs /> },
+    { path:'/CustomerCard',element:<CustomerCard/>}
 ];
