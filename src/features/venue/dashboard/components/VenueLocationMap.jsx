@@ -1,25 +1,17 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Map } from '@shared/components/ui';
 import { LoadScript } from '@react-google-maps/api';
-import useEnquiryStore from '../../enquiry/context/useEnquiryStore';
 
 
 function VenueLocationMap() {
-    // Use global store
-    const {
-        formData,
-        updateFormData,
-    } = useEnquiryStore();
     let [click, setClick] = useState(false);
     let [indicator, setIndicator] = useState({
         left: 0,
         width: 0
     });
-     const initialLocationName = formData.locations || '';
-    const initialLat = formData.latitude || 30.7333;
-    const initialLng = formData.longitude || 76.7794;
-    const initialRadius = formData.radius || 20; // 
-    const [showMapMarker, setShowMapMarker] = useState(!!initialLocationName);
+    const initialLat = 30.7333;
+    const initialLng = 76.7794;
+    const initialRadius = 5;
     const [center, setCenter] = useState({
         lat: initialLat,
         lng: initialLng,
@@ -45,7 +37,9 @@ function VenueLocationMap() {
         setRange(20);
         setCenter({ lat: initialLat, lng: initialLng })
     }
-
+    const handleCancel = () => {
+        setClick(false);
+    }
     const handleNavClick = (e) => {
         const button = e.currentTarget;
 
@@ -102,7 +96,12 @@ function VenueLocationMap() {
             }
         );
     };
-    
+
+    useEffect(() => {
+        if (!window.google) return;
+        getAddressFromLngLat(center.lat, center.lng);
+    }, [click]);
+
     return <>
         <button onClick={handleClick} className="bg-gray-600 text-white py-2 px-4 rounded-full cursor-pointer ">Venue Map</button>
 
@@ -113,9 +112,9 @@ function VenueLocationMap() {
                         <div className="flex gap-2">
                             <div>
                                 <h2 className="text-[#060606] text-[24px] font-bold">Moti Mahal Delux</h2>
-                                <p className="text-[#85878C] text-[14px] font-semibold">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita voluptates corrupti magni non, recusandae rem?</p>
+                                <p className="text-[#85878C] text-[14px] font-semibold">A renowned dining destination known for its rich North Indian flavors and timeless recipes.</p>
                             </div>
-                            <div className="h-[24px] w-[24px] "><i className="fa-solid fa-xmark text-[12px] font-semibold"></i></div>
+                            <div onClick={handleCancel} className="h-[24px] w-[24px] cursor-pointer "><i className="fa-solid fa-xmark text-[12px] font-semibold"></i></div>
                         </div>
                         <div className="h-[40px] border-[#F0F0F4] flex justify-start items-center mt-2 " ref={navRef}>
                             <button id="overview" onClick={handleNavClick} className="px-2 ml-1 text-[16px] font-semibold text-[#5C5F62] text-center cursor-pointer ">Overview</button>
@@ -130,7 +129,7 @@ function VenueLocationMap() {
                                 }} ></div>
                             </div>
                         </div>
-                        <div className="w-full bg-white my-4 rounded-[30px] border border-[#D7D9DA] ">
+                        <div className="w-full bg-white my-4 rounded-[30px] border border-[#D7D9DA] mb-6">
                             <LoadScript
                                 googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
                                 libraries={libraries}
@@ -144,20 +143,20 @@ function VenueLocationMap() {
                                     center={center}
                                     radius={range * 1000} // Convert km to meters
                                     zoom={11}
-                                    showMarker={showMapMarker}
-                        setShowMarker={setShowMapMarker}
                                     setCenter={setCenter}
                                     onLocationSelector={getAddressFromLngLat}
-                                // Add marker functionality to Map component if not already present
-                                // Assuming Map component handles the marker logic via props
                                 />
                             </LoadScript>
                         </div>
                         <div>
-                            <p className="!text-[16px] !font-bold !text-[#060606]">Street Address:{locationData.address}</p>
-                            <p className="!text-[16px] !font-bold !text-[#060606]">State: {locationData.state}</p>
-                            <p className="!text-[16px] !font-bold !text-[#060606]">Pincode:{locationData.pincode}</p>
-                            <p className="!text-[16px] !font-bold !text-[#060606]">Coordinates:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{locationData.lat}, {locationData.lng}</p>
+                            <p className="!text-[16px] !font-bold !text-[#060606] !mb-2">Street Address: <span className='text-[16px] text-[#060606] font-semibold ml-2'>{locationData.address}</span></p>
+                            <p className="!text-[16px] !font-bold !text-[#060606] !mb-2">State: <span className='text-[16px] text-[#060606] font-semibold ml-2'>{locationData.state}</span></p>
+                            <p className="!text-[16px] !font-bold !text-[#060606] !mb-2">Pincode: <span className='text-[16px] text-[#060606] font-semibold ml-2'>{locationData.pincode}</span></p>
+                            <p className="!text-[16px] !font-bold !text-[#060606] !mb-2">Coordinates: <span className='text-[16px] text-[#573BB6] font-semibold ml-2'>{locationData.lat}, {locationData.lng}</span></p>
+                        </div>
+                        <div className='flex gap-2'>
+                            <div className='h-[22px] w-[22px] rounded-[11px] bg-[#15B076] flex justify-center items-center border border-[#15b076]'><i className="fa-solid fa-location-arrow text-[11px] text-[#ffffff]"></i></div>
+                            <a href='#' className='!text-[16px] !font-semibold !text-[#15b076] !underline'>Directions</a>
                         </div>
                     </div>
                 </div>
