@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDashboard } from "@/features/venue/dashboard/context/DashboardContext";
-import VenueLocationMap from "../components/VenueLocationMap";
 import DashboardTitle from "../components/DashboardTitle";
 import { ArrowRight } from 'lucide-react'
 import { Button, Card, Divider, GradientText } from "@/shared";
@@ -58,8 +57,6 @@ const Dashboard = () => {
         </div>
 
       </div>
-
-  <VenueLocationMap/>
 
       {/* Card section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
