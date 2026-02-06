@@ -18,6 +18,7 @@ function PackageDetails() {
           cardInfo={item.cardInfo}
           cuisines={item.cuisines}
           packageMenu={item.packageMenu}
+          cardDescription={item.cardDescription}
         />
       ))}
     </>
