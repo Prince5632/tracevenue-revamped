@@ -32,7 +32,7 @@ const Input = ({
     const inputId = id || name || `input-${Math.random().toString(36).substr(2, 9)}`;
 
     const baseInputStyles = `
-        w-full px-5 py-3
+        w-full px-5 py-[10px]
         border rounded-[30px]
         text-base font-medium text-[#060606]
         placeholder:text-[#85878c] placeholder:font-medium
