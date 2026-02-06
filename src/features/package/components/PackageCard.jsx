@@ -2,9 +2,9 @@ function PackageCard(props) {
   return <>
     <div
       className="
-            py-[20px]
+            pt-[20px]
             gap-[20px]
-            lg:flex border-b border-[#D7D9DA] mb-2
+            lg:flex 
           "
     >
       <div
