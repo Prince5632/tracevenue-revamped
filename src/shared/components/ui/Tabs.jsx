@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 
 /**
  * Tabs Component - TraceVenue Design System
@@ -15,13 +15,12 @@ const Tabs = ({
     className = '',
     ...props
 }) => {
-    const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
+     const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
 
-    const handleTabChange = (tabId) => {
-        setActiveTab(tabId);
-        onChange?.(tabId);
-    };
-
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    onChange?.(tabId);
+  };
     const variants = {
         default: {
             container: 'border-b border-[#e5e7eb] bg-[#fafafa]',
@@ -29,10 +28,16 @@ const Tabs = ({
             activeTab: 'text-[#ff4000] font-semibold',
             indicator: 'bg-gradient-to-r from-[#f08e45] to-[#ee5763]',
         },
+        // pills: {
+        //     container: 'gap-2 p-1 bg-[#f0f0f4] rounded-[30px]',
+        //     tab: 'text-[#5c5f62] rounded-[25px]',
+        //     activeTab: 'bg-white text-[#ff4000] shadow-sm',
+        //     indicator: '',
+        // },
         pills: {
-            container: 'gap-2 p-1 bg-[#f0f0f4] rounded-[30px]',
-            tab: 'text-[#5c5f62] rounded-[25px]',
-            activeTab: 'bg-white text-[#ff4000] shadow-sm',
+            container: 'bg-[#f0f0f4] rounded-full p-1 flex',
+            tab: `flex-1 text-sm font-semibold rounded-full text-gray-500 transition-all duration-200 cursor-pointer hover:bg-[#ff4000] hover:text-white`,
+            // activeTab: 'bg-[#FF4000] text-white shadow-sm',
             indicator: '',
         },
     };
@@ -48,7 +53,7 @@ const Tabs = ({
                         key={tab.id}
                         onClick={() => handleTabChange(tab.id)}
                         className={`
-                            flex-1 py-3 px-4 text-sm font-medium
+                            flex-1 py-2 px-4 text-sm font-medium
                             transition-all duration-200 relative
                             ${style.tab}
                             ${activeTab === tab.id ? style.activeTab : ''}
@@ -64,7 +69,7 @@ const Tabs = ({
             </div>
 
             {/* Tab Content */}
-            <div className="py-4">
+            <div className="py-2">
                 {tabs.find(tab => tab.id === activeTab)?.content}
             </div>
         </div>
