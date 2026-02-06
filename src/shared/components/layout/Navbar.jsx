@@ -10,6 +10,11 @@ import {
   ArrowRight,
   ChevronDown,
   MessageCircleMore,
+  LogIn,
+  UserPlus,
+  HelpCircle,
+  UserRound,
+  Power,
 } from "lucide-react";
 import Login from "../../../features/auth/components/Login";
 import { logout } from "@/services/userService";
@@ -207,55 +212,169 @@ const Navbar = () => {
         </div>
 
         {/* MOBILE MENU */}
+
+        {/* {open && (
+  <div
+    className="
+      bg-white
+      absolute w-50
+      top-16 left-[47%]
+      lg:hidden
+      flex flex-col 
+      p-5
+      rounded-2xl
+      shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+      border border-gray-100
+    "
+  >
+  
+    <Link
+      to="https://tracevenue.com/how-it-works/"
+      className="
+        text-gray-800
+        text-base font-semibold
+        pb-3
+      "
+    >
+      How it works
+    </Link>
+
+    <div className="h-[1px] bg-gray-300 mb-2"></div>
+
+    {isLoggedIn ? (
+      <>
+        <Link
+          to="/profile"
+          className="
+            flex items-center gap-2
+            px-2 py-2 text-gray-600
+          "
+        >
+          <User size={18} />
+          Profile
+        </Link>
+
+        <button
+          onClick={handleLogout}
+          className="
+            flex items-center gap-2
+            px-2 py-2 text-red-600 text-left
+          "
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
+      </>
+    ) : (
+      <>
+    
+      <button onClick={handleLoginClick} className="flex gap-2 !text-[16px] !font-semibold"
+        > <LogIn className="w-4 "/>Login</button>
+     
+           <button onClick={handleLoginClick} className="flex gap-2 !text-[16px] !font-semibold text-[#e63900]"
+        ><UserPlus className="w-4"/>Sign up</button>
    
-    {open &&(
-        <div className="bg-white shadow-lg absolute w-full top-14 left-0 p-4 lg:hidden flex flex-col gap-4">
-            <Link
-              to="https://tracevenue.com/how-it-works/"
-              className="px-4 py-2"
-            >
-              How it works
-            </Link>
-            {isLoggedIn ? (
-              <>
-               <Link
-              to="/profile"
-              className="flex items-center gap-2 px-2 py-2 text-gray-600"
-            >
-              <User size={18} /> Profile
-            </Link>
+      </>
+    )}
+  </div>
+)} */}
 
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-2 py-2 text-red-600 text-left"
-            >
-              <LogOut size={18} /> Logout
-            </button>
-              </>
-            ) : (
-              <>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="w-full justify-start text-[#060606]"
-                  onClick={handleLoginClick}
-                >
-                  Login
-                </Button>
+{open && (
+  <div
+    className="
+      bg-white
+      absolute w-[200px]
+      top-16 left-[47%]
+      lg:hidden
+      flex flex-col gap-3
+      p-5
+      rounded-2xl
+      shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+      border border-gray-100
+    "
+  >
+   
+    <Link
+      to="https://tracevenue.com/how-it-works/"
+      className="
+        text-gray-800
+        text-base font-semibold
+        text-center flex gap-2
+      "
+    >
+      <HelpCircle className="w-5"/>How it works
+    </Link>
 
-                <Button
-                  size="sm"
-                  variant="gradient"
-                  className="w-full"
-                  onClick={handleLoginClick}
-                >
-                  Sign up
-                </Button>
-              </>
-            )}
-          </div>
-          
-        )}
+    <div className="h-[1px] bg-gray-300 mb-1"></div>
+
+    {isLoggedIn ? (
+      <>
+         <Link
+          to="/profile"
+          className="
+            flex items-center gap-2
+            px-2 py-2 !text-gray-700
+            bg-gray-50 rounded-lg border border-gray-300         "
+        >
+          <UserRound  size={18} />
+          Profile
+        </Link>
+
+        <button
+          onClick={handleLogout}
+          className="
+            flex items-center gap-2
+            px-2 py-2 text-red-600
+            bg-red-50 rounded-lg
+          "
+        >
+          <Power  size={18} />
+          Logout
+        </button>
+      </>
+    ) : (
+      <>
+       
+        <button
+          onClick={handleLoginClick}
+          className="
+            flex items-center gap-2
+            py-2.5 px-3
+            rounded-lg
+            border border-gray-300
+            bg-gray-100
+            text-gray-700
+            text-[16px] font-semibold
+          "
+        >
+          <LogIn className="w-4 text-gray-500" />
+          Login
+        </button>
+
+      
+        <button
+          onClick={handleLoginClick}
+          className="
+            flex items-center gap-2
+            py-2.5 px-3
+            rounded-lg
+            text-[16px] font-semibold
+            text-white
+            bg-gradient-to-r from-[#e67e22] to-[#e63900]
+          "
+        >
+          <UserPlus className="w-4 text-white" />
+          Sign up
+        </button>
+        
+      </>
+    )}
+  </div>
+)}
+
+
+
+
         
 
       </nav>
