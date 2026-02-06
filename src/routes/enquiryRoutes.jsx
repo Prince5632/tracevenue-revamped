@@ -24,7 +24,6 @@ export const enquiryRoutes = [
 
     // Package details route
     // { path: '/package/:id/:jobId', element: <PackageDetails /> },
-    { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
     { path: "/package-details", element: <PackageDetails /> },
 
     // Component documentation (dev only)
