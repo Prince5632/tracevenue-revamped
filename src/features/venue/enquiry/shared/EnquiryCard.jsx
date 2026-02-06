@@ -39,7 +39,7 @@ const EnquiryCard = ({ looking, event, date, day, guest, amount, location, prici
                                     {/* person budget */}
                                     <div className='flex flex-col !py-3 sm:items-center md:items-center lg:items-start lg:!px-2 leading-tight w-[90%] shrink-0 break-words'>
                                         <GradientText className='font-bold italic text-[14px] capitalize '>{pricingType}</GradientText>
-                                        <GradientText className='text-[20px] font-bold italic break-all'>{amount}</GradientText>
+                                        <GradientText className='text-[20px] font-bold italic break-all w-full md:text-center lg:text-start'>{amount}</GradientText>
                                     </div>
                                     <div className='h-full lg:h-[40px] border border-[1px] border-[#D7D9DA] relative lg:top-4' />
                                 </div>
