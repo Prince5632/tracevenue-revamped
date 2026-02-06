@@ -1,7 +1,7 @@
 import { Divider } from '@/shared'
 import React from 'react'
 
-const Row = ({heading,count,symbol}) => {
+const Row = ({heading,count}) => {
     return (
         <>
             <tr className='bg-white text-gray-500 text-sm'>

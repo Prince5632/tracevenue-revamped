@@ -8,7 +8,7 @@ const MenuRow = ({ title, data, show, showBtn }) => {
     return (
         <>
             <tr>
-                <td className='p-3 bg-[#EEEBF8] border-r border-gray-300 cursor-pointer font-semibold'>
+                <td className='p-2 bg-[#EEEBF8] border-r border-gray-300 cursor-pointer font-semibold'>
                     <button className='cursor-pointer' onClick={() => {
                         showBtn(!show)
                     }}>
@@ -29,7 +29,6 @@ const MenuRow = ({ title, data, show, showBtn }) => {
             </tr>
 
             {show && (
-                
                <InnerContent data={data} /> 
             )}
 
