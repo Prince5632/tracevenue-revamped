@@ -2,9 +2,9 @@ function PackageCard(props) {
   return <>
     <div
       className="
-            pt-[20px]
+            pr-[20px]
             gap-[20px]
-            lg:flex 
+            lg:flex border-b border-[#D7D9DA] mb-2
           "
     >
       <div
@@ -144,12 +144,12 @@ function PackageCard(props) {
         className="
               w-full
               mx-2
-              sm:mt-0
+              sm:mt-0 
             "
       >
         <div
           className="
-              mb-[16px]
+              m-[16px] border-l-2 pl-[16px] border-[#ff6b35]
               "
         >
           <h4
