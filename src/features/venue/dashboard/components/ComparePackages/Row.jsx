@@ -5,8 +5,8 @@ const Row = ({heading,count}) => {
     return (
         <>
             <tr className='bg-white text-gray-500 text-sm'>
-                <td className='pl-10 capitalize'>{heading}</td>
-                <td className='p-3 text-center'>{count}</td>
+                <td className='pl-10 capitalize text-base text-[var(--color-text-muted)]'>{heading}</td>
+                <td className='p-3 text-center font-semibold text-(--color-text-secondary) text-base'>{count}</td>
             </tr>
             <tr>
                 <td colSpan={4} className="p-0">

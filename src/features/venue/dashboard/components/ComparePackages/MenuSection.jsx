@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import MenuRow from './MenuRow';
+import MenuRow from './MenuRow'
 
 const MenuSection = ({ data, titleCase }) => {
     
@@ -11,10 +11,10 @@ const MenuSection = ({ data, titleCase }) => {
     })
     return (
         <>
-        <tr className='bg-[var(--color-border)] p-3'>
-            <td colSpan={4} className='px-2 py-4 font-bold'>Menu Categories</td>
+        <tr className='bg-[var(--color-background)] p-3'>
+            <td colSpan={4} className='px-2 py-4 font-semibold'>Menu Categories</td>
         </tr>
-
+            
             {data.map((elem, idx) => {
                 const key = titleCase(elem.title);
             

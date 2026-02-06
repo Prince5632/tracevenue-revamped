@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import TableHeader from '../components/TableHeader';
-import TableBody from '../components/TableBody';
+import TableHeader from './TableHeader';
+import TableBody from './TableBody';
 
 
 const ComparePackages = () => {
