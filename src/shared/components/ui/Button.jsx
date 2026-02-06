@@ -42,25 +42,23 @@ const Button = ({
     const variants = {
         primary: `
             bg-[#ff4000] text-white border-none
-            hover:bg-[#ff5722] hover:shadow-[0_4px_20px_rgba(255,64,0,0.3)]
-            hover:-translate-y-0.5
+           
         `,
         secondary: `
             bg-[#f0f0f4] text-[#5c5f62] border border-[#d7d9da]
-            hover:bg-[#f1f5f9] hover:border-[#5c5f62]
+            
         `,
         gradient: `
             bg-gradient-to-r from-[#f39c12] to-[#ee5763] text-white border-none
-            hover:shadow-[0_6px_24px_rgba(255,64,0,0.4)]
-            hover:-translate-y-0.5 hover:scale-[1.02]
+         
         `,
         outline: `
             bg-transparent text-[#ff4000] border border-[#ff4000]
-            hover:bg-[#ff4000] hover:text-white
+          
         `,
         ghost: `
             bg-transparent text-[#5c5f62] border-none
-            hover:bg-[#f1f5f9] hover:text-[#060606]
+          
         `,
     };
 
