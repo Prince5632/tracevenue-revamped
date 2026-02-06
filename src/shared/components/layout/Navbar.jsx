@@ -5,8 +5,6 @@ import logo from "@assets/images/logo.png";
 import {
   MenuIcon,
   Bell,
-  User,
-  LogOut,
   ArrowRight,
   ChevronDown,
   MessageCircleMore,
@@ -213,78 +211,12 @@ const Navbar = () => {
 
         {/* MOBILE MENU */}
 
-        {/* {open && (
-  <div
-    className="
-      bg-white
-      absolute w-50
-      top-16 left-[47%]
-      lg:hidden
-      flex flex-col 
-      p-5
-      rounded-2xl
-      shadow-[0_8px_30px_rgba(0,0,0,0.08)]
-      border border-gray-100
-    "
-  >
-  
-    <Link
-      to="https://tracevenue.com/how-it-works/"
-      className="
-        text-gray-800
-        text-base font-semibold
-        pb-3
-      "
-    >
-      How it works
-    </Link>
-
-    <div className="h-[1px] bg-gray-300 mb-2"></div>
-
-    {isLoggedIn ? (
-      <>
-        <Link
-          to="/profile"
-          className="
-            flex items-center gap-2
-            px-2 py-2 text-gray-600
-          "
-        >
-          <User size={18} />
-          Profile
-        </Link>
-
-        <button
-          onClick={handleLogout}
-          className="
-            flex items-center gap-2
-            px-2 py-2 text-red-600 text-left
-          "
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
-      </>
-    ) : (
-      <>
-    
-      <button onClick={handleLoginClick} className="flex gap-2 !text-[16px] !font-semibold"
-        > <LogIn className="w-4 "/>Login</button>
-     
-           <button onClick={handleLoginClick} className="flex gap-2 !text-[16px] !font-semibold text-[#e63900]"
-        ><UserPlus className="w-4"/>Sign up</button>
-   
-      </>
-    )}
-  </div>
-)} */}
-
 {open && (
   <div
     className="
       bg-white
       absolute w-[200px]
-      top-16 left-[47%]
+      top-16 right-2
       lg:hidden
       flex flex-col gap-3
       p-5
@@ -353,7 +285,7 @@ const Navbar = () => {
 
       
         <button
-          onClick={handleLoginClick}
+         onClick={() => setCardOpen({ show: true, type: "signup" })}
           className="
             flex items-center gap-2
             py-2.5 px-3
