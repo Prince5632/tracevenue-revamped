@@ -1,3 +1,4 @@
+import PackageDetails from '@/pages/PackageDetails';
 import EnquiryLayout from '@layouts/EnquiryLayout';
 import ComponentDocs from '@pages/ComponentDocs';
 
@@ -21,6 +22,7 @@ export const enquiryRoutes = [
 
     // Package details route
     // { path: '/package/:id/:jobId', element: <PackageDetails /> },
+    { path: "/package-details", element: <PackageDetails /> },
 
     // Component documentation (dev only)
     { path: '/docs', element: <ComponentDocs /> },
