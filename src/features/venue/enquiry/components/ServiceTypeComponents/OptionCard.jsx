@@ -53,7 +53,7 @@ const OptionCard = ({
                 {tag}
               </h2>
 
-              <p className="font-semibold text-[14px] text-[#5C5F62] mt-2 w-[220px]">
+              <p className="font-semibold text-[14px] text-[#5C5F62] mt-2">
                 {description}
               </p>
             </div>

@@ -11,7 +11,7 @@ const MainLayout = () => {
         <>
             {/* Navbar*/}
             <Navbar />
-            <main className='mt-10 lg:mt-24 sm:mt-10 md:mt-24'>
+            <main className='mt-1 lg:mt-24 sm:mt-10 md:mt-24 pb-48'>
                 <Outlet />
             </main>
             {/* Footer is optional - can be added here if needed globally */}
