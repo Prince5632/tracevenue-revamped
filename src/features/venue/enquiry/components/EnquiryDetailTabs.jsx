@@ -85,8 +85,8 @@ const EnquiryDetailTabs = () => {
               >
                 <span
                   className={`
-            px-3              /* ⬅ reduced width */
-            py-1.5            /* ⬅ reduced height */
+            w-[250px]            
+            py-1.5           
             rounded-lg
             text-sm
             font-semibold

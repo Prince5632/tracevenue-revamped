@@ -4,11 +4,13 @@ import Map from '@/components/common/Map';
 import Card from '@shared/components/ui/Card';
 import Alcohol from '@assets/images/alcohol.svg';
 import Veg from '@assets/images/veg.svg';
+import Location from '@assets/images/locationPin.svg'
 import NonVeg from '@assets/images/non-veg.svg';
 import ColdDrink from '@assets/images/colddrink.svg';
 import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
+
 import { CircleArrowLeft } from "lucide-react";
 import { id } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
@@ -237,35 +239,24 @@ const EnquiriesDetail = () => {
 
     if (!window.google) return;
 
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-      if (status === 'OK' && results?.[0]) {
-        setLocation(results[0].formatted_address);
-      }
-    });
+    // const geocoder = new window.google.maps.Geocoder();
+    // geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+    //   if (status === 'OK' && results?.[0]) {
+    //     setLocation(results[0].formatted_address);
+    //   }
+    // });
   };
 
   return (
     <>
-
-      {/**Main Content */}
-      <div className="w-full lg:w-[75%]">
-        <div className="p-4">
-          <h1 className="font-bold text-2xl mb-2 flex flex-row gap-3">
-            <CircleArrowLeft size={37} color='#fd4304' strokeWidth={1.2} className='cursor-pointer' onClick={() => navigate('/service/venues/enquiry/active')} />
-            <h2 className='text-base text-[#060600] font-bold md:text-2xl '>
-              Looking venue for kitty party for 30 people on 10 Jan, 2026
-            </h2>
-          </h1>
-          <EnquiryTopview />
-        </div>
-
+     {/**Main Content */}
+      <div className="w-full lg:w-full">
         {/* BASIC INFORMATION + LOCATION */}
-        <div className=" p-6 ">
+        <div className=" p-2 ">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* LEFT */}
             <div className="w-full  space-y-6">
-              <h2 className="font-sans text-lg mb-3 text-[#6c757d]">Basic Information</h2>
+              <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Basic Information</h2>
 
               {/* Venue & Catering */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -273,25 +264,28 @@ const EnquiriesDetail = () => {
                   <Card
                     key={service.id}
                     variant="bordered"
-                    padding="md"
+                    padding="sm"
                     onClick={() => {
                       setSelectedService(service.id);
                       localStorage.setItem('selectedService', service.id);
                     }}
-                    className={`cursor-pointer transition-all duration-200 relative h-full min-h-45
-                      ${selectedService === service.id ? 'border-[#ff8359]' : ''}
+                    className={`cursor-pointer transition-all duration-200 relative h-full min-h-39
+                      ${selectedService === service.id 
+                        ? 'border-[#ff8359]' : ''}
                     `}
                   >
-                    <span className="absolute top-4 left-4 text-[22px] font-bold
-                      bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)]
-                      bg-clip-text text-transparent">
-                      {service.label}
+                    <span className="absolute top-4 left-4 text-[25px] font-bold
+                      bg-[linear-gradient(93.96deg,#F08E45_0%,#EE5763_98.12%)]
+                      bg-clip-text text-transparent"
+                    >
+                     {service.label}
                     </span>
+
 
                     <img
                       src={service.image}
                       alt={service.label}
-                      className="absolute bottom-4 right-4 w-25 object-contain"
+                      className="absolute bottom-4 right-2 w-23 object-contain"
                     />
                   </Card>
                 ))}
@@ -301,22 +295,22 @@ const EnquiriesDetail = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                 {/* Budget */}
-                <Card variant="flat" padding="sm" className="h-full bg-white min-h-45">
+                <Card variant="flat" padding="sm" className="h-full bg-white min-h-39">
                   <h1 className="font-sans text-lg">Budget</h1>
 
-                  <div className="flex flex-col gap-9 mt-2.25 ">
-                    <Card className="border-orange-600 text-xs py-0.5 px-3 w-fit text-[#6c757d]">
+                  <div className="flex flex-col gap-9  ">
+                    <Card className="border-orange-600 text-xs py-0.5 px-3 w-fit text-[#FF4000]">
                       Per Person
                     </Card>
 
                     <Card
                       padding="sm"
-                      className="font-semibold py-1 px-2.5 mt-2 text-lg flex items-center whitespace-nowrap w-fit text-[#333333]"
+                      className="font-semibold py-1 px-1 text-lg flex items-center whitespace-nowrap w-fit text-[#333333]"
                     >
-                      <span className="text-gray-500 mx-1.5 ">₹</span>
+                      <span className="text-gray-500 mx-1 ">₹</span>
                       2,500
                       <span className="text-gray-500 mx-1">-</span>
-                      <span className="text-gray-500 mx-1.5 ">₹</span>
+                      <span className="text-gray-500 mx-1 ">₹</span>
                       5,500
 
                     </Card>
@@ -324,13 +318,17 @@ const EnquiriesDetail = () => {
                 </Card>
 
                 {/* Gathering Size */}
-                <Card variant="flat" padding="sm" className="flex flex-col h-full bg-white min-h-45">
+                <Card variant="flat" padding="sm" className="flex flex-col h-full bg-white min-h-39">
                   <h1 className="font-sans text-lg whitespace-nowrap">
                     Gathering Size
                   </h1>
 
                   <div className="mt-auto self-end text-right">
-                    <h1 className="text-orange-600 font-bold text-lg">60–80</h1>
+                    <h1 className="font-bold text-3xl font-gilroy
+                        bg-[linear-gradient(95.9deg,#F08E45_0%,#EE5763_97.38%)]
+                        bg-clip-text text-transparent"
+                      >60–80</h1>
+
                     <h6 className="font-semibold text-gray-500 whitespace-nowrap">
                       Number of Guests
                     </h6>
@@ -341,17 +339,34 @@ const EnquiriesDetail = () => {
             </div>
 
             {/* RIGHT : LOCATION */}
-            <div className="w-full ">
-              <h3 className="font-sans text-lg mb-3 text-[#6c757d]">Location (10 km)</h3>
-              <div className="h-95 rounded-2xl overflow-hidden">
+
+            <div className="w-full">
+                <h3 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">
+                  Location (10 km)
+                </h3>
+                {/* Map Wrapper */}
+              <div className="relative h-83.5 rounded-2xl overflow-hidden">
+                {/* Search Bar on Map */}
+                <div className="absolute top-5 left-3 right-3 z-1">
+                  <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+                    <span className="text-orange-500">
+                      <img src={Location}/>
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="South West Inn"
+                      className="w-full outline-none text-xl font-medium text-gray-950!"
+                    />
+                  </div>
+                </div>
+               {/* Map */}
                 <Map
                   center={center}
                   radius={center ? 10000 : 0}
                   handleLocation={handleLocation}
                 />
               </div>
-            </div>
-
+           </div>
           </div>
         </div>
 
@@ -359,8 +374,8 @@ const EnquiriesDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
 
           {/* DATE & TIME  */}
-          <div className="p-6 text-white rounded-xl">
-            <h2 className="font-sans text-lg mb-3 text-[#6c757d]">Date & Time</h2>
+          <div className="p-2 text-white rounded-xl">
+            <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Date & Time</h2>
             <div className="grid grid-row-2 sm:grid-row-2 gap-1">
 
               {/* Preferred Date */}
@@ -384,7 +399,7 @@ const EnquiriesDetail = () => {
               </Card>
 
               {/* Alternate Date */}
-              <h2 className="font-sans text-lg mb-3 text-[#6c757d]">Alternate Dates</h2>
+              <h2 className="font-gilroy font-bold text-lg mb-2 text-[#6c757d]">Alternate Dates</h2>
               <Card variant="default" padding="md" className="flex items-center justify-between gap-5">
                 <div className="text-left">
                   <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
@@ -408,8 +423,8 @@ const EnquiriesDetail = () => {
           </div>
 
           {/*FOOD PREFERENCE  */}
-          <div className="p-6">
-            <h2 className="font-sans text-lg mb-3 text-[#6c757d]">Food Preferences</h2>
+          <div className="p-2">
+            <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Food Preferences</h2>
             <div className="grid grid-cols-2 gap-3.75">
               <Card className="h-26.5 md:w-[177.13px] py-2.5 px-3.75">
                 <Card.Header className="text-lg font-bold">
@@ -443,7 +458,7 @@ const EnquiriesDetail = () => {
         </div>
 
         {/* CUISINES */}
-        <div className='p-6'>
+        <div className='p-2'>
           <Card variant="borderless" className="p-5 mb-3 bg-[#F8F9FA]" hoverable={false}>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="font-sans text-lg mr-3 mb-2 text-[#1A1A1A]">
@@ -469,7 +484,7 @@ const EnquiriesDetail = () => {
         </div>
 
         {/*  MENU + FOOD */}
-        <div className="p-6 flex gap-8">
+        <div className="flex gap-8">
 
           {/* LEFT MENU */}
           <div className="w-[35%] hidden lg:block">
