@@ -2,7 +2,7 @@ function FoodItems(props) {
     return <>
         <div key={props.index} className=" border border-[#D7D9DA] rounded-[30px] shadow-[4px_0_10px_#0000000d] p-4 mt-4 lg:mt-0">
             <h4 className="text-[18px] text-[##060606] font-semibold mb-2">{props.subHeading}</h4>
-            <div className="w-full bg-[#C6FBE5] rounded-[5px] text-[#15B076] font-semibold italic text-[14px] text-center p-[2px] mb-4">
+            <div className="w-full bg-[#C6FBE5] rounded-[5px] text-[#15B076] font-semibold italic text-[12px] text-center p-[2px] mb-4 whitespace-nowrap overflow-hidden text-ellipsis">
                 Venues are offering 3-5 items to choose
             </div>
             {

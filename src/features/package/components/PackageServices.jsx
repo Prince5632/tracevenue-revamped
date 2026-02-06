@@ -6,7 +6,7 @@ function PackageServices(props) {
                 {
                     props.packageMenuDetails.map((item, index) => (
                         item.id == 2 ? <>
-                            <div key={index} className="w-full px-4">
+                            <div key={index} className="w-full pl-4">
                                 {
                                     item.menuButton.map((subItem, index) => (
                                         <div key={index} className="flex gap-4 w-full rounded-[30px] border border-[#D7D9DA] bg-[#ffffff] shadow-[4px_0_10px_#0000000d] mb-2 p-2">

@@ -149,7 +149,7 @@ function PackageCard(props) {
       >
         <div
           className="
-              m-[16px]
+              mb-[16px]
               "
         >
           <h4
