@@ -1,24 +1,27 @@
+import { Button } from "@/shared/components/ui";
+
 function MenuButton(props) {
   return (
     <>
-      <button
-      onClick={props.onclick}
+      <Button
+        variant="ghost"
+        onClick={props.onclick}
         className={`
-          flex
-          w-full
-          px-[16px] py-[12px]
-          text-[16px] font-semibold
-          border-l-[3px] rounded-[6px]
-          cursor-pointer transition-all
-          hover:bg-[#f8f9fa] justify-between items-center  duration-300 ease-initial
-          ${props.isActive?"bg-[#fff8f0] hover:bg-[#fff8f0] text-[#ff6b35] border-l-[#e29f55] text-[#e29f55]":"bg-transparent border-l-transparent hover:border-l-[#e29f55] "}
+          !flex
+          !w-full
+          !px-[16px] !py-[12px]
+          !text-[16px] !font-semibold
+          !border-l-[3px] !rounded-[6px]
+          !cursor-pointer !transition-all
+          hover:!bg-[#f8f9fa] !justify-between !items-center  !duration-300 !ease-initial
+          ${props.isActive ? "!bg-[#fff8f0] hover:!bg-[#fff8f0] !text-[#ff6b35] !border-l-[#e29f55] !text-[#e29f55]" : "!bg-transparent !border-l-transparent hover:!border-l-[#e29f55] "}
   `}
       >
         <span
           className={`
              text-[16px] font-semibold
             cursor-pointer text-left
-            ${props.isActive?"text-[#e29f55]":"text-[#333333]"}
+            ${props.isActive ? "text-[#e29f55]" : "text-[#333333]"}
           `}
         >
           {props.content}
@@ -31,7 +34,7 @@ function MenuButton(props) {
         >
           {props.count}
         </span>
-      </button>
+      </Button>
     </>
   );
 }
