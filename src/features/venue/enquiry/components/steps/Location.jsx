@@ -293,7 +293,7 @@ const Location = ({ urlParams = {} }) => {
     }, []);
 
     return (
-        <div ref={wrapperRef} className="w-full relative">
+        <div ref={wrapperRef} className="w-full relative pb-18">
             {/* Search Input Section */}
             <div className='relative z-4 w-full'>
                 <div className='relative flex items-center w-full'>
