@@ -23,7 +23,10 @@
     /* Card background gradients */
     --color-card-gradient-start: #fdeaed;
     --color-card-gradient-end: #fff3ea;
+    
     --gradient-card: linear-gradient(90deg, var(--color-card-gradient-start) 50%, var(--color-card-gradient-end) 100%);
+
+    --gradient-card-reverse: linear-gradient(90deg, var(--color-card-gradient-end) 50%, var(--color-card-gradient-start) 100%);
 
     /* ========== Semantic Colors ========== */
     --color-success: #15b076;
@@ -34,7 +37,9 @@
     --color-warning-light: #fef9e7;
     --color-info: #3498db;
     --color-info-light: #ebf5fb;
+    
 
+    --color-label:#EEEBF8;
     /* ========== Neutral Colors ========== */
     /* Text Colors */
     --color-text-primary: #060606;
@@ -75,6 +80,7 @@
     /* ========== Component-Specific Colors ========== */
     --color-rdp-accent-bg: #fff5f0;
 }
+
 
 /* Dark Mode Support (optional - for future use) */
 @media (prefers-color-scheme: dark) {
