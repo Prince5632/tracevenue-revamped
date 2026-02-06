@@ -141,14 +141,14 @@ function PackageInfo(props) {
           </div>
         </div>
         <PackageFooter />
-        <div className="flex flex-col md:!flex-row items-start gap-4 sticky top-24"
+        <div className="flex flex-col md:!flex-row items-start sticky top-24"
         >
           {/* Menu Categories */}
           <div className="hidden lg:block">
             <MenuCategories packageMenu={props.packageMenu} isActive={active} handleMenuClick={() => handleMenuClick} />
           </div>
           {/* food items */}
-          <div className="w-full md:max-w-[688px]">
+          <div className="w-full md:max-w-[600px] ">
             <h2 className="text-[18px] text-[#060606] font-bold mb-2 ">Food Items</h2>
             <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-thin md:pb-[200px]">
               {
@@ -157,7 +157,7 @@ function PackageInfo(props) {
                     {
                       item.menuButton?.map((subItem, index) => (
                         subItem.id == itemId ? <>
-                          <div key={index} className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div key={index} className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 px-4">
                             {
                               subItem.items?.map((dishes, index) => (
                                 <FoodItems foodItems={dishes.foodItems} index={index} subHeading={dishes.subHeading} />

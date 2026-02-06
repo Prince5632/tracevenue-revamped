@@ -4,7 +4,7 @@ function MenuCategories(props){
     {/* menu categories */}
           <div className="flex flex-col w-[200px] justify-center ">
             <h2 className="text-[18px] text-[#060606] font-bold mb-2 ">Menu Categories</h2>
-            <div className="w-[180px] rounded-[30px] border border-[#D7D9DA] shadow-[0_4px_10px_#0000000d] flex flex-col py-8">
+            <div className="w-full rounded-[30px] border border-[#D7D9DA] shadow-[0_4px_10px_#0000000d] flex flex-col py-8">
 
               {
                 props.packageMenu?.map((item, index) => (

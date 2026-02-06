@@ -1,12 +1,12 @@
 function PackageServices(props) {
     return <>
-        <div className="w-full md:w-[344px] border-l border-l-[#D7D9DA] flex flex-col justify-start px-4 mt-6 md:mt-0">
-            <h2 className="text-[18px] text-[#060606] font-bold mb-2 ">Amenities & Services</h2>
+        <div className="w-full md:w-[344px] border-l border-l-[#D7D9DA] flex flex-col justify-start mt-6 md:mt-0">
+            <h2 className="text-[18px] text-[#060606] font-bold mb-2 mx-4">Amenities & Services</h2>
             <div className="w-full max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin pb-[200px]">
                 {
                     props.packageMenuDetails.map((item, index) => (
                         item.id == 2 ? <>
-                            <div key={index} className="w-full">
+                            <div key={index} className="w-full px-4">
                                 {
                                     item.menuButton.map((subItem, index) => (
                                         <div key={index} className="flex gap-4 w-full rounded-[30px] border border-[#D7D9DA] bg-[#ffffff] shadow-[4px_0_10px_#0000000d] mb-2 p-2">
