@@ -5,19 +5,15 @@ import MenuCategories from "./MenuCategories";
 import FoodItems from "./FoodItems";
 import PackageServices from "./PackageServices";
 import { useState } from "react";
+import { Card, Badge, Button } from "@/shared/components/ui";
 
 function PackageInfo(props) {
-  // const sectionRefs = useRef({});
   const [active, setActive] = useState(null);
   const [itemId, setItemId] = useState(1)
 
   const handleMenuClick = (id) => {
     setItemId(id);
     setActive(id);
-    // sectionRefs.current[id]?.scrollIntoView({
-    //   behavior: "smooth",
-    //   block: "start",
-    // });
   };
   return (
     <>
@@ -55,7 +51,8 @@ function PackageInfo(props) {
               lg:flex lg:justify-center lg:items-center
             "
           >
-            <button
+            <Button
+              variant="outline"
               className="
                 min-w-[190px]
                 px-[25px] py-[4px] mt-2
@@ -64,7 +61,7 @@ function PackageInfo(props) {
                 border border-[#FF5722] rounded-[30px]
                 cursor-pointer
                 !text-[16px] !font-bold
-                lg:mt-0
+                lg:mt-0 hover:!bg-white hover:!text-[#ff5722]
               "
             >
               Plan New Event
@@ -73,13 +70,13 @@ function PackageInfo(props) {
                   fa-solid fa-arrow-right
                 "
               ></i>
-            </button>
+            </Button>
           </div>
         </div>
         <div
           className="
             h-[3px] w-full
-            mt-6 mb-[20px]
+            mt-6
             bg-[#F0F0F4]
             rounded-[30px]
             sm:h-[5px]
@@ -103,43 +100,41 @@ function PackageInfo(props) {
           subHeading={props.subHeading}
           cardDescription={props.cardDescription}
         />
-        <div
-          className="
-            my-[16px]
-            rounded-[12px] 
-          "
-        >
-          <h4
-            className="
+        <Card variant="default" padding="md" className="border-none shadow-none px-0">
+          <Card.Header>
+            <h4
+              className="
             mb-2
               text-[#060606] text-[18px] font-bold
             "
-          >
-            Cuisines
-          </h4>
-          <div
-            className="
+            >
+              Cuisines
+            </h4>
+          </Card.Header>
+          <Card.Body>
+            <div
+              className="
               flex flex-wrap
               gap-4
             "
-          >
-            {props.cuisines.map((item, index) => (
-              <span
-                key={index}
-                className="
-                  px-[12px] py-[4px]
-                  text-[#060606] text-[12px] font-semibold
-                  bg-[#ffffff]
-                  rounded-[30px] border border-[#D7D9DA]
-                  transition-all
-                  duration-200 ease-in gam
-                "
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
+            >
+              {props.cuisines.map((item, index) => (
+                <Badge
+                  variant="outline"
+                  key={index}
+                  className="
+                    px-[12px] py-[5px]
+                    text-[#060606] text-[14px] font-semibold
+                    bg-white
+                    rounded-[30px]
+                  "
+                >
+                  {item}
+                </Badge>
+              ))}
+            </div>
+          </Card.Body>
+        </Card>
         <PackageFooter />
         <div className="flex flex-col md:!flex-row items-start sticky top-24"
         >
@@ -149,7 +144,7 @@ function PackageInfo(props) {
           </div>
           {/* food items */}
           <div className="w-full md:max-w-[600px] ">
-            <h2 className="text-[18px] text-[#060606] font-bold mb-2 ">Food Items</h2>
+            <h2 className="text-[18px] text-[#060606] font-bold mb-2 px-4">Food Items</h2>
             <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-thin md:pb-[200px]">
               {
                 props.packageMenu?.map((item, index) => (
@@ -157,7 +152,7 @@ function PackageInfo(props) {
                     {
                       item.menuButton?.map((subItem, index) => (
                         subItem.id == itemId ? <>
-                          <div key={index} className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 px-4">
+                          <div key={index} className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 px-4 ">
                             {
                               subItem.items?.map((dishes, index) => (
                                 <FoodItems foodItems={dishes.foodItems} index={index} subHeading={dishes.subHeading} />
