@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { MapPin } from 'lucide-react';
-import { Button, Card, GradientText } from '@/shared';
+import React from 'react'
+import { Card, GradientText } from '@/shared';
 import { useNavigate } from 'react-router-dom';
 import birthdayCake from "../../../../assets/dashboard/birthdayCake.png";
 import LocationPin from "../../../../assets/images/LocationPin.png";
@@ -8,7 +7,7 @@ import LocationPin from "../../../../assets/images/LocationPin.png";
 const EnquiryCard = ({ looking, event, date, day, guest, amount, location, pricingType, enquiryRaised, startTime, endTime, minGuest, maxGuest }) => {
     const navigate = useNavigate()
     return (
-        <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]'>
+        <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]' onClick={() => navigate("/service/venues/enquiry/enquiry-detail")}>
             {/* image */}
             <div className='p-4 lg:w-55 !h-[180px]'>
                 <Card variant="bordered" className="lg:h-44 rounded-[30px] !m-0 relative -top-2 -left-2">
@@ -81,13 +80,13 @@ const EnquiryCard = ({ looking, event, date, day, guest, amount, location, prici
 
                     </div>
 
-                    
+
                 </div>
 
                 <div className='flex justify-between mb-2'>
                     <h2 className='text-[#15B076] font-semibold text-[16px]'>Awaiting Quotations</h2>
                     <h2 className='font-semibold italic text-[#573BB6] text-[14px]'>{enquiryRaised}</h2>
-                    
+
                 </div>
 
             </div>

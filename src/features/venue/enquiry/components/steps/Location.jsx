@@ -293,7 +293,7 @@ const Location = ({ urlParams = {} }) => {
     }, []);
 
     return (
-        <div ref={wrapperRef} className="w-full relative">
+        <div ref={wrapperRef} className="w-full relative pb-18">
             {/* Search Input Section */}
             <div className='relative z-4 w-full'>
                 <div className='relative flex items-center w-full'>
@@ -382,12 +382,12 @@ const Location = ({ urlParams = {} }) => {
                             <input
                                 type="range"
                                 min="1"
-                                max="100"
+                                max="50"
                                 value={range}
                                 onChange={handleRadiusChange}
                                 className="w-full h-4 rounded-full appearance-none cursor-pointer"
                                 style={{
-                                    background: `linear-gradient(to right, #f08e45 0%, #ee5763 ${(range / 100) * 100}%, #e5e5e5 ${(range / 100) * 100}%, #e5e5e5 100%)`
+                                    background: `linear-gradient(to right, #f08e45 0%, #ee5763 ${(range / 50) * 100}%, #e5e5e5 ${(range / 50) * 100}%, #e5e5e5 100%)`
                                 }}
                             />
                             {/* Custom thumb for Webkit browsers */}
