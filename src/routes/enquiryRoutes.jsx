@@ -28,11 +28,10 @@ export const enquiryRoutes = [
     // Package details route
     // { path: '/package/:id/:jobId', element: <PackageDetails /> },
     { path: "/package-details", element: <PackageDetails /> },
-    { path: '/Quotation', element: <QuotationCard /> },
+    { path: '/quotation-card', element: <QuotationCard /> },
     { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
     { path: "/package-details", element: <PackageDetails /> },
     { path: '/quotation-page', element: <Quotationpage /> },
-    { path: '/Quotation-1', element: <QuotationCard /> },
 
 
     // Component documentation (dev only)
