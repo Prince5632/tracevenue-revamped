@@ -17,7 +17,7 @@ const OptionCard = ({
       variant="bordered"
       padding="md"
       className={`relative cursor-pointer transition-all duration-200  border ${
-        selected === id ? " border-[#ff8359]" : "border-none"
+        selected === id ? " border-[#ff8359]" : "border-transparent"
       }`}
     >
       <Card.Body>
