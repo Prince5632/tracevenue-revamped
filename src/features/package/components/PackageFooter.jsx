@@ -20,6 +20,7 @@ function PackageFooter() {
               shadow-[0_8px_32px_#0000001f]
               items-center gap-[20px]
               md:rounded-[16px] md:!flex-row md:justify-between
+              mx-auto 
             "
       >
         <div

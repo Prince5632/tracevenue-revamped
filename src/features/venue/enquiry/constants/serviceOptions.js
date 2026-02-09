@@ -7,7 +7,7 @@ export const serviceOptions = [
         heading: "Discover",
         serviceType: "Venue",
         description:
-            "Discover verified banquet halls, farmhouses, rooftops in Tricity that match your guest list, style, and budget in just a few clicks.",
+            "Find verified Tricity venues by guest count, style, and budget.",
         image: Venue,
     },
     {
@@ -15,7 +15,7 @@ export const serviceOptions = [
         heading: "Plan",
         serviceType: "Catering",
         description:
-            "Plan customized catering with complete service teams so your guests enjoy seamless food and hospitality across the tri-city.",
+            "Custom tri-city catering with full-service hospitality.",
         image: Catering,
     },
 ];
