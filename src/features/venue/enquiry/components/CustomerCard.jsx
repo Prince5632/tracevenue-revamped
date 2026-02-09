@@ -1,12 +1,13 @@
 import React from "react";
 import CustomerCardImage from "@assets/CustomerCard/CustomerCardIMG.png";
+import CustomerCardMessageImage from "@assets/CustomerCard/CustomerCardMessageIcon.png";
 import { Badge, Button, Card } from "@/shared";
 const PackageCard = () => {
   return (
     <>
       <Card
         variant="default"
-        className="max-w-[444px] rounded-[30px] border border-[#D7D9DA] !p-0 ml-8 mt-24 "
+        className="max-w-[444px] rounded-[30px] border border-[#D7D9DA] !p-0 ml-0 mt-24 "
       >
         <Card.Body className="">
           <div
@@ -80,18 +81,26 @@ const PackageCard = () => {
                 <div className="max-w-[96px] text-[14px] text-[#15B076] font-semibold italic ">
                   <span>78% Matched</span>
 
-                  <div className="w-[180px] h-[4px] rounded-[5px] bg-[#F0F0F4] ">
+                  <div className="w-[160px] h-[4px] rounded-[5px] bg-[#F0F0F4] ">
                     <div className="w-[100px] h-[4px] bg-[#15B076] rounded-[3px]"></div>
                   </div>
                 </div>
-                <div className=" bg-[#EEEBF8] rounded-[10px] text-[#573BB6] flex justify-center items-center !py-[4px] px-[16px]  ">
-                  <span className="font-semibold w-[70px]  text-[16px] ">
+
+                <div className="flex items-center gap-3">
+                <div className="bg-[#EEEBF8] px-[16px] py-[6px] rounded-[10px] cursor-pointer flex justify-center items-center">
+
+                  <button className="cursor-pointer ">
+                    <img src= {CustomerCardMessageImage} alt="" />
+                  </button>
+                </div>
+
+                <div className=" bg-[#573BB6] rounded-[10px] text-[#FFFFFF] flex justify-center items-center py-[4px] px-[16px]  cursor-pointer">
+                  <button className="font-semibold w-[70px]  text-[16px] cursor-pointer ">
                     Compare
-                  </span>
-                  <input
-                    type="checkbox"
-                    className="max-w-[26px] h-[16px] accent-[#573BB6] cursor-pointer ml-2"
-                  />
+                  </button>
+                  <i class="fa-solid fa-plus text-[16px]"></i>
+                 
+                </div>
                 </div>
               </div>
             </div>
