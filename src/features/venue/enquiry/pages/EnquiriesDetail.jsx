@@ -193,21 +193,27 @@ const EnquiriesDetail = () => {
   const sectionRefs = useRef([]);
   const [activeSection, setActiveSection] = useState(0);
   const [isClick, setIsClick] = useState(false);
+  const [isFocus, setIsFoucus] = useState(false);
+
   let heading = "Looking venue for birthday party for 50 people on 27 feb, 2026.";
-  let [value, setValue] = useState(heading);
+  const [value, setValue] = useState(heading);        // saved value
+  const [editValue, setEditValue] = useState(heading); // temp value
   const handlePencilButtonClick = () => {
+    setEditValue(value);
     setIsClick(true);
   }
   const handleInputCancel = () => {
+    setEditValue(value);
     setIsClick(false);
   }
-  const handleInputChange = (e)=>{
-    setValue(e.target.value);
+  const handleInputChange = (e) => {
+    setEditValue(e.target.value);
   }
-  const handleEditInput = (e)=>{
-    value=e.target.value;
+  const handleEditInput = () => {
+    setValue(editValue);
     setIsClick(false);
   }
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -273,9 +279,14 @@ const EnquiriesDetail = () => {
             <div className='flex-1 w-full flex gap-4 items-center'>
               {
                 isClick ? <>
-                  <div className='h-[48px] w-full border-2 rounded-[10px] border-[#e0e0e0] flex items-center px-2'>
+                  <div
+                    onFocus={() => setIsFoucus(true)}
+                    onBlur={() => setIsFoucus(false)}
+                    className={`h-[48px] w-full border-2 rounded-[10px] border-[#e0e0e0] flex items-center px-2 ${isFocus ? "border-[#ff4000]" : "border-[#e0e0e0]"}`}>
                     <input type="text"
-                      value={value} className='h-[48px] w-full pl-2 !text-[18px] !text-[#060606] !font-bold' onChange={handleInputChange} />
+                      value={editValue}
+                      className='h-[48px] w-full pl-2 !text-[18px] !text-[#060606] !font-bold'
+                      onChange={handleInputChange} />
                     <div className='flex gap-2'>
                       <Button onClick={handleEditInput} variant="primary" className="!rounded-[10px] h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in ">
                         <i class="fa-solid fa-check"></i>
@@ -534,7 +545,7 @@ const EnquiriesDetail = () => {
         </div>
 
         {/*  MENU + FOOD */}
-        <div className="flex gap-8">
+        <div className="flex gap-8 2xl:gap-0 ">
 
           {/* LEFT MENU */}
           <div className="w-[35%] hidden lg:block">
@@ -573,7 +584,7 @@ const EnquiriesDetail = () => {
           </div>
 
           {/* RIGHT FOOD */}
-          <div id="food-scroll" className="w-full lg:w-[65%] space-y-6 grid grid-cols-1  ">
+          <div id="food-scroll" className=" w-full lg:w-[65%] space-y-6 grid grid-cols-1  ">
             <Card className="hidden lg:block ">
               <h1 className="font-sans text-lg mb-4 h-5.25 ">Food Items</h1>
 
