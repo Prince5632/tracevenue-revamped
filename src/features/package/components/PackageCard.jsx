@@ -1,22 +1,27 @@
-function PackageCard(props){
-    return<>
+import { Card, Badge } from "@/shared/components/ui";
+
+function PackageCard(props) {
+  return <>
+
+    <Card variant="default" padding="md" className="border-none !p-0 shadow-none rounded-none">
+      <Card.Body>
         <div
           className="
-            py-[16px]
+            pr-[20px]
             gap-[20px]
-            lg:flex
+            lg:flex border-b border-[#D7D9DA] py-[20px]
           "
         >
           <div
-            style={{ background: `url(${props.CardImage})` }}
+            style={{ backgroundImage: `url(${props.CardImage})`, backgroundPosition: "center bottom 20%" }}
             className="
-              h-[200px] w-full lg:max-w-[400px]
+              h-[294px] w-full lg:max-w-[630px]
               bg-center bg-no-repeat
               rounded-[30px]
               relative group !bg-cover
               sm:min-w-[400px]
               lg:h-[272px]
-              2xl:max-w-[600px]
+              2xl:max-w-[830px]
             "
           >
             <div
@@ -126,31 +131,31 @@ function PackageCard(props){
               "
             >
               {props.cuisines.map((item, index) => (
-                <span
+                <Badge
+                  variant="outline"
                   key={index}
                   className="
-                    px-[10px] py-[4px]
-                    text-[#333333] text-[11px] font-bold
+                    px-[12px] py-[5px]
+                    text-[#060606] text-[14px] font-semibold
                     bg-white
                     rounded-[30px]
                   "
                 >
                   {item}
-                </span>
+                </Badge>
               ))}
             </div>
           </div>
           <div
             className="
               w-full
-              mt-6
-              sm:mt-0
+              mx-2
+              sm:mt-0 
             "
           >
             <div
               className="
-                m-[16px] px-[16px]
-                border-l-[3px] border-[#ff6b35]
+              m-[16px] border-l-2 pl-[16px] border-[#ff6b35]
               "
             >
               <h4
@@ -200,7 +205,7 @@ function PackageCard(props){
             <div
               className="
                 flex flex-wrap
-                py-[8px] px-[12px] ml-[16px] mb-[10px]
+                py-[8px] px-[12px] ml-[16px] mb-[10px] mr-[10px]
                 bg-[#f8f9fa]
                 rounded-[6px]
                 gap-3
@@ -259,6 +264,8 @@ function PackageCard(props){
             </div>
           </div>
         </div>
-    </>
+      </Card.Body>
+    </Card>
+  </>
 }
 export default PackageCard;

@@ -1,3 +1,14 @@
+import carParking from "@/assets/package images/amenities icons/car_parking.png";
+import bikeParking from "@/assets/package images/amenities icons/bike_parking.png";
+import mike from "@/assets/package images/amenities icons/mike.png";
+import internet from "@/assets/package images/amenities icons/internet.png";
+import beverages from "@/assets/package images/menuCategories/beverage.png";
+import snacks from "@/assets/package images/menuCategories/snacks.png";
+import mainCourse from "@/assets/package images/menuCategories/main_course.png";
+import salad from "@/assets/package images/menuCategories/salad.png";
+import starters from "@/assets/package images/menuCategories/starters.png";
+import desserts from "@/assets/package images/menuCategories/desserts.png";
+
 export const packageInformation = [
   {
     step: "Step 2",
@@ -6,6 +17,8 @@ export const packageInformation = [
       "Based on your location and event type, restaurants are offering a variety of packages with different cuisine combinations.",
     subHeading:
       "Mega 6-Cuisine Celebration Spread Featuring Indian & Continental",
+    cardDescription:
+      "Celebrate your special moments with our exclusive 6-cuisine celebration spread, thoughtfully curated to delight every palate. Perfect for weddings, corporate events, birthday parties, and grand gatherings.",
     price: "80000",
     services: [
       {
@@ -68,39 +81,382 @@ export const packageInformation = [
     packageMenu: [
       {
         id: 1,
-        heading: "Menu",
+        heading: "Menu Categories",
         menuButton: [
           {
             id: 1,
             content: "Beverages",
-            subHeading: "Cold Drinks",
-            subContent: ["Coca Cola", "Coke", "Water"],
-            count: "3",
-          },
-          {
-            id: 2,
-            content: "Starter/Snacks",
-            subHeading: "Veg items",
-            subContent: ["Honey Chilli Potato", "Tangy Potato Tikki"],
-            count: "2",
-          },
-          {
-            id: 3,
-            content: "Soups",
-            subHeading: "Veg items",
-            subContent: [
-              "Veg Manchow Soup",
-              "Veg Hot N Sour Soup",
-              "Veg Clear Soup",
+            icon: beverages,
+            items: [
+              {
+                subHeading: "Main Course items",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: [
+                      "Paneer Lababdar",
+                      "Paneer Butter Masala",
+                      "Kadhai Paneer",
+                      "Chilli Paneer with Schezwan Souce",
+                    ],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [
+                      "Butter Chiken",
+                      "Chiken Lababdar",
+                      "Chiken in Black Bean Sauce",
+                    ],
+                  },
+                ],
+              },
+              {
+                subHeading: "Rice & Biryani",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Rice (Steam / Jeera)", "Veg Dum Biryani"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: ["Murg Dum Biryani", "Murg Pulao"],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
             ],
             count: "3",
           },
           {
+            id: 2,
+            content: "Snacks",
+            icon: snacks,
+            items: [
+              {
+                subHeading: "Main Course items",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: [
+                      "Paneer Lababdar",
+                      "Paneer Butter Masala",
+                      "Kadhai Paneer",
+                      "Chilli Paneer with Schezwan Souce",
+                    ],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [
+                      "Butter Chiken",
+                      "Chiken Lababdar",
+                      "Chiken in Black Bean Sauce",
+                    ],
+                  },
+                ],
+              },
+              {
+                subHeading: "Rice & Biryani",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Rice (Steam / Jeera)", "Veg Dum Biryani"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: ["Murg Dum Biryani", "Murg Pulao"],
+                  },
+                ],
+              },
+            ],
+            count: "2",
+          },
+          {
+            id: 3,
+            content: "Main Course",
+            icon: mainCourse,
+            items: [
+              {
+                subHeading: "Main Course items",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: [
+                      "Paneer Lababdar",
+                      "Paneer Butter Masala",
+                      "Kadhai Paneer",
+                      "Chilli Paneer with Schezwan Souce",
+                    ],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [
+                      "Butter Chiken",
+                      "Chiken Lababdar",
+                      "Chiken in Black Bean Sauce",
+                    ],
+                  },
+                ],
+              },
+              {
+                subHeading: "Rice & Biryani",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Rice (Steam / Jeera)", "Veg Dum Biryani"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: ["Murg Dum Biryani", "Murg Pulao"],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+            ],
+            count: "6",
+          },
+          {
             id: 4,
-            content: "Complimentary",
-            subHeading: "veg items",
-            subContent: ["Papad"],
+            content: "Salad",
+            icon: salad,
+            items: [
+              {
+                subHeading: "Main Course items",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: [
+                      "Paneer Lababdar",
+                      "Paneer Butter Masala",
+                      "Kadhai Paneer",
+                      "Chilli Paneer with Schezwan Souce",
+                    ],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [
+                      "Butter Chiken",
+                      "Chiken Lababdar",
+                      "Chiken in Black Bean Sauce",
+                    ],
+                  },
+                ],
+              },
+            ],
             count: "1",
+          },
+          {
+            id: 5,
+            content: "Starters",
+            icon: starters,
+            items: [
+              {
+                subHeading: "Main Course items",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: [
+                      "Paneer Lababdar",
+                      "Paneer Butter Masala",
+                      "Kadhai Paneer",
+                      "Chilli Paneer with Schezwan Souce",
+                    ],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [
+                      "Butter Chiken",
+                      "Chiken Lababdar",
+                      "Chiken in Black Bean Sauce",
+                    ],
+                  },
+                ],
+              },
+              {
+                subHeading: "Rice & Biryani",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Rice (Steam / Jeera)", "Veg Dum Biryani"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: ["Murg Dum Biryani", "Murg Pulao"],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+              {
+                subHeading: "Breads",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Assorted Indian Breads", "Naan"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [],
+                  },
+                ],
+              },
+            ],
+            count: "7",
+          },
+          {
+            id: 6,
+            content: "Desserts",
+            icon: desserts,
+            items: [
+              {
+                subHeading: "Main Course items",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: [
+                      "Paneer Lababdar",
+                      "Paneer Butter Masala",
+                      "Kadhai Paneer",
+                      "Chilli Paneer with Schezwan Souce",
+                    ],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: [
+                      "Butter Chiken",
+                      "Chiken Lababdar",
+                      "Chiken in Black Bean Sauce",
+                    ],
+                  },
+                ],
+              },
+              {
+                subHeading: "Rice & Biryani",
+                foodItems: [
+                  {
+                    foodCategories: "veg",
+                    vegItems: ["Rice (Steam / Jeera)", "Veg Dum Biryani"],
+                  },
+                  {
+                    foodCategories: "non-veg",
+                    nonVegItems: ["Murg Dum Biryani", "Murg Pulao"],
+                  },
+                ],
+              },
+            ],
+            count: "2",
           },
         ],
       },
@@ -110,72 +466,57 @@ export const packageInformation = [
         menuButton: [
           {
             id: 101,
-            content: "Decoration & Setup",
-            children: [
-              {
-                subHeading: "Decoration",
-                subContent: "Stage Decoration: Flower Stage Decoration",
-                icon: "fa-regular fa-lightbulb",
-              },
-            ],
-            count: "1",
+            content: "4-Wheeler Parking",
+            icon: carParking,
+            available: "Free",
           },
           {
             id: 102,
-            content: "Food & Catering",
-            children: [
-              {
-                subHeading: "Live Stalls",
-                subContent:
-                  "Sweet & Dessert Live Stalls: Candy Floss / Popcorn",
-                icon: "fa-solid fa-utensils",
-              },
-              {
-                subHeading: "Cake",
-                subContent: "Birthday Cake: Eggless",
-                icon: "fa-solid fa-cake-candles",
-              },
-            ],
-            count: "2",
+            content: "2-Wheeler Parking",
+            icon: bikeParking,
+            available: "Free",
           },
           {
             id: 103,
-            content: "Photography & Videography",
-            children: [
-              {
-                subHeading: "Video",
-                subContent: "Drone Videography: 4K Drone Coverage",
-                icon: "fa-regular fa-camera",
-              },
-              {
-                subHeading: "Video",
-                subContent: "Cinematic Video: 4k Cinematic Shoot",
-                icon: "fa-regular fa-camera",
-              },
-            ],
-            count: "2",
+            content: "Microphone",
+            icon: mike,
+            available: "Paid",
           },
           {
             id: 104,
-            content: "Entertainment",
-            children: [
-              {
-                subHeading: "Games",
-                subContent: "Fun & Carnival Games: Ballon Shooting",
-                icon: "fa-regular fa-star",
-              },
-              {
-                subHeading: "Games",
-                subContent: "Fun & Carnival Games: Ring Toss",
-                icon: "fa-regular fa-star",
-              },
-              {
-                subHeading: "Games",
-                subContent: "Fun & Carnival Games: Mini Bowling",
-                icon: "fa-regular fa-star",
-              },
-            ],
-            count: "3",
+            content: "Internet",
+            icon: internet,
+            available: "Free",
+          },
+          {
+            id: 105,
+            content: "Internet",
+            icon: internet,
+            available: "Free",
+          },
+          {
+            id: 106,
+            content: "Internet",
+            icon: internet,
+            available: "Free",
+          },
+          {
+            id: 107,
+            content: "Internet",
+            icon: internet,
+            available: "Free",
+          },
+          {
+            id: 108,
+            content: "Internet",
+            icon: internet,
+            available: "Free",
+          },
+          {
+            id: 109,
+            content: "Internet",
+            icon: internet,
+            available: "Free",
           },
         ],
       },

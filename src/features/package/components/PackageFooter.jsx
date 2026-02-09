@@ -1,3 +1,5 @@
+import { Button } from "@/shared/components/ui";
+
 function PackageFooter() {
   return <>
     <div
@@ -81,21 +83,23 @@ function PackageFooter() {
                 lg:!flex-row
               "
         >
-          <button
+          <Button
+            variant="outline"
             className="
                   w-full
                   px-[20px] py-[12px]
                   text-[#ff4000] text-[16px]
                   rounded-[30px] border border-[rgb(255,64,0)]
                   cursor-pointer transition-all shadow-[0_6px_28px_#ff400073]
-                  !font-bold hover:translate-y-[-2px] duration-300 ease-in
+                  !font-bold hover:translate-y-[-2px] duration-300 ease-in hover:!bg-[#ffffff] hover:!text-[#ff4000]
                   sm:px-[32px] sm:py-[16px]
                   md:w-auto
                 "
           >
             Preview Enquiry
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="gradient"
             className="
                   flex items-center justify-center
                   w-full
@@ -109,7 +113,7 @@ function PackageFooter() {
                   md:w-auto
                 "
           >
-            Raise Enquiry
+            Get Best Quotes
             <i
               class="
                     ml-1
@@ -118,7 +122,7 @@ function PackageFooter() {
                     fa-solid fa-arrow-right group-hover:translate-x-1 duration-300 ease-in !font-extrabold
                   "
             ></i>
-          </button>
+          </Button>
         </div>
       </div>
     </div>
