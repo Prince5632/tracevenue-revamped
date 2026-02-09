@@ -59,7 +59,6 @@ const EnquiriesDetail = () => {
     {
       section: "Beverages",
       count: 2,
-      
       icon: ColdDrink,
       groups: [
         {
@@ -194,6 +193,21 @@ const EnquiriesDetail = () => {
   const sectionRefs = useRef([]);
   const [activeSection, setActiveSection] = useState(0);
   const [isClick, setIsClick] = useState(false);
+  let heading = "Looking venue for birthday party for 50 people on 27 feb, 2026.";
+  let [value, setValue] = useState(heading);
+  const handlePencilButtonClick = () => {
+    setIsClick(true);
+  }
+  const handleInputCancel = () => {
+    setIsClick(false);
+  }
+  const handleInputChange = (e)=>{
+    setValue(e.target.value);
+  }
+  const handleEditInput = (e)=>{
+    value=e.target.value;
+    setIsClick(false);
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -249,13 +263,6 @@ const EnquiriesDetail = () => {
     //   }
     // });
   };
-
-  const handlePencilButtonClick = () => {
-    setIsClick(true);
-  }
-  const handleInputCancel = () => {
-    setIsClick(false);
-  }
   return (
     <>
       {/**Main Content */}
@@ -267,10 +274,10 @@ const EnquiriesDetail = () => {
               {
                 isClick ? <>
                   <div className='h-[48px] w-full border-2 rounded-[10px] border-[#e0e0e0] flex items-center px-2'>
-                    <input type="text" placeholder='Enter something here'
-                      value="Looking venue for birthday party for 50 people on 27 feb, 2026." className='h-[48px] w-full pl-2 !text-[16px] !text-[#060606] !font-bold' />
+                    <input type="text"
+                      value={value} className='h-[48px] w-full pl-2 !text-[18px] !text-[#060606] !font-bold' onChange={handleInputChange} />
                     <div className='flex gap-2'>
-                      <Button variant="primary" className="!rounded-[10px] h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in ">
+                      <Button onClick={handleEditInput} variant="primary" className="!rounded-[10px] h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in ">
                         <i class="fa-solid fa-check"></i>
                       </Button>
                       <Button onClick={handleInputCancel} variant="secondary" className="!rounded-[10px] h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in">
@@ -284,7 +291,7 @@ const EnquiriesDetail = () => {
                     <Button onClick={handlePencilButtonClick} variant="gradient" className="border-none !rounded-[10px] h-[40px] w-[40px] shadow-[4px_0_8px_#ff400033] transition-all duration-300 ease-in shrink-0 bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)] border border-[rgb(255,64,0)] cursor-pointer hover:translate-y-[-2px] flex justify-center items-center">
                       <i className="fa-solid fa-pen text-[20px]"></i>
                     </Button>
-                    <h3 className='text-[20px] text-[#060606] font-bold'>Looking venue for birthday party for 50 people on 27 feb, 2026.</h3>
+                    <h3 className='text-[20px] text-[#060606] font-bold'>{value}</h3>
                   </>
               }
             </div>
