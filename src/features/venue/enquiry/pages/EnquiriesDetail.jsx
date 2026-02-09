@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import EnquiryTopview from '@/features/venue/enquiry/components/EnquiryDetailTabs';
 import Map from '@/components/common/Map';
+import { LoadScript } from '@react-google-maps/api';
 import Card from '@shared/components/ui/Card';
 import Veg from '@assets/images/veg.svg';
 import Location from '@assets/images/locationPin.svg'
@@ -247,7 +248,7 @@ const EnquiriesDetail = () => {
 
   return (
     <>
-     {/**Main Content */}
+      {/**Main Content */}
       <div className="w-full lg:w-full">
         {/* BASIC INFORMATION + LOCATION */}
         <div className=" p-2 ">
@@ -268,7 +269,7 @@ const EnquiriesDetail = () => {
                       localStorage.setItem('selectedService', service.id);
                     }}
                     className={`cursor-pointer transition-all duration-200 relative h-full min-h-39
-                      ${selectedService === service.id 
+                      ${selectedService === service.id
                         ? 'border-[#ff8359]' : ''}
                     `}
                   >
@@ -276,7 +277,7 @@ const EnquiriesDetail = () => {
                       bg-[linear-gradient(93.96deg,#F08E45_0%,#EE5763_98.12%)]
                       bg-clip-text text-transparent"
                     >
-                     {service.label}
+                      {service.label}
                     </span>
 
 
@@ -325,7 +326,7 @@ const EnquiriesDetail = () => {
                     <h1 className="font-bold text-3xl font-gilroy
                         bg-[linear-gradient(95.9deg,#F08E45_0%,#EE5763_97.38%)]
                         bg-clip-text text-transparent"
-                      >60–80</h1>
+                    >60–80</h1>
 
                     <h6 className="font-semibold text-gray-500 whitespace-nowrap">
                       Number of Guests
@@ -339,16 +340,16 @@ const EnquiriesDetail = () => {
             {/* RIGHT : LOCATION */}
 
             <div className="w-full">
-                <h3 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">
-                  Location (10 km)
-                </h3>
-                {/* Map Wrapper */}
+              <h3 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">
+                Location (10 km)
+              </h3>
+              {/* Map Wrapper */}
               <div className="relative h-83.5 rounded-2xl overflow-hidden">
                 {/* Search Bar on Map */}
                 <div className="absolute top-5 left-3 right-3 z-1">
                   <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
                     <span className="text-orange-500">
-                      <img src={Location}/>
+                      <img src={Location} />
                     </span>
                     <input
                       type="text"
@@ -357,14 +358,16 @@ const EnquiriesDetail = () => {
                     />
                   </div>
                 </div>
-               {/* Map */}
-                <Map
-                  center={center}
-                  radius={center ? 10000 : 0}
-                  handleLocation={handleLocation}
-                />
+                {/* Map */}
+                <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+                  <Map
+                    center={center}
+                    radius={center ? 10000 : 0}
+                    handleLocation={handleLocation}
+                  />
+                </LoadScript>
               </div>
-           </div>
+            </div>
           </div>
         </div>
 
