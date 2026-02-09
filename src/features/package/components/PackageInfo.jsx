@@ -2,42 +2,42 @@ import CardImage from "@/assets/package images/card1.jpeg";
 import PackageCard from "@/features/package/components/PackageCard";
 import PackageFooter from "@/features/package/components/PackageFooter";
 import PackageMenu from "@/features/package/components/PackageMenu";
-import Card from "@/shared/components/ui/Card";
-import Badge from "@/shared/components/ui/Badge";
-import { useRef,useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
+import { Button, Card, Badge } from "@/shared/components/ui";
+import { ProgressBar } from "@/shared/components/feedback";
 
 function PackageInfo(props) {
-    const sectionRefs = useRef({});
-    const [active, setActive] = useState(null);
-    useEffect(()=>{
-      const observer = new IntersectionObserver(
-        (entries)=>{
-          entries.forEach((entry)=>{
-            if(entry.isIntersecting){
-              const id = entry.target.getAttribute("data-id");
-              setActive(Number(id));
-            }
-          });
-        },
-        {
-          root: null,
-          rootMargin: "-15% 0px -70% 0px",
-          threshold: 0,
-        }
-      );
-      Object.values(sectionRefs.current).forEach((section)=>{
-        if (section) observer.observe(section);
-      });
-      return ()=>observer.disconnect();
-    },[]);
+  const sectionRefs = useRef({});
+  const [active, setActive] = useState(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("data-id");
+            setActive(Number(id));
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-15% 0px -70% 0px",
+        threshold: 0,
+      }
+    );
+    Object.values(sectionRefs.current).forEach((section) => {
+      if (section) observer.observe(section);
+    });
+    return () => observer.disconnect();
+  }, []);
 
-    const handleMenuClick = (id) => {
-        setActive(id);
-  sectionRefs.current[id]?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-};
+  const handleMenuClick = (id) => {
+    setActive(id);
+    sectionRefs.current[id]?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   return (
     <>
@@ -76,13 +76,15 @@ function PackageInfo(props) {
               lg:flex lg:justify-center lg:items-center
             "
           >
-            <button
+            <Button
+              variant="outline"
               className="
                 min-w-[190px]
                 px-[25px] py-[4px] mt-2
                 text-[#Ff5722]
                 bg-white
                 border border-[#FF5722] rounded-[30px]
+                hover:!bg-[#ffffff] hover:!text-[#ff5722]
                 cursor-pointer
                 !text-[16px] !font-bold
                 lg:mt-0
@@ -94,18 +96,10 @@ function PackageInfo(props) {
                   fa-solid fa-arrow-right
                 "
               ></i>
-            </button>
+            </Button>
           </div>
         </div>
-        <div
-          className="
-            h-[3px] w-full
-            mt-6 mb-[20px]
-            bg-[#F0F0F4]
-            rounded-[30px]
-            sm:h-[5px]
-          "
-        ></div>
+        <ProgressBar value={0} className="mt-6 mb-[20px]" />
         <div>
           <div
             className="
@@ -153,44 +147,32 @@ function PackageInfo(props) {
           services={props.services}
           CardImage={CardImage}
         />
-        <div
-          className="
-            mb-[16px] p-[20px]
-            bg-[#f8f9fa]
-            rounded-[12px]
-          "
-        >
-          <h4
-            className="
-              mb-[16px]
-              text-[#1a1a1a] text-[18px] font-bold
-            "
-          >
-            Cuisines
-          </h4>
-          <div
-            className="
-              flex flex-wrap
-              gap-4
-            "
-          >
+
+        <Card variant="flat" padding="md" className="border-none !bg-[#f8f9fa] mb-4">
+          <Card.Header>
+            <h4 className="mb-[16px] text-[#1a1a1a] text-[18px] font-bold">
+              Cuisines
+            </h4>
+          </Card.Header>
+          <Card.Body>
             {props.cuisines.map((item, index) => (
-              <span
+              <Badge
+                variant="outline"
                 key={index}
                 className="
-                  px-[16px] py-[8px]
+                            px-[16px] py-[8px]
                   text-[#333333] text-[14px] font-semibold
-                  bg-[#ffffff]
+                  !bg-[#ffffff]
                   rounded-[30px] border border-[#e0e0e0]
                   transition-all
-                  duration-200 ease-in gam
-                "
+                  duration-200 ease-in mr-2
+                          "
               >
                 {item}
-              </span>
+              </Badge>
             ))}
-          </div>
-        </div>
+          </Card.Body>
+        </Card>
         <PackageFooter />
         <div
           className="
@@ -201,7 +183,7 @@ function PackageInfo(props) {
         >
           <div
             className="
-              overflow-y-auto
+              overflow-y-auto 
               w-[280px] max-h-[calc(100vh-6rem)]
               px-[20px] pb-[20px]
               text-[16px] text-[#212529]
@@ -243,11 +225,11 @@ function PackageInfo(props) {
                         Food Items
                       </h4>
                       {item.menuButton?.map((subItem, index) => (
-                        <div 
-                        key={index} 
-                        ref={(el)=>(sectionRefs.current[subItem.id]=el)}
-                        data-id={subItem.id}
-                        className="scroll-mt-[80px]"
+                        <div
+                          key={index}
+                          ref={(el) => (sectionRefs.current[subItem.id] = el)}
+                          data-id={subItem.id}
+                          className="scroll-mt-[80px]"
                         >
                           <h5
                             className="
@@ -368,9 +350,9 @@ function PackageInfo(props) {
                       </h4>
                       {item.menuButton?.map((subItem, index) => (
                         <div key={index}
-                        ref={(el)=>(sectionRefs.current[subItem.id]=el)}
-                        data-id={subItem.id}
-                         className="mb-[8px] scroll-mt-[80px] w-full">
+                          ref={(el) => (sectionRefs.current[subItem.id] = el)}
+                          data-id={subItem.id}
+                          className="mb-[8px] scroll-mt-[80px] w-full">
                           <h5
                             className="
                               mb-[8px] p-[10px]
