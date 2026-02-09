@@ -31,12 +31,12 @@ const Dashboard = () => {
       <DashboardTitle />
 
       {/* Card */}
-      <div className="bg-[linear-gradient(95.02deg,#f08e45_0.07%,#ee5763_61.45%)] rounded-4xl p-6 grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 items-center w-full">
+      <div className="bg-[linear-gradient(95.02deg,#f08e45_0.07%,#ee5763_61.45%)] rounded-4xl p-6 grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 items-center ">
 
         {/* Text Section */}
         <div className="md:text-left">
           <h1 className="font-bold text-3xl text-white">
-            <span className="bg-linear-to-r from-[#ffd145] to-[#fff9e7] bg-clip-text text-transparent">Hi Prince! </span>
+            <span className="bg-linear-to-r from-[#ffd145] to-[#fff9e7] bg-clip-text text-transparent">Hi {dashboardStats?.data?.user?.name}! </span>
             Ready to plan your next event?
           </h1>
           <h2 className="text-white font-semibold text-md mt-2">
@@ -63,45 +63,40 @@ const Dashboard = () => {
 
         <DashboardAnalytics
           src="src\assets\dashboard\three-line-list.svg"
-          count={12}
           title="Active Enquiries"
+          count={dashboardStats?.data?.stats?.totalEnquiries}
         />
 
         <DashboardAnalytics
           src="src\assets\dashboard\clock.svg"
-          count={10}
           title="Pending Responses"
+          count={dashboardStats?.data?.stats?.totalPendingResponses}
         />
 
         <DashboardAnalytics
           src="src\assets\dashboard\check-green.svg"
-          count={10}
+          count={dashboardStats?.data?.stats?.totalCompletedEnquiries}
           title="Completed Bookings"
         />
 
       </div>
 
 
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4 mt-6">
       {/* Upcoming events */}
-
-      <Card variant="default" className="mt-4">
+      <Card variant="default" className=" h-[260px]">
         <Card.Header>
           <h3 className="font-semibold text-xl text-[#212529]">Upcoming events</h3>
         </Card.Header>
 
-        <Card.Body className='grid grid-cols-1 lg:grid-cols-2 gap-3'>
-          <DashboardEventCard />
-          <DashboardEventCard />
-          <DashboardEventCard />
-          <DashboardEventCard />
+        <Card.Body className='flex flex-wrap gap-3'>
+          {dashboardStats?.data?.upcomingEvents.map((item,idx)=>{
+            return <DashboardEventCard data={item}/>
+          })}
         </Card.Body>
 
       </Card>
-
-      {/* Event Section */}
-      <div className="w-full grid lg:grid-cols-2 gap-4 my-4">
-        {/* Event card */}
-        <Card className='w-full'>
+         <Card className='w-full h-[260px]'>
           <Card.Header>
             <h2 className="font-bold text-[18px] text-gray-800">Event Planning Tips</h2>
           </Card.Header>
@@ -109,7 +104,7 @@ const Dashboard = () => {
           <Divider />
 
           <Card.Body>
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex flex-wrap items-center gap-2 mt-2">
               <div>
                 <img src="src\assets\dashboard\event-plan.svg" />
               </div>
@@ -132,8 +127,10 @@ const Dashboard = () => {
             </p>
           </Card.Footer>
         </Card>
+    </div>
 
-        {/* Recent Activity Card */}
+      {/* Recent Activity Card */}
+      <div className="w-full">
         <Card>
           <Card.Header className="font-semibold text-2xl text-gray-800">Recent Activity</Card.Header>
           <Card.Body className="font-bold text-secondary">No Recent Activity</Card.Body>

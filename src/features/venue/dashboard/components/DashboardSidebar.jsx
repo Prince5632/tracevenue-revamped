@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { ChevronDown } from "lucide-react";
 import carbonDocumentIcon from "../../../../assets/dashboard/carbon_document-signed.svg";
 import mageDashboardIcon from "../../../../assets/dashboard/mage_dashboard.svg";
@@ -7,8 +7,21 @@ import userProfile from "../../../../assets/dashboard/user-profile.svg";
 import settings from "../../../../assets/dashboard/setting.svg";
 import logout from "../../../../assets/dashboard/switch.svg";
 import { useNavigate } from "react-router-dom";
+import { useDashboard } from "../context/DashboardContext";
 
 const DashboardSidebar = () => {
+  const { fetchDashboardStats, dashboardStats, error, isLoading } =
+      useDashboard();
+
+    useEffect(() => {
+      fetchDashboardStats();
+    }, [fetchDashboardStats]);
+  
+    useEffect(() => {
+      if (dashboardStats) {
+        console.log("Dashboard Data (Context):", dashboardStats);
+      }
+    }, [dashboardStats]);
   const [openMenu, setOpenMenu] = useState({
     enquiries: false,
     contracts: false,
@@ -67,7 +80,7 @@ const DashboardSidebar = () => {
       <div className="border-b border-[#D7D9DA]">
         <button
           onClick={() => toggleMenu("enquiries")}
-          className="w-full flex justify-between items-center   font-medium h-14.5 px-7.5"
+          className="w-full flex justify-between items-center font-medium h-14.5 px-7.5"
         >
           <div className="flex gap-4 font-semibold items-center">
             <img
@@ -89,10 +102,10 @@ const DashboardSidebar = () => {
         {openMenu.enquiries && (
           <div className="w-full">
             {[
-              "Active Enquiries (4)",
-              "Draft Enquiries (7)",
-              "Completed Enquiries (1)",
-              "Expired Enquiries (7)",
+              `Active Enquiries (${dashboardStats?.data?.stats?.statusWise?.Active})`,
+              `Draft Enquiries (${dashboardStats?.data?.stats?.statusWise?.Draft})`,
+              `Completed Enquiries (${dashboardStats?.data?.stats?.statusWise?.Closed})`,
+              `Expired Enquiries (${dashboardStats?.data?.stats?.statusWise?.InActive})`,
             ].map((item) => (
               <div
                 key={item}
@@ -141,9 +154,9 @@ const DashboardSidebar = () => {
         {openMenu.contracts && (
           <div className="w-full">
             {[
-              "Active Contracts (0)",
-              "Proposed Contracts (0)",
-              "Completed Contracts (1)",
+               `Active Contracts (${dashboardStats?.data?.stats?.contractStats?.active})`,
+               `Proposed Contracts (${dashboardStats?.data?.stats?.contractStats?.pending})`,,
+               `Completed Contracts (${dashboardStats?.data?.stats?.contractStats?.completed})`,
             ].map((item) => (
               <div
                 key={item}
