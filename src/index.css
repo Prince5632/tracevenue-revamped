@@ -4,3 +4,13 @@
 
 /* Import the full design system from styles folder */
 @import "./styles/index.css";
+
+/* in your global CSS file (e.g., globals.css) */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
