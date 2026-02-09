@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Settings2 } from 'lucide-react';
 import { ChevronDown } from 'lucide-react';
 import { SlidersHorizontal } from 'lucide-react';
 import { Button, Input } from '@/shared';
 import { useNavigate } from 'react-router-dom';
+import filters from "../../../../assets/dashboard/filter.svg";
+import tabler from "../../../../assets/dashboard/tabler_list-details.svg";
+import tick from "../../../../assets/images/tick.png";
+import { BsCheckLg } from "react-icons/bs";
 
 const Header = ({ heading, subheading, sortBy, setSortBy }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -42,30 +46,33 @@ const Header = ({ heading, subheading, sortBy, setSortBy }) => {
                     </div>
                 </div>
 
-                <div className='w-full h-1 bg-gray-200 my-4'></div>
+                <div className='relative h-1 my-4'>
+                    <div className='absolute h-1 bg-gray-200 left-0 right-1'></div>
+                </div>
 
                 {/* input fields */}
+                <div className='lg:pr-16'>
 
-                <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 mt-3'>
-                    <Input placeholder="Search enquiries" leftIcon={<SlidersHorizontal />} />
+                    <div className='grid grid-cols-1 lg:grid-cols-[55%_40%_auto] gap-4 mt-3'>
+                        <Input placeholder="Search enquiries" leftIcon={<img src={tabler} alt="tabler" />} />
 
-                    <div ref={inputRef} className='rounded-xl border border-gray-300 flex gap-5 flex-colitems-center hover:border-orange-600 relative
-        cursor-pointer h-12 justify-between p-4'>
-                        <div className='relative w-full'>
-                            <div className='flex justify-between items-center'>
-                                <div className='flex gap-2 items-center relative'>
-                                    <div className='text-secondary font-semibold'>Sort by:</div>
-                                    <div className='text-primary text-sm md:text-xl font-semibold'>{event}</div>
+                        <div ref={inputRef} className='relative rounded-[30px] border border-[1px] border-[#D7D9DA] hover:border-orange-600
+                        cursor-pointer h-[47px] py-[10px] px-4'>
+                            <div className='flex justify-between'>
+                                <div className='flex gap-2 whitespace-nowrap'>
+                                    <div className='text-[16px] text-[#85878C] font-semibold'>Sort by:</div>
+                                    <div className={`text-[16px] text-orange-600 font-semibold`}>{event}</div>
                                 </div>
 
-                                <button className="cursor-pointer ml-20" onClick={() => {
+                                <button className="cursor-pointer" onClick={() => {
                                     setIsOpen(!isOpen)
-                                }}><ChevronDown /></button>
+                                }}><ChevronDown className='h-[16px] w-[16px]' />
+                                </button>
 
-                            </div>
 
-                            {isOpen &&
-                                <div className='bg-white h-25 rounded-xl border border-gray-400 absolute right-0 top-6 p-2 mt-2 w-[60%] ml-10'>
+
+                                {/* {isOpen &&
+                                <div className='bg-white h-25 rounded-xl border border-gray-400 absolute right-0 top-20 p-2 mt-2 w-[60%] ml-10'>
                                     <div className='flex justify-between items-center'>
                                         <button onClick={() => {
                                             setEvent('Latest Enquiries')
@@ -87,7 +94,38 @@ const Header = ({ heading, subheading, sortBy, setSortBy }) => {
                                     </div>
 
                                 </div>
-                            }
+                            } */}
+
+                                {isOpen &&
+                                    <div className='bg-white h-auto rounded-[20px] border border-[1px] border-[#D7D9DA] absolute right-0 top-11 w-60 px-5 py-2'>
+                                        <div className='flex justify-between items-center py-2'>
+                                            <button onClick={() => {
+                                                setEvent('Latest Enquiries')
+                                                setSortBy('latest')
+                                                setIsOpen(!isOpen)
+                                            }} className={` text-[#85878C] !text-[16px] !font-semibold cursor-pointer transition-transform duration-300 ease-in-out hover:translate-x-1  ${event === 'Latest Enquiries' ? "text-orange-600" : ""}`}>Latest Enquiries</button>
+
+                                            {event === 'Latest Enquiries' && <BsCheckLg className='text-orange-600' />}
+
+                                        </div>
+                                        <div className='flex justify-between items-center py-2'>
+                                            <button onClick={() => {
+                                                setEvent('Nearest Event date')
+                                                setSortBy('nearest')
+                                                setIsOpen(!isOpen)
+                                            }} className={`text-[#85878C] !text-[16px] !font-semibold cursor-pointer transition-transform duration-300 ease-in-out hover:translate-x-1  ${event === 'Nearest Event date' ? "text-orange-600" : ""}`}>Nearest Event date</button>
+                                            {event === 'Nearest Event date' && <BsCheckLg className='text-orange-600' />}
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div className='w-[64px] h-[47px] border border-[1px] border-[#D7D9DA] rounded-[30px] px-5 py-[10px] flex justify-center items-center'>
+                            <Settings2 size={20} className='text-primary' />
                         </div>
                     </div>
                 </div>
