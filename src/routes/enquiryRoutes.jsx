@@ -1,6 +1,9 @@
+import PackageCard from '@/features/package/components/PackageCard';
+// import RestaurantDetailModal from '@/features/venue/dashboard/components/RestaurantDetailModal';
 import PackageDetails from '@/pages/PackageDetails';
 import EnquiryLayout from '@layouts/EnquiryLayout';
 import ComponentDocs from '@pages/ComponentDocs';
+import CustomerCard from '@/features/venue/enquiry/components/CustomerCard'
 import QuotationCard from '@/features/venue/enquiry/components/Quotation/QuotationCard';
 import Quotationpage from '@/features/venue/enquiry/components/Quotation/Quotationpage';
 /**
@@ -33,4 +36,5 @@ export const enquiryRoutes = [
 
     // Component documentation (dev only)
     { path: '/docs', element: <ComponentDocs /> },
+    { path:'/CustomerCard',element:<CustomerCard/>}
 ];
