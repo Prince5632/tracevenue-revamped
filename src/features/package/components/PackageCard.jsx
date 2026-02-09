@@ -257,19 +257,7 @@ function PackageCard(props) {
           </div>
         </div>
       </Card.Body>
-      {/* <Card.Footer>
-        <Button>Action</Button>
-    </Card.Footer> */}
     </Card>
-    {/* <div
-          className="
-            py-[16px]
-            gap-[20px]
-            lg:flex
-          "
-        >
-          
-        </div> */}
   </>
 }
 export default PackageCard;

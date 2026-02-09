@@ -10,11 +10,11 @@ function MenuButton(props) {
           !flex
           !w-full
           !px-[16px] !py-[12px]
-          !text-[16px] !font-semibold
+          !text-[16px] !font-semibold !border-solid
           !border-l-[3px] !rounded-[6px]
           !cursor-pointer !transition-all
           hover:!bg-[#f8f9fa] !justify-between !items-center  !duration-300 !ease-initial
-          ${props.isActive ? "!bg-[#fff8f0] hover:!bg-[#fff8f0] !text-[#ff6b35] !border-l-[#e29f55] !text-[#e29f55]" : "!bg-transparent !border-l-transparent hover:!border-l-[#e29f55] "}
+          ${props.isActive ? "!bg-[#fff8f0] hover:!bg-[#fff8f0] !text-[#ff6b35] !border-l-solid !border-l-[#e29f55] !text-[#e29f55]" : "!bg-transparent !border-l-solid !border-l-transparent hover:!border-l-[#e29f55] "}
   `}
       >
         <span

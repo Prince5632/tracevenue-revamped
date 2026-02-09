@@ -183,7 +183,7 @@ function PackageInfo(props) {
         >
           <div
             className="
-              overflow-y-auto
+              overflow-y-auto 
               w-[280px] max-h-[calc(100vh-6rem)]
               px-[20px] pb-[20px]
               text-[16px] text-[#212529]
