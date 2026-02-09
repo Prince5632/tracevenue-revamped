@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import EnquiryTopview from '@/features/venue/enquiry/components/EnquiryDetailTabs';
 import Map from '@/components/common/Map';
 import Card from '@shared/components/ui/Card';
-import Alcohol from '@assets/images/alcohol.svg';
 import Veg from '@assets/images/veg.svg';
 import Location from '@assets/images/locationPin.svg'
 import NonVeg from '@assets/images/non-veg.svg';
@@ -12,7 +11,6 @@ import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
 
 import { CircleArrowLeft } from "lucide-react";
-import { id } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 
 const EnquiriesDetail = () => {

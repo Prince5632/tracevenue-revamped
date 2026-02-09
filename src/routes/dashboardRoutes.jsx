@@ -7,9 +7,8 @@ import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail";
 import ExpiredEnquiries from "@/features/venue/enquiry/pages/ExpiredEnquiries";
 import Enquiries from "@/features/venue/enquiry/shared/Enquiries";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import ProtectedRoute from "@routes/ProtectedRoute";
-import { Children } from "react";
-
+import RestaurantDetailModal from "@/features/venue/enquiry/components/shared/RestaurantDetailModal";
+import ComparePackages from "@/features/venue/enquiry/components/ComparePackages/ComparePackages";
 /**
  * Dashboard routes - protected routes requiring authentication
  * These will be implemented as the project grows
@@ -22,6 +21,9 @@ export const dashboardRoutes = [
       {
         path: "/dashboard",
         element: <Dashboard />,
+      },  {
+        path: "/dashboard/compare",
+        element: <ComparePackages />,
       },
 
       {
@@ -51,9 +53,16 @@ export const dashboardRoutes = [
         path: "/service/venues/contracts/:status",
         element: <Contract />,
       },
+      // enquiry detail routes
       {
         path: "/service/venues/enquiry/enquiry-detail",
         element: <EnquiriesDetail />,
+      },
+
+      // other routes
+      {
+        path: "/venueGallery",
+        element: <RestaurantDetailModal />,
       },
     ],
   },
