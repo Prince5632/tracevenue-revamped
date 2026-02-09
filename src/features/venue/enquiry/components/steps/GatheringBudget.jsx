@@ -107,7 +107,7 @@ const GatheringBudget = () => {
                     setMinBudget(String(eightyPercentage))
                   }
                 }}
-                className={`rounded-full px-2 ${budgetType === 'perPerson'
+                className={`rounded-full px-3 ${budgetType === 'perPerson'
                   ? 'text-orange-600 border-[#ff4000]'
                   : 'text-gray-700 border-gray-400'
                   }`}
@@ -127,7 +127,7 @@ const GatheringBudget = () => {
                     setBudget("");
                   }
                 }}
-                className={`rounded-full px-2 ${budgetType === 'lumpSum'
+                className={`rounded-full px-3 ${budgetType === 'lumpSum'
                   ? 'text-orange-600 border-[#ff4000]'
                   : 'text-gray-700 border-gray-400'
                   }`}
