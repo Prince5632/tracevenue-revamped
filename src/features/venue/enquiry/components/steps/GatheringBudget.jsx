@@ -38,7 +38,7 @@ const GatheringBudget = () => {
            * Gathering Size Card
         */}
 
-      <Card padding="md" className="max-w-full">
+      <Card padding="md" className="max-w-full pb-10">
         <Card.Header>
           <h2 className="text-xl font-semibold text-gray-800">Gathering Size</h2>
         </Card.Header>
