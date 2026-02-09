@@ -121,7 +121,7 @@ function PackageFooter() {
               <Button
                 variant="outline"
                 onClick={() => setIsModalOpen(false)}
-                className="!text-[16px] !font-semibold text-[#ff4000] !px-[20px] !py-[12px]"
+                className="!text-[16px] !font-semibold text-[#ff4000] !px-[30px] !py-[12px]"
               >
                 Close
               </Button>

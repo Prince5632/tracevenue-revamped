@@ -486,8 +486,8 @@ const EnquiriesDetail = () => {
           {/*FOOD PREFERENCE  */}
           <div className="p-2">
             <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Food Preferences</h2>
-            <div className="grid grid-cols-2 gap-3.75">
-              <Card className="h-26.5 md:w-[177.13px] py-2.5 px-3.75">
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="py-2.5 px-3.75">
                 <Card.Header className="text-lg font-bold">
                   Eating
                 </Card.Header>
@@ -501,7 +501,7 @@ const EnquiriesDetail = () => {
                 </Card.Body>
               </Card>
 
-              <Card className="h-26.5 md:w-[177.13px] py-2.5 px-3.75">
+              <Card className="py-2.5 px-3.75">
                 <Card.Header className="text-lg font-bold">
                   Alcohol
                 </Card.Header>
@@ -548,7 +548,7 @@ const EnquiriesDetail = () => {
         <div className="flex gap-8 2xl:gap-0 ">
 
           {/* LEFT MENU */}
-          <div className="w-[35%] hidden lg:block">
+          <div className=" hidden lg:block">
             <div className="sticky top-4">
               <Card className="h-105.25 w-70">
                 <h2 className="font-sans text-lg mb-4 h-5.25">Menu</h2>
@@ -584,7 +584,7 @@ const EnquiriesDetail = () => {
           </div>
 
           {/* RIGHT FOOD */}
-          <div id="food-scroll" className=" w-full lg:w-[65%] space-y-6 grid grid-cols-1  ">
+          <div id="food-scroll" className="flex-1 w-full lg:w-[65%] space-y-6 grid grid-cols-1  ">
             <Card className="hidden lg:block ">
               <h1 className="font-sans text-lg mb-4 h-5.25 ">Food Items</h1>
 
