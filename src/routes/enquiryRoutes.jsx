@@ -1,5 +1,5 @@
 import PackageCard from '@/features/package/components/PackageCard';
-import RestaurantDetailModal from '@/features/venue/dashboard/components/RestaurantDetailModal';
+// import RestaurantDetailModal from '@/features/venue/dashboard/components/RestaurantDetailModal';
 import PackageDetails from '@/pages/PackageDetails';
 import EnquiryLayout from '@layouts/EnquiryLayout';
 import ComponentDocs from '@pages/ComponentDocs';
