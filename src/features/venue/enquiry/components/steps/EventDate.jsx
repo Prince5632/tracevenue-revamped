@@ -60,7 +60,7 @@ const EventDate = () => {
 
                         {/* CustomTimePicker Component Added from common component file but not functional due to the onChange function prop */}
 
-                        <div className='h-16 w-[25%] bg-green-200 p-1 rounded-xl flex flex-col justify-center items-center text-[#85878C]'>
+                        <div className='h-16 w-[25%] bg-[#C6FBE580] px-2 rounded-xl flex flex-col justify-center items-center text-[#85878C]'>
                             {fullday === "Fullday" && fullday}
                             {fullday === "Time" && (
                                 <>
@@ -110,7 +110,7 @@ const EventDate = () => {
                                 <div className='text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayNumber} {monthName}</div>
                             </div>
 
-                            <div className='h-16 w-[25%] bg-green-200 p-1 rounded-xl flex flex-col justify-center items-center text-[#85878C]'>
+                            <div className='h-16 w-[25%] bg-[#C6FBE580] px-2 rounded-xl flex flex-col justify-center items-center text-[#85878C]'>
                                 {fullday === "Fullday" && fullday}
                                 {fullday === "Time" && (
                                     <>
@@ -155,7 +155,7 @@ const EventDate = () => {
                                 <div className='text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent'>{dayNumber} {monthName}</div>
                             </div>
 
-                            <div className='h-16 w-[25%] bg-green-200 p-1 rounded-xl flex flex-col justify-center items-center text-[#85878C] '>
+                            <div className='h-16 w-[25%] bg-[#C6FBE580] px-2 rounded-xl flex flex-col justify-center items-center text-[#85878C] '>
                                 {fullday === "Fullday" && fullday}
                                 {fullday === "Time" && (
                                     <>
