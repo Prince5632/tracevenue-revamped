@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import EnquiryTopview from '@/features/venue/enquiry/components/EnquiryDetailTabs';
 import Map from '@/components/common/Map';
 import { LoadScript } from '@react-google-maps/api';
-import Card from '@shared/components/ui/Card';
+import { Card, Button } from '@shared/components/ui';
 import Veg from '@assets/images/veg.svg';
 import Location from '@assets/images/locationPin.svg'
 import NonVeg from '@assets/images/non-veg.svg';
@@ -10,6 +10,8 @@ import ColdDrink from '@assets/images/colddrink.svg';
 import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
+import { ProgressBar } from '@/shared/components/feedback';
+import { Download } from 'lucide-react';
 
 import { CircleArrowLeft } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
@@ -57,6 +59,7 @@ const EnquiriesDetail = () => {
     {
       section: "Beverages",
       count: 2,
+      
       icon: ColdDrink,
       groups: [
         {
@@ -190,6 +193,7 @@ const EnquiriesDetail = () => {
   /* SCROLL SPY LOGIC  */
   const sectionRefs = useRef([]);
   const [activeSection, setActiveSection] = useState(0);
+  const [isClick, setIsClick] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -246,10 +250,48 @@ const EnquiriesDetail = () => {
     // });
   };
 
+  const handlePencilButtonClick = () => {
+    setIsClick(true);
+  }
+  const handleInputCancel = () => {
+    setIsClick(false);
+  }
   return (
     <>
       {/**Main Content */}
       <div className="w-full lg:w-full">
+        {/* HEADER SECTION */}
+        <div>
+          <div className='mb-6 flex items-center justify-between gap-6'>
+            <div className='flex-1 w-full flex gap-4 items-center'>
+              {
+                isClick ? <>
+                  <div className='h-[48px] w-full border-2 rounded-[10px] border-[#e0e0e0] flex items-center px-2'>
+                    <input type="text" placeholder='Enter something here'
+                      value="Looking venue for birthday party for 50 people on 27 feb, 2026." className='h-[48px] w-full pl-2 !text-[16px] !text-[#060606] !font-bold' />
+                    <div className='flex gap-2'>
+                      <Button variant="primary" className="!rounded-[10px] h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in ">
+                        <i class="fa-solid fa-check"></i>
+                      </Button>
+                      <Button onClick={handleInputCancel} variant="secondary" className="!rounded-[10px] h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in">
+                        <i class="fa-solid fa-x"></i>
+                      </Button>
+                    </div>
+                  </div>
+                </>
+                  :
+                  <>
+                    <Button onClick={handlePencilButtonClick} variant="gradient" className="border-none !rounded-[10px] h-[40px] w-[40px] shadow-[4px_0_8px_#ff400033] transition-all duration-300 ease-in shrink-0 bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)] border border-[rgb(255,64,0)] cursor-pointer hover:translate-y-[-2px] flex justify-center items-center">
+                      <i className="fa-solid fa-pen text-[20px]"></i>
+                    </Button>
+                    <h3 className='text-[20px] text-[#060606] font-bold'>Looking venue for birthday party for 50 people on 27 feb, 2026.</h3>
+                  </>
+              }
+            </div>
+            <Button variant="outline" className="!text-[16px] text-[#ff4000] border border-solid border-[#ff4000] !font-bold rounded-[30px] p-[9px] bg-white hover:!bg-[#ffffff] cursor-pointer">Download as PDF<Download /></Button>
+          </div>
+          <ProgressBar variant="gradient" value={50} className="mb-6" />
+        </div>
         {/* BASIC INFORMATION + LOCATION */}
         <div className=" p-2 ">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

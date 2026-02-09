@@ -1,6 +1,10 @@
-import { Button } from "@/shared/components/ui";
+import React from "react";
+import { Button, Modal } from "@/shared/components/ui";
+import { useState } from "react";
+import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail";
 
 function PackageFooter() {
+  let [isModalOpen, setIsModalOpen] = useState(false);
   return <>
     <div
       className="
@@ -87,6 +91,7 @@ function PackageFooter() {
         >
           <Button
             variant="outline"
+            onClick={() => setIsModalOpen(true)}
             className="
                   w-full
                   px-[20px] py-[12px]
@@ -101,6 +106,52 @@ function PackageFooter() {
           >
             Preview Enquiry
           </Button>
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title="Preview Enquiry"
+            size="md"
+            className="!w-[80%]"
+          >
+            <Modal.Body>
+              <EnquiriesDetail />
+            </Modal.Body>
+
+            <Modal.Footer>
+              <Button
+                variant="outline"
+                onClick={() => setIsModalOpen(false)}
+                className="!text-[16px] !font-semibold text-[#ff4000] !px-[20px] !py-[12px]"
+              >
+                Close
+              </Button>
+              <Button
+                variant="gradient"
+                className="
+                  flex items-center justify-center
+                  w-full
+                  px-[20px] py-[12px]
+                  text-[#ffffff] text-[16px]
+                  bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)]
+                  rounded-[30px] border border-[rgb(255,64,0)]
+                  cursor-pointer transition-all shadow-[0_6px_28px_#ff400073]
+                  !font-bold  
+                  sm:px-[32px] sm:py-[16px]
+                  md:w-auto
+                "
+              >
+                Get Best Quotes
+                <i
+                  class="
+                    ml-1
+                    text-[14px] text-[#ffffff]
+                    transition-transform transition-all
+                    fa-solid fa-arrow-right group-hover:translate-x-1 duration-300 ease-in !font-extrabold
+                  "
+                ></i>
+              </Button>
+            </Modal.Footer>
+          </Modal>
           <Button
             variant="gradient"
             className="
