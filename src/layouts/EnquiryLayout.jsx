@@ -330,8 +330,9 @@ const EnquiryLayout = () => {
     <>
       <div
         className="flex gap-7  max-w-7xl mx-auto h-fill
-            gap-7"
+gap-7"
       >
+        <div className="hidden lg:block w-[345px] shrink-0" />
         {isSidebarOpen && (
           <div
             className="fixed inset-0 bg-black/40 z-40 lg:hidden "
@@ -339,8 +340,11 @@ const EnquiryLayout = () => {
           />
         )}
         <div
-          className={`fixed lg:static z-50 lg:z-auto top-0 left-0 transform transition-transform 
+          className={`fixed z-50 lg:z-auto top-0 lg:top-27 transform transition-transform 
                          duration-300 ${isSidebarOpen ? "rounded-t-none" : "rounded-t-xl "} ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+                         style={{
+                            left: "max(0px, calc((100vw - 76rem) / 2))",
+                          }}
         >
           <Sidebar
             steps={steps}
@@ -354,18 +358,18 @@ const EnquiryLayout = () => {
           {/*  cross icon on small screen */}
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="lg:hidden absolute top-1 right-2 sm:-right-2 bg-primary text-white  rounded-full p-1 shadow 
-                        cursor-pointer z-60"
+            className={`lg:hidden absolute top-1 ${isSidebarOpen ? "-right-2" : "!right-0"} sm:-right-2 bg-primary text-white  rounded-full p-1 shadow 
+                        cursor-pointer z-60`}
           >
             <X size={20} />
           </button>
         </div>
 
         {/* right steps sections */}
-        <div className="flex-1 relative  top-20 md:-top-20 min-w-0 md:mt-20 ">
+        <div className="flex-1 relative lg:static top-14 sm:top-14 md:top-0 ">
           {/* this button hide on large screen */}
           <Button
-            className="mb-4 lg:hidden rounded-l-none"
+            className="mb-4 lg:hidden rounded-l-none mt-8 sm:mt-0 md:mt-0"
             onClick={() => setIsSidebarOpen(true)}
             size="lg"
             variant="gradient"

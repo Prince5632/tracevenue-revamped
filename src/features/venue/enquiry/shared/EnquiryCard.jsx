@@ -7,7 +7,7 @@ import LocationPin from "../../../../assets/images/LocationPin.png";
 const EnquiryCard = ({ looking, event, date, day, guest, amount, location, pricingType, enquiryRaised, startTime, endTime, minGuest, maxGuest }) => {
     const navigate = useNavigate()
     return (
-        <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]' onClick={() => navigate("/service/venues/enquiry/enquiry-detail")}>
+        <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]' onClick={() => navigate("/enquiry-detail-layout")}>
             {/* image */}
             <div className='p-4 lg:w-55 !h-[180px]'>
                 <Card variant="bordered" className="lg:h-44 rounded-[30px] !m-0 relative -top-2 -left-2">
@@ -70,8 +70,8 @@ const EnquiryCard = ({ looking, event, date, day, guest, amount, location, prici
                                 </div>
 
                                 <div className='flex flex-col text-secondary font-bold whitespace-nowrap'>
-                                   <span>
-                                     {startTime}
+                                    <span>
+                                        {startTime}
                                     </span>
                                     <span>{endTime}</span>
                                 </div>

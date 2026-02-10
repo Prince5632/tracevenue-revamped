@@ -2,11 +2,26 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Tabs from '@shared/components/ui/Tabs';
 
+const BASE_PATH = "/enquiry-detail-layout";
+
 const steps = [
-  { id: 'quotations', label: 'Quotations', path: '/quotation-page' },
-  { id: 'compare', label: 'Compare Package', path: '/compare-package' },
-  { id: 'offer', label: 'Offer & Booking', path: '/offer-booking' },
+  {
+    id: "quotations",
+    label: "Quotations",
+    path: `${BASE_PATH}/quotation-pages`,
+  },
+  {
+    id: "compare",
+    label: "Compare Package",
+    path: `${BASE_PATH}/compare-packages`,
+  },
+  {
+    id: "offer",
+    label: "Offer & Booking",
+    path: `${BASE_PATH}/offer-booking`,
+  },
 ];
+
 
 const EnquiryDetailTabs = () => {
   const navigate = useNavigate();
