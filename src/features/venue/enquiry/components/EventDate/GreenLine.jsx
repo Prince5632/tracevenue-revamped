@@ -6,7 +6,7 @@ const GreenLine = ({type}) => {
 
       {type === "Time" ? (
         // HALF DAY DESIGN
-        <div className="flex items-center gap-2 ">
+        <div className="flex items-center gap-2 h-14">
           <div className="relative flex flex-col items-center">
             <div className="w-[3px] h-10 bg-[#B1F4D8]"></div>
 
@@ -17,8 +17,8 @@ const GreenLine = ({type}) => {
         </div>
       ) : (
         // FULL DAY DESIGN
-        <div className="flex items-center gap-2 x-3 py-1 rounded-lg">
-          <div className="w-2 h-2 rounded-full bg-[#15B076]"></div>
+        <div className="flex items-center gap-2 x-3 py-1 rounded-lg h-14">
+          <div className="w-[10px] h-[10px] rounded-full bg-[#15B076]"></div>
           <span className="text-[#85878C] font-semibold  text-[16px] w-[59px]">Full Day</span>
         </div>
       )}
