@@ -145,7 +145,7 @@ function PackageFooter() {
             className="!w-[80%]"
           >
             <Modal.Header>
-              <div className='mb-6 flex items-center justify-between gap-6'>
+              <div className='mb-6 flex flex-col lg:!flex-row items-center justify-between gap-6'>
                 <div className='flex-1 w-full flex gap-4 items-center'>
                   {
                     isClick ? <>
@@ -175,7 +175,7 @@ function PackageFooter() {
                       </>
                   }
                 </div>
-                <Button variant="outline" onClick={downloadPdf} className="!text-[16px] text-[#ff4000] border border-solid border-[#ff4000] !font-bold rounded-[30px] p-[9px] bg-white hover:!bg-[#ffffff] cursor-pointer">Download as PDF<Download /></Button>
+                <Button variant="outline" onClick={downloadPdf} className="w-full lg:w-auto !text-[16px] text-[#ff4000] border border-solid border-[#ff4000] !font-bold rounded-[30px] p-[9px]  bg-white hover:!bg-[#ffffff] cursor-pointer">Download as PDF<Download /></Button>
               </div>
               <ProgressBar variant="gradient" value={100} className="mb-6" />
             </Modal.Header>
