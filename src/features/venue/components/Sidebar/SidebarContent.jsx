@@ -24,7 +24,7 @@ const SidebarContent = ({ step, isLast, index, currentStep, formData }) => {
 
       <div className="-mt-1 leading-[18px] mb-4">
         <h6 className={`font-bold text-[16px] ${isActive ? 'text-[#060606]' : 'text-[#060606]'}`}>
-          {step.title}
+          {step.shortTitle}
         </h6>
 
         {step.id === 'location' && formData?.locations ? (

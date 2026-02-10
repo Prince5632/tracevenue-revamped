@@ -13,7 +13,7 @@ const Sidebar = ({
 }) => {
   return (
     <aside
-      className={`relative w-full max-w-[340px] min-w-[340px] sm:max-w-[380px] md:max-w-[380px] lg:max-w-[340px] ${isSidebarOpen ? "rounded-none mt-0 mb-0 h-lvh sm:h-lvh" : "rounded-3xl "} lg:h-auto bg-[#F2F3F5] lg:rounded-4xl lg:mb-2
+      className={`relative w-full max-w-[340px] min-w-[340px] sm:max-w-[380px] md:max-w-[380px] lg:max-w-[345px] ${isSidebarOpen ? "rounded-none mt-0 mb-0 h-lvh sm:h-lvh" : "rounded-3xl "} lg:h-auto bg-[#F2F3F5] lg:rounded-4xl lg:mb-2
     flex flex-col border border-gray-300 lg:sticky lg:-mt-2 `}
     >
       {/* Header Image Section */}
@@ -40,6 +40,7 @@ const Sidebar = ({
             >
               <SidebarContent
                 step={{ ...step, subtitle: step.shortDescription }}
+                step2={{ ...step, subheading: step.shortTitle }}
                 index={index + 1}
                 currentStep={currentStep}
                 isLast={index === steps.length - 1}
@@ -51,7 +52,7 @@ const Sidebar = ({
       </div>
 
       {/* Footer Illustration */}
-      <div className="w-full left-0 -mt-12">
+      <div className="w-full left-0 -mt-16">
         <img
           src={illustration}
           alt="Tracevenue illustration"
