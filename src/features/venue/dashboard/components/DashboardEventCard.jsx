@@ -31,13 +31,13 @@ const DashboardEventCard = ({ data }) => {
           {/* locate */}
           <div className="flex gap-2">
             <img src="src\assets\dashboard\location.svg" alt="location" className='w-3 h-3' />
-            <h4 className='text-gray-400 font-semibold text-[16px]'>{data?.location[0]?.subLocality},{data?.location[0]?.locality}</h4>
+            <h4 className='text-gray-400 font-semibold text-[16px]'>{data?.location?.[0] ? [data?.location[0]?.subLocality,data?.location[0]?.locality].filter(Boolean).join(',') : null}</h4>
           </div>
 
           {/* calender */}
           <div className="flex gap-2">
               <img src="src\assets\dashboard\calendar.svg" alt="calender" className='w-3 h-3 sm:w-5 sm:h-5' />
-              <span className="font-bold tracking-tighter">{formatDate(data?.preferredEventDate)}</span>
+              <span className="font-bold tracking-tighter">{(data?.preferredEventDate) ? formatDate(data.preferredEventDate):null }</span>
           </div>
         </Card.Body>
       </Card>

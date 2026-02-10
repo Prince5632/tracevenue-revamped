@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import carbonDocumentIcon from "../../../../assets/dashboard/carbon_document-signed.svg";
 import mageDashboardIcon from "../../../../assets/dashboard/mage_dashboard.svg";
@@ -11,23 +11,19 @@ import { useDashboard } from "../context/DashboardContext";
 
 const DashboardSidebar = () => {
   const { fetchDashboardStats, dashboardStats, error, isLoading } =
-      useDashboard();
+    useDashboard();
 
-    useEffect(() => {
-      fetchDashboardStats();
-    }, [fetchDashboardStats]);
-  
-    useEffect(() => {
-      if (dashboardStats) {
-        console.log("Dashboard Data (Context):", dashboardStats);
-      }
-    }, [dashboardStats]);
+  useEffect(() => {
+    fetchDashboardStats();
+  }, [fetchDashboardStats]);
+
   const [openMenu, setOpenMenu] = useState({
     enquiries: false,
     contracts: false,
     profile: false,
     setting: false,
   });
+
   const navigate = useNavigate();
   const toggleMenu = (menu) => {
     setOpenMenu((openMenu) => ({
@@ -35,7 +31,25 @@ const DashboardSidebar = () => {
       [menu]: !openMenu[menu],
     }));
   };
-  const [active, setActive] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
+
+  const {
+    statusWise= {},
+    contractStats= {}
+  } = dashboardStats?.data?.stats || {};
+
+  const {
+    Active,
+    Draft,
+    Closed,
+    InActive
+  } = statusWise;
+
+  const 
+  { active,
+    pending,
+    completed
+  } = contractStats;
 
   return (
     <div
@@ -102,20 +116,20 @@ const DashboardSidebar = () => {
         {openMenu.enquiries && (
           <div className="w-full">
             {[
-              `Active Enquiries (${dashboardStats?.data?.stats?.statusWise?.Active})`,
-              `Draft Enquiries (${dashboardStats?.data?.stats?.statusWise?.Draft})`,
-              `Completed Enquiries (${dashboardStats?.data?.stats?.statusWise?.Closed})`,
-              `Expired Enquiries (${dashboardStats?.data?.stats?.statusWise?.InActive})`,
+              `Active Enquiries (${Active})`,
+              `Draft Enquiries (${Draft})`,
+              `Completed Enquiries (${Closed})`,
+              `Expired Enquiries (${InActive})`,
             ].map((item) => (
               <div
                 key={item}
                 onClick={() => {
-                  setActive(item)
+                  setActiveTab(item)
                   navigate(`/service/venues/enquiry/${item.toLowerCase().split(" ")[0]}`)
                 }
                 }
                 className={`w-full h-12 flex items-center cursor-pointer font-medium text-[18px] pl-18
-                  ${active === item
+                  ${activeTab === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
                     : "text-black"
                   }
@@ -132,7 +146,7 @@ const DashboardSidebar = () => {
       <div className="border-b border-[#D7D9DA] ">
         <button
           onClick={() => toggleMenu("contracts")}
-          className="w-full flex justify-between items-center  h-14.5 font-medium px-7.5"
+          className="w-full flex justify-between items-center h-14.5 font-medium px-7.5"
         >
           <div className="flex gap-4 font-semibold">
             <img
@@ -154,9 +168,9 @@ const DashboardSidebar = () => {
         {openMenu.contracts && (
           <div className="w-full">
             {[
-               `Active Contracts (${dashboardStats?.data?.stats?.contractStats?.active})`,
-               `Proposed Contracts (${dashboardStats?.data?.stats?.contractStats?.pending})`,,
-               `Completed Contracts (${dashboardStats?.data?.stats?.contractStats?.completed})`,
+              `Active Contracts (${active})`,
+              `Proposed Contracts (${pending})`, ,
+              `Completed Contracts (${completed})`,
             ].map((item) => (
               <div
                 key={item}

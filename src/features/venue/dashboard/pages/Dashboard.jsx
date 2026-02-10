@@ -25,6 +25,13 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading dashboard data</div>;
 
+  const {
+    totalEnquiries,
+    totalPendingResponses,
+    totalCompletedEnquiries
+  } =dashboardStats?.data?.stats || {}
+
+  const {name = ''}=dashboardStats?.data?.user ||{}
   return <>
     <div className="flex flex-col gap-4 w-full">
 
@@ -36,7 +43,7 @@ const Dashboard = () => {
         {/* Text Section */}
         <div className="md:text-left">
           <h1 className="font-bold text-3xl text-white">
-            <span className="bg-linear-to-r from-[#ffd145] to-[#fff9e7] bg-clip-text text-transparent">Hi {dashboardStats?.data?.user?.name}! </span>
+            <span className="bg-linear-to-r from-[#ffd145] to-[#fff9e7] bg-clip-text text-transparent">Hi {name}! </span>
             Ready to plan your next event?
           </h1>
           <h2 className="text-white font-semibold text-md mt-2">
@@ -64,27 +71,26 @@ const Dashboard = () => {
         <DashboardAnalytics
           src="src\assets\dashboard\three-line-list.svg"
           title="Active Enquiries"
-          count={dashboardStats?.data?.stats?.totalEnquiries}
+          count={totalEnquiries}
         />
 
         <DashboardAnalytics
           src="src\assets\dashboard\clock.svg"
           title="Pending Responses"
-          count={dashboardStats?.data?.stats?.totalPendingResponses}
+          count={totalPendingResponses}
         />
 
         <DashboardAnalytics
           src="src\assets\dashboard\check-green.svg"
-          count={dashboardStats?.data?.stats?.totalCompletedEnquiries}
+          count={totalCompletedEnquiries}
           title="Completed Bookings"
         />
-
       </div>
 
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4 mt-6">
       {/* Upcoming events */}
-      <Card variant="default" className=" h-[260px]">
+      <Card variant="default" className="h-65">
         <Card.Header>
           <h3 className="font-semibold text-xl text-[#212529]">Upcoming events</h3>
         </Card.Header>
@@ -96,7 +102,7 @@ const Dashboard = () => {
         </Card.Body>
 
       </Card>
-         <Card className='w-full h-[260px]'>
+         <Card className='w-full h-65'>
           <Card.Header>
             <h2 className="font-bold text-[18px] text-gray-800">Event Planning Tips</h2>
           </Card.Header>
