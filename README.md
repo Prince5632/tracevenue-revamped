@@ -4,6 +4,7 @@ A modern React application for venue booking and management, built with Vite, Re
 
 ## 🚀 Quick Start
 
+
 ```bash
 # Install dependencies
 npm install
@@ -67,7 +68,6 @@ color: var(--color-primary);
 background: var(--color-background);
 border-radius: var(--radius-lg);
 ```
-
 ### 📚 Component Documentation
 Visit `/docs` route to see live examples of all components with code snippets.
 
@@ -103,6 +103,9 @@ git commit -m "fix: resolve date picker error - john"
 git commit -m "docs: update component examples - sarah"
 ```
 
+
+
+
 ### Workflow Steps
 ```bash
 # 1. Create branch
@@ -132,3 +135,5 @@ git push origin feat/your-feature
 - **Component Docs**: `http://localhost:5174/docs` (local) or `/docs` (production)
 - **Vite Docs**: https://vitejs.dev/
 - **React Router**: https://reactrouter.com/
+
+
