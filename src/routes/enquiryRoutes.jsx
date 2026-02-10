@@ -6,6 +6,7 @@ import ComponentDocs from '@pages/ComponentDocs';
 import CustomerCard from '@/features/venue/enquiry/components/CustomerCard'
 import QuotationCard from '@/features/venue/enquiry/components/Quotation/QuotationCard';
 import Quotationpage from '@/features/venue/enquiry/components/Quotation/Quotationpage';
+import EnquiryDetailLayout from '@/features/venue/enquiry/Layout/EnquiryDetailLayout';
 import RestaurantDetailModal from '@/features/venue/enquiry/components/shared/RestaurantDetailModal';
 /**
  * Enquiry step routes with URL-based step progression
@@ -28,11 +29,12 @@ export const enquiryRoutes = [
     // Package details route
     // { path: '/package/:id/:jobId', element: <PackageDetails /> },
     { path: "/package-details", element: <PackageDetails /> },
-    { path: '/quotation-card', element: <QuotationCard /> },
+    {path: '/quotation-card' , element:<QuotationCard/>}, 
     { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
     { path: "/package-details", element: <PackageDetails /> },
-    { path: '/quotation-page', element: <Quotationpage /> },
-
+    {path:'/quotation-page',element:<Quotationpage/>},
+    {path:'/enquiry-detail-layout',element:<EnquiryDetailLayout/>},
+    
 
     // Component documentation (dev only)
     { path: '/docs', element: <ComponentDocs /> },

@@ -330,7 +330,7 @@ const EnquiryLayout = () => {
     <>
       <div
         className="flex gap-7  max-w-7xl mx-auto h-fill
-            gap-7"
+gap-7"
       >
         {isSidebarOpen && (
           <div

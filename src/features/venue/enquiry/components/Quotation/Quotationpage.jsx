@@ -90,32 +90,36 @@ const Quotationpage = ({
   return (
     <div className="w-full flex gap-8">
       {/* Sidebar */}
-      <div className="hidden lg:block w-[25%] h-screen sticky top-0 bg-amber-200">
+      {/* <div className="hidden lg:block w-[25%] h-screen sticky top-0 bg-amber-200">
         <h1>sidebar</h1>
-      </div>
+      </div> */}
 
       {/* Main */}
-      <div className="w-full lg:w-[75%] flex flex-col">
+      <div className="w-full flex flex-col">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white">
           <div className="p-1">
-            <div className="flex items-center gap-3 mb-2">
+            {/* <div className="flex items-center gap-3 mb-2">
               <CircleArrowLeft size={36} color="#fd4304" />
               <h2 className="font-bold text-2xl">
                 Looking venue for kitty party for 30 people on 10 Jan, 2026
               </h2>
-              <img src={Eyeicon}   className={`w-8 h-8 ml-20 cursor-pointer transition ${
-    showDetailPage ? "opacity-50 grayscale" : ""
-  }`} onClick={() => setShowDetailPage(prev =>!prev)}/>
-            </div>
-            <EnquiryDetailTabs/>
-          
-
-          <div className="hidden lg:flex px-4 pt-6 items-center gap-10">
+              <img src={Eyeicon}   
+              className={
+                `w-8 h-8 ml-20 cursor-pointer transition 
+                  ${
+                    showDetailPage ? "opacity-50 grayscale" : ""
+                  }`
+                } 
+                onClick={() => setShowDetailPage(prev =>!prev)}
+              />
+          </div>
+            <EnquiryDetailTabs/> */}
+          <div className="hidden lg:flex px-4 items-center gap-10">
              {/* Search */}
              <div
                ref={desktopSearchRef}
-               className="relative w-full max-w-[420px]"
+               className="relative w-full max-w-105"
              >
                <Input
                  type="text"
@@ -261,7 +265,7 @@ const Quotationpage = ({
         {/* Cards */}
 
         {/* Cards / Detail Page */}
-        <div className="flex-1 px-4 mt-4">
+        <div className="flex-1 px-4 mt-2">
           {!showDetailPage ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-5">
               {Array.from({ length: 15 }).map((_, i) => (
