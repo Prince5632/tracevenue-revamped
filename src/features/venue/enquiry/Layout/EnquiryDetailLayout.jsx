@@ -1,17 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Eyeicon from '@assets/images/eyeicon.svg'
 import EnquiryDetailTabs from "@features/venue/enquiry/components/EnquiryDetailTabs"
 import {
   CircleArrowLeft,
 } from "lucide-react";
-import Quotationpage from '../components/Quotation/Quotationpage';
-import EnquiriesDetail from '../pages/EnquiriesDetail';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 
 
 const EnquiryDetailLayout = () => {
-  // const [showDetailPage, setShowDetailPage] = useState(false);
   const navigate = useNavigate();
   return (
     <div className='w-full flex gap-8'>
@@ -27,16 +24,11 @@ const EnquiryDetailLayout = () => {
               <img src={Eyeicon}
                 className={
                   `w-8 h-8 ml-20 cursor-pointer transition `}
-                // onClick={() => setShowDetailPage(<EnquiriesDetail/>)}
                 onClick={() => navigate("/enquiry-detail-layout/details")}
               />
             </div>
             <EnquiryDetailTabs />
           </div>
-
-          {/* {!showDetailPage
-       ?(<Quotationpage/>):(<EnquiriesDetail/>)} */}
-
           <Outlet />
         </div>
       </div>

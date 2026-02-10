@@ -83,20 +83,3 @@ export const dashboardRoutes = [
   },
 
 ];
-
-// export const dashboardRoutes = [
-//   {
-//     path: "/dashboard",
-//     element: (
-//       <ProtectedRoute>
-//         <DashboardLayout />
-//       </ProtectedRoute>
-//     ),
-//     children: [
-//       { index: true, element: <DashboardHome /> },
-//       { path: "enquiries/*", element: <Enquiries /> },
-//       { path: "contracts/*", element: <Contracts /> },
-//       { path: "messages", element: <Messages /> },
-//     ],
-//   },
-// ];

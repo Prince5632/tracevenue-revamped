@@ -27,13 +27,11 @@ export const enquiryRoutes = [
     { path: '/:location/:serviceType/:eventType/:gatheringAndBudget/:eventDate/:foodPreference', element: <EnquiryLayout /> },
 
     // Package details route
-    // { path: '/package/:id/:jobId', element: <PackageDetails /> },
     { path: "/package-details", element: <PackageDetails /> },
     {path: '/quotation-card' , element:<QuotationCard/>}, 
     { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
     { path: "/package-details", element: <PackageDetails /> },
     {path:'/quotation-page',element:<Quotationpage/>},
-    // {path:'/enquiry-detail-layout',element:<EnquiryDetailLayout/>},
     
 
     // Component documentation (dev only)
