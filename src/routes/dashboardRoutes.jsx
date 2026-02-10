@@ -24,7 +24,7 @@ export const dashboardRoutes = [
       {
         path: "/dashboard",
         element: <Dashboard />,
-      },  {
+      }, {
         path: "/dashboard/compare",
         element: <ComparePackages />,
       },
@@ -69,14 +69,14 @@ export const dashboardRoutes = [
       },
 
       {
-       path: "/service/venues/enquiry/enquiry-detail-layout",
-       element: <EnquiryDetailLayout />,
-       children: [
-        { index: true, element: <Quotationpage /> }, // default
-        { path: "quotation-pages", element: <Quotationpage /> },
-        { path: "compare-packages", element:<ComparePackages/> },
-        { path: "offer-booking", element:<Offer_booking/>},
-        { path: "details", element: <EnquiriesDetail /> }
+        path: "/enquiry-detail-layout",
+        element: <EnquiryDetailLayout />,
+        children: [
+          { index: true, element: <Quotationpage /> }, // default
+          { path: "quotation-pages", element: <Quotationpage /> },
+          { path: "compare-packages", element: <ComparePackages /> },
+          { path: "offer-booking", element: <Offer_booking /> },
+          { path: "details", element: <EnquiriesDetail /> }
         ],
       },
     ],

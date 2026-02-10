@@ -26,7 +26,7 @@ const Dashboard = () => {
   if (error) return <div>Error loading dashboard data</div>;
 
   return <>
-    <div className="flex flex-col gap-4 w-[60%] absolute ml-100">
+    <div className="flex flex-col gap-4">
 
       <DashboardTitle />
 

@@ -33,7 +33,7 @@ export const enquiryRoutes = [
     { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
     { path: "/package-details", element: <PackageDetails /> },
     {path:'/quotation-page',element:<Quotationpage/>},
-    {path:'/enquiry-detail-layout',element:<EnquiryDetailLayout/>},
+    // {path:'/enquiry-detail-layout',element:<EnquiryDetailLayout/>},
     
 
     // Component documentation (dev only)
