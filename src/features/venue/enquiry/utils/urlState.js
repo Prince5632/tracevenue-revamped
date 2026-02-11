@@ -10,11 +10,55 @@ import {
 import { flattenEvents } from "./flattenEvents";
 import { eventCategories } from "../constants";
 import { EMPTY_ENQUIRY_FORM } from "../constants/formDefaults";
+import { toEventSlug } from "./eventSlug";
 
 const PEOPLE_LIMITS = { min: 20, max: 500 };
 const BUDGET_LIMITS = { min: 500, max: 10_000_000 };
 
 const eventsCatalog = flattenEvents(eventCategories);
+
+const deriveEventValue = (event) => {
+  if (!event) return null;
+  if (typeof event === "string") return event;
+  return (
+    event.value ??
+    event._id ??
+    event.id ??
+    event.eventId ??
+    event.slug ??
+    toEventSlug(event.label || event.eventName || event.title || event.name)
+  );
+};
+
+const deriveEventLabel = (event) => {
+  if (!event) return "";
+  if (typeof event === "string") return event;
+  const resolved =
+    event.label ??
+    event.eventName ??
+    event.title ??
+    event.name ??
+    event.slug ??
+    "";
+  return resolved;
+};
+
+export const normalizeEventSelection = (event) => {
+  const value = deriveEventValue(event);
+  if (!value) return null;
+  const label = deriveEventLabel(event);
+  const slug =
+    event?.slug ||
+    toEventSlug(label || value || event?.eventId || event?.id || "");
+  return {
+    id:
+      (event && (event.id ?? event.eventId ?? event._id)) || value,
+    value,
+    label,
+    eventName: event?.eventName ?? label,
+    slug,
+  };
+};
 
 const clampNumber = (value, min, max) => {
   if (typeof value !== "number" || Number.isNaN(value)) return null;
@@ -164,7 +208,7 @@ export const decodeWizardUrl = ({ pathname, search, steps }) => {
   }
 
   if (eventType) {
-    formData.selectedEventType = eventType;
+    formData.selectedEventType = normalizeEventSelection(eventType);
   }
 
   if (guestRange) {

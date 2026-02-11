@@ -9,7 +9,12 @@ import {
   getEnquirySteps,
 } from "@features/venue/enquiry/utils";
 import useEnquiryStore from "@/features/venue/enquiry/context/useEnquiryStore";
+import {
+  ensureCuisineCombinations,
+  validateWithCuisineApi,
+} from "@/features/venue/services/enquiryValidationService";
 import { fetchCuisineCombinations } from "@/features/venue/services/cuisineComboService";
+import { matchEventFromCatalog, isObjectId } from "@/features/venue/enquiry/utils/eventMatching";
 import { Button } from "@shared/components/ui";
 
 const EnquiryLayout = () => {
@@ -39,11 +44,39 @@ const EnquiryLayout = () => {
     setSuggestionMessage,
     setIssueFactor,
     setIsApiLoading,
+    eventOptions,
+    eventOptionsLoading,
+    loadEventOptions,
   } = useEnquiryStore();
 
   useLayoutEffect(() => {
     hydrateFromUrl(wizardSnapshot.formData);
   }, [wizardSnapshot.formData, hydrateFromUrl]);
+
+  useEffect(() => {
+    if (!eventOptionsLoading && !eventOptions.length) {
+      loadEventOptions();
+    }
+  }, [eventOptions.length, eventOptionsLoading, loadEventOptions]);
+
+  useEffect(() => {
+    if (!Array.isArray(eventOptions) || !eventOptions.length) return;
+    const current = formData?.selectedEventType;
+    if (!current) return;
+    const currentId = current?.value;
+    if (isObjectId(currentId)) return;
+
+    const match = matchEventFromCatalog(eventOptions, current);
+    if (match?._id) {
+      updateFormData("selectedEventType", {
+        id: match._id,
+        value: match._id,
+        eventName: match.eventName || match.label,
+        label: match.eventName || match.label,
+        slug: match.slug,
+      });
+    }
+  }, [eventOptions, formData?.selectedEventType, updateFormData]);
 
   const canonicalRedirect = useMemo(() => {
     const { location: locationSlug, serviceType: serviceSlug, eventType: eventSlug } =
@@ -88,16 +121,41 @@ const EnquiryLayout = () => {
     if (stepState.isComplete) return steps.length - 1;
     return Math.max((stepState.index ?? 0) - 1, -1);
   }, [steps, wizardSnapshot.currentStep]);
-  const [activeStepIndex, setActiveStepIndex] = useState(resolvedStepIndex);
+
+  const [stepOverride, setStepOverride] = useState(null);
 
   useEffect(() => {
-    setActiveStepIndex(resolvedStepIndex);
-  }, [resolvedStepIndex, location.pathname, location.search]);
+    setStepOverride(null);
+  }, [location.pathname, location.search]);
 
-  const boundedStepIndex = Math.min(
-    Math.max(activeStepIndex, 0),
-    Math.max(steps.length - 1, 0),
+  const clampToAvailableSteps = useCallback(
+    (index) => {
+      if (!steps.length) return 0;
+      if (typeof index !== "number" || Number.isNaN(index)) return 0;
+      const lastIndex = steps.length - 1;
+      return Math.max(0, Math.min(index, lastIndex));
+    },
+    [steps.length],
   );
+
+  const rawStepIndex =
+    typeof stepOverride === "number" ? stepOverride : resolvedStepIndex;
+  const boundedStepIndex = clampToAvailableSteps(rawStepIndex);
+
+  const setActiveStepIndex = useCallback(
+    (nextValue) => {
+      setStepOverride((prevOverride) => {
+        const baseValue =
+          typeof prevOverride === "number" ? prevOverride : resolvedStepIndex;
+        const targetValue =
+          typeof nextValue === "function" ? nextValue(baseValue) : nextValue;
+        const clampedValue = clampToAvailableSteps(targetValue);
+        return clampedValue === resolvedStepIndex ? null : clampedValue;
+      });
+    },
+    [clampToAvailableSteps, resolvedStepIndex],
+  );
+
   const currentStep = steps[boundedStepIndex] || null;
   const isFirstStep = boundedStepIndex === 0;
   const isLastStep = boundedStepIndex === steps.length - 1;
@@ -111,34 +169,202 @@ const EnquiryLayout = () => {
     return false;
   }, []);
 
-  const validateCurrentStep = useCallback(() => {
-    const stepId = currentStep?.id;
+  const formatSuggestion = (payload) => {
+    if (!payload) return null;
+    const parts = [];
+    if (payload.issue) parts.push(payload.issue);
+    if (payload.solution) parts.push(payload.solution);
+    return parts.join(" • ");
+  };
+
+  const runCuisineGate = useCallback(
+    async (stepKey) => {
+      setIsApiLoading(true);
+      const result = await validateWithCuisineApi(stepKey, formData);
+      setIsApiLoading(false);
+      if (!result?.ok) {
+        setIssueFactor(result?.issueFactor || stepKey);
+        const formattedSuggestion =
+          formatSuggestion(result?.suggestions) || result?.message;
+        setSuggestionMessage(
+          formattedSuggestion ||
+            "Please adjust your selection before continuing.",
+        );
+        return false;
+      }
+      return true;
+    },
+    [formData, setIssueFactor, setIsApiLoading, setSuggestionMessage],
+  );
+
+  const hasPastDate = (entries = []) => {
+    if (!Array.isArray(entries)) return false;
+    const now = new Date();
+    return entries.some((entry) => {
+      if (!entry?.date) return false;
+      const dateTime = new Date(
+        `${entry.date}T${entry.allDay ? "00:00" : entry.startTime || "00:00"}`,
+      );
+      return dateTime < now;
+    });
+  };
+
+  const hasInvalidDuration = (entries = []) =>
+    entries.some((entry) => {
+      if (entry?.allDay) return false;
+      if (!entry?.startTime || !entry?.endTime) return false;
+      const [sH, sM] = entry.startTime.split(":").map(Number);
+      const [eH, eM] = entry.endTime.split(":").map(Number);
+      const diff = eH * 60 + eM - (sH * 60 + sM);
+      return diff < 60;
+    });
+
+  const runStepGuards = useCallback(async () => {
+    if (!currentStep) return false;
+    const stepId = currentStep.id;
+
+    const fail = (message, issue = stepId) => {
+      setIssueFactor(issue);
+      setSuggestionMessage(message);
+      return false;
+    };
+
+    const ensureLocation = () => {
+      if (
+        isEmptyValue(formData?.locations) ||
+        isEmptyValue(formData?.latitude) ||
+        isEmptyValue(formData?.longitude)
+      ) {
+        return fail("Please select your preferred location.", "location");
+      }
+      return true;
+    };
+
+    const ensureService = () => {
+      if (isEmptyValue(formData?.serviceType)) {
+        return fail("Please select a service type.", "service_type");
+      }
+      return true;
+    };
+
+    const ensureEvent = () => {
+      if (isEmptyValue(formData?.selectedEventType)) {
+        return fail("Please select an event type.", "event_type");
+      }
+      const eventId = formData?.selectedEventType?.value;
+      if (!isObjectId(eventId)) {
+        return fail(
+          "Fetching event details. Please wait a moment and try again.",
+          "event_type",
+        );
+      }
+      return true;
+    };
+
+    const ensurePeopleAndBudget = () => {
+      const minPeople = Number(formData?.selectedPeopleRange?.minPeople);
+      const maxPeople = Number(formData?.selectedPeopleRange?.maxPeople);
+      const minBudget = Number(formData?.minBudgetValue);
+      const maxBudget = Number(formData?.maxBudgetValue);
+
+      if (!minPeople) {
+        return fail("Please select minimum guest count.", "gathering_budget");
+      }
+      if (!maxPeople) {
+        return fail("Please select maximum guest count.", "gathering_budget");
+      }
+      if (maxPeople < minPeople) {
+        return fail(
+          "Max guests should be greater than min guests.",
+          "gathering_budget",
+        );
+      }
+      if (!minBudget || !maxBudget) {
+        return fail("Please enter your budget.", "gathering_budget");
+      }
+      if (maxBudget < minBudget) {
+        return fail(
+          "Max budget should be greater than min budget.",
+          "gathering_budget",
+        );
+      }
+      return true;
+    };
+
     switch (stepId) {
       case "location":
-        return (
-          !isEmptyValue(formData?.locations) &&
-          !isEmptyValue(formData?.latitude) &&
-          !isEmptyValue(formData?.longitude)
-        );
+        if (!ensureLocation()) return false;
+        return runCuisineGate("location");
+
       case "service_type":
-        return !isEmptyValue(formData?.serviceType);
+        if (!ensureLocation() || !ensureService()) return false;
+        return runCuisineGate("service_type");
+
       case "event_type":
-        return !isEmptyValue(formData?.selectedEventType);
+        if (!ensureLocation() || !ensureService() || !ensureEvent()) {
+          return false;
+        }
+        return runCuisineGate("event_type");
+
       case "gathering_budget":
-        return (
-          !isEmptyValue(formData?.selectedPeopleRange?.minPeople) &&
-          !isEmptyValue(formData?.selectedPeopleRange?.maxPeople) &&
-          !isEmptyValue(formData?.minBudgetValue) &&
-          !isEmptyValue(formData?.maxBudgetValue)
-        );
-      case "event_date":
-        return !isEmptyValue(formData?.selectedDates);
-      case "food_preferences":
+        if (
+          !ensureLocation() ||
+          !ensureService() ||
+          !ensureEvent() ||
+          !ensurePeopleAndBudget()
+        ) {
+          return false;
+        }
+        return runCuisineGate("gathering_budget");
+
+      case "event_date": {
+        if (isEmptyValue(formData?.selectedDates)) {
+          return fail("Please select at least one preferred date.", stepId);
+        }
+        if (hasPastDate(formData.selectedDates)) {
+          return fail(
+            "Your preferred date is in the past. Please choose a future date.",
+            stepId,
+          );
+        }
+        if (hasPastDate(formData?.alternateDates || [])) {
+          return fail(
+            "One or more alternate dates are in the past.",
+            stepId,
+          );
+        }
+        if (hasInvalidDuration(formData.selectedDates)) {
+          return fail(
+            "End time must be at least 1 hour after the start time.",
+            stepId,
+          );
+        }
         return true;
+      }
+
+      case "food_preferences": {
+        const result = await ensureCuisineCombinations(formData);
+        if (!result?.ok) {
+          return fail(
+            result?.message ||
+              "No packages are available for your current selection.",
+            result?.issueFactor || stepId,
+          );
+        }
+        return true;
+      }
+
       default:
         return true;
     }
-  }, [currentStep?.id, formData, isEmptyValue]);
+  }, [
+    currentStep,
+    formData,
+    isEmptyValue,
+    runCuisineGate,
+    setIssueFactor,
+    setSuggestionMessage,
+  ]);
 
   const commitAnswersThroughStep = useCallback(
     (stepIndex) => {
@@ -169,9 +395,8 @@ const EnquiryLayout = () => {
     if (!currentStep) return;
     clearValidationFeedback();
 
-    const isValid = validateCurrentStep();
-    if (!isValid) {
-      setSuggestionMessage("Please complete the current step before continuing.");
+    const canProceed = await runStepGuards();
+    if (!canProceed) {
       return;
     }
 
@@ -181,37 +406,36 @@ const EnquiryLayout = () => {
       wizardSnapshot.formData,
     );
 
-    try {
+    if (shouldValidateCuisine(currentStep?.id)) {
       setIsApiLoading(true);
-      const response = await fetchCuisineCombinations(formData);
-      const data = response?.data;
-      if (data) {
-        const ok = data.success === true && data.validation_passed === true;
-        if (!ok) {
-          const msg =
-            data.suggestions?.solution ||
-            data.message ||
-            "Please adjust your selection.";
-          setIssueFactor(data.current_step || null);
-          setSuggestionMessage(msg);
-          setIsApiLoading(false);
-          return;
+      try {
+        const response = await fetchCuisineCombinations(formData);
+        const data = response?.data;
+        if (data) {
+          const ok = data.success === true && data.validation_passed === true;
+          if (!ok) {
+            const msg =
+              formatSuggestion(data.suggestions) ||
+              data.message ||
+              "Please adjust your selection.";
+            setIssueFactor(data.current_step || currentStep?.id || null);
+            setSuggestionMessage(msg);
+            return;
+          }
         }
-      }
-    } catch (error) {
-      console.error("Cuisine API verification failed", error);
-      if (boundedStepIndex <= 1) {
+      } catch (error) {
+        console.error("Cuisine API verification failed", error);
         setSuggestionMessage("Something went wrong. Please try again.");
-        setIsApiLoading(false);
         return;
+      } finally {
+        setIsApiLoading(false);
       }
-    } finally {
-      setIsApiLoading(false);
     }
 
-    const commitIndex = stepChanged
-      ? boundedStepIndex
-      : Math.max(boundedStepIndex, persistedStepIndex);
+    const commitIndex =
+      stepChanged || persistedStepIndex < 0
+        ? boundedStepIndex
+        : persistedStepIndex;
 
     commitAnswersThroughStep(commitIndex);
 
@@ -231,11 +455,13 @@ const EnquiryLayout = () => {
     formData,
     isLastStep,
     persistedStepIndex,
+    runStepGuards,
+    setActiveStepIndex,
     setIsApiLoading,
     setIssueFactor,
     setSuggestionMessage,
     steps.length,
-    validateCurrentStep,
+    suggestionMessage,
     wizardSnapshot.formData,
   ]);
 
@@ -244,7 +470,7 @@ const EnquiryLayout = () => {
     clearValidationFeedback();
     setActiveStepIndex((prev) => Math.max(prev - 1, 0));
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [clearValidationFeedback, isFirstStep]);
+  }, [clearValidationFeedback, isFirstStep, setActiveStepIndex]);
 
   const handleStepClick = useCallback(
     (stepIndex) => {
@@ -257,7 +483,7 @@ const EnquiryLayout = () => {
       setActiveStepIndex(safeTarget);
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    [boundedStepIndex, clearValidationFeedback, resolvedStepIndex],
+    [boundedStepIndex, clearValidationFeedback, resolvedStepIndex, setActiveStepIndex],
   );
 
   if (!currentStep) {
@@ -340,6 +566,15 @@ const deepEqual = (a, b) => {
   const normalizedB = b ?? null;
   return JSON.stringify(normalizedA) === JSON.stringify(normalizedB);
 };
+
+const CUISINE_VALIDATION_STEPS = new Set([
+  "gathering_budget",
+  "event_date",
+  "food_preferences",
+]);
+
+const shouldValidateCuisine = (stepId) =>
+  stepId ? CUISINE_VALIDATION_STEPS.has(stepId) : false;
 
 const normalizeDietaryRequirements = (list = []) =>
   Array.isArray(list) ? [...list].sort() : [];

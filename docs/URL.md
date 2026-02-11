@@ -375,4 +375,31 @@ This system works because:
 **React no longer owns the enquiry.
 The URL does.**
 
+---
+
+# 16) Extending the wizard safely
+
+Future changes must keep the “URL owns the data” contract. Use this condensed checklist (see `docs/ENQUIRY_STEPS_GUIDE.md` for details) whenever you add new behaviour.
+
+## 16.1 Adding a new step
+
+1. Declare the step in `STEP_DEFINITIONS` (`src/features/venue/enquiry/utils/enquiryConfig.js`) and append its key to `VITE_ENQUIRY_STEPS` so ordering stays explicit.
+2. Create a UI component in `src/features/venue/enquiry/components/steps/` and export it from `components/steps/index.js`. Components must be stateless and read/write via `formData` + `updateFormData`.
+3. Extend the URL codec (`src/features/venue/enquiry/utils/urlState.js` + `urlBuilder.js`) so the new answer serialises into either a path segment or a short query param. Normalise here, never inside React.
+4. Update `resolveWizardStep` completion rules and `extractStepPayload` (in `src/layouts/EnquiryLayout.jsx`) so change detection knows about the step. This prevents accidental query wipes when nothing actually changed.
+5. Enforce validation inside `runStepGuards` (layout) and reuse the existing API helpers (`ensureCuisineCombinations`, `fetchCuisineCombinations`, etc.) when a backend check is required.
+6. Surface a human summary in `SidebarContent` so the left rail always mirrors what the URL already knows.
+7. Document the param in this file (valid values, defaults, downstream invalidation logic) before merging.
+
+## 16.2 Adding fields within an existing step
+
+1. Add defaults to `EMPTY_ENQUIRY_FORM` and `createEmptyForm()` so hydration starts from a known shape.
+2. Update `decodeWizardUrl` to parse and sanitise the new key, and teach `buildWizardUrl` how to encode it. Drop the field when upstream answers change.
+3. Update the relevant step component to capture user input, and bubble the data through `updateFormData`.
+4. Extend `extractStepPayload` so `hasStepChanged` tracks the new field (otherwise the wizard may never invalidate downstream answers).
+5. Add any necessary API payload changes or sidebar summaries.
+6. Document the field here: what key it uses, allowed values, and the invariants it enforces.
+
+Following these two checklists keeps the enquiry flow deterministic, shareable, and refresh-safe as it grows.
+
 And since the browser history is already a perfect per-tab state container, you get stability without persisting anything.
