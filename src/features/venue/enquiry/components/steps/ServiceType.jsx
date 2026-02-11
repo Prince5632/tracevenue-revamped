@@ -19,10 +19,10 @@ const ServiceTypePage = ({ urlParams = {} }) => {
   }, [urlParams.serviceType]);
   return (
     <>
-      <h1 className="text-xl font-semibold text-[#242424] mb-6 mx-2">
+      <h1 className="text-xl font-semibold text-[#242424] mb-6">
         What are you looking for?
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 px-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 ">
         {serviceOptions.map((option) => (
           <OptionCard
             key={option.id}

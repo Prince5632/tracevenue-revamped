@@ -61,7 +61,7 @@ const EventDate = () => {
             </div>
 
         
-           <div className="flex items-center  bg-[#C6FBE580]  rounded-xl px-3 py-1 w-[30%] justify-between">
+           <div className="flex items-center  bg-[#C6FBE580]  rounded-xl px-3 py-1 sm:w-[30%] w-[34%] justify-between">
               <GreenLine type={fullday} />
 
               {fullday === "Time" && (
@@ -111,7 +111,7 @@ const EventDate = () => {
             <Card
               variant="default"
               padding="md"
-              className="flex items-center justify-around gap-5"
+              className="flex items-center justify-around gap-2"
             >
               <div className="text-left">
                 <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
@@ -123,7 +123,7 @@ const EventDate = () => {
               </div>
 
           
-              <div className="flex items-center w-[30%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
+              <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
               <GreenLine type={fullday} />
 
               {fullday === "Time" && (
@@ -183,7 +183,7 @@ const EventDate = () => {
             <Card
               variant="default"
               padding="md"
-              className="flex items-center justify-around gap-5"
+              className="flex items-center justify-around gap-2"
             >
               <div className="text-left">
                 <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
@@ -194,7 +194,7 @@ const EventDate = () => {
                 </div>
               </div>
 
-             <div className="flex items-center w-[30%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
+             <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
               <GreenLine type={fullday} />
 
               {fullday === "Time" && (
