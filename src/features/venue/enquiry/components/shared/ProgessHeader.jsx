@@ -4,7 +4,7 @@ const ProgressHeader = ({ currentStep, totalSteps, title, subtitle }) => {
   const progressPercentage = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="w-full relative lg:left-0 px-4">
+    <div className="w-full relative lg:left-0 px-4 sm:px-0">
       <p className="text-[14px] font-semibold text-[#5C5F62] mb-1 hidden lg:block">
         Step {currentStep}/{totalSteps}
       </p>
