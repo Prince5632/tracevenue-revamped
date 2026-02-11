@@ -53,6 +53,7 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
           closeSearch();
         }}
         onToggle={toggleSearch}
+        onClose = {closeSearch}
       />
 
       <div className="py-5 px-2">
@@ -73,12 +74,13 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
             title={event.title}
             image={event.image}
             selected={selectedEventId === event.eventId}
-            onClick={() =>
+            onClick={() =>{
               handleSelect({
                 id: event.eventId,
                 label: event.title,
-              })
-            }
+              });
+              closeSearch();
+            }}
           />
         ))}
       </div>
@@ -114,7 +116,9 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
                   value={event.label}
                   leftIcon={event.icon}
                   selected={selectedEventId === event.id}
-                  onClick={() => handleSelect(event)}
+                  onClick={() => {handleSelect(event);
+                    closeSearch()
+                  }}
                 />
               ))}
             </div>

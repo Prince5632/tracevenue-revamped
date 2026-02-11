@@ -61,7 +61,7 @@ const EventDate = () => {
             </div>
 
         
-           <div className="flex items-center gap-3 bg-[#C6FBE580]  rounded-xl px-3 py-1">
+           <div className="flex items-center  bg-[#C6FBE580]  rounded-xl px-3 py-1 w-[30%] justify-between">
               <GreenLine type={fullday} />
 
               {fullday === "Time" && (
@@ -123,7 +123,7 @@ const EventDate = () => {
               </div>
 
           
-              <div className="flex items-center gap-3 bg-[#C6FBE580]  rounded-xl px-3 py-1">
+              <div className="flex items-center w-[30%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
               <GreenLine type={fullday} />
 
               {fullday === "Time" && (
@@ -194,7 +194,7 @@ const EventDate = () => {
                 </div>
               </div>
 
-             <div className="flex items-center gap-3 bg-[#C6FBE580]  rounded-xl px-3 py-1">
+             <div className="flex items-center w-[30%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
               <GreenLine type={fullday} />
 
               {fullday === "Time" && (
