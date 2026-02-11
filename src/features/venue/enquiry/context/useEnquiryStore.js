@@ -1,55 +1,47 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { createEmptyForm } from "@/features/venue/enquiry/constants/formDefaults";
+
+const buildInitialForm = () => createEmptyForm();
 
 const useEnquiryStore = create((set) => ({
-  formData: {
-    locations: "",
-    radius: 20,
-    latitude: "",
-    longitude: "",
-    serviceType: null,
-    selectedEventType: null,
-    selectedPeopleRange: null,
-    minBudgetValue: null,
-    maxBudgetValue: null,
-    budgetType: null,
-    selectedDates: [],
-    dietaryRequirements: []
-  },
-  completedSteps: [],
+  formData: buildInitialForm(),
 
-  // Actions
-  setFormData: (newData) => set((state) => ({
-    formData: { ...state.formData, ...newData }
-  })),
+  // Runtime flags (UI + API)
+  issueFactor: null,
+  suggestionMessage: null,
+  isApiLoading: false,
 
-  updateFormData: (key, value) => set((state) => ({
-    formData: { ...state.formData, [key]: value }
-  })),
+  // === Form Data Actions ===
+  hydrateFromUrl: (nextData) =>
+    set({
+      formData: nextData ? { ...nextData } : buildInitialForm(),
+    }),
 
-  setCompletedSteps: (steps) => set({ completedSteps: steps }),
+  setFormData: (newData) =>
+    set((state) => ({
+      formData: { ...state.formData, ...newData },
+    })),
 
-  addCompletedStep: (stepId) => set((state) => {
-    if (state.completedSteps.includes(stepId)) return state;
-    return { completedSteps: [...state.completedSteps, stepId] };
-  }),
+  updateFormData: (key, value) =>
+    set((state) => ({
+      formData: { ...state.formData, [key]: value },
+    })),
 
-  resetStore: () => set({
-    formData: {
-      locations: "",
-      radius: 20,
-      latitude: "",
-      longitude: "",
-      serviceType: null,
-      selectedEventType: null,
-      selectedPeopleRange: null,
-      minBudgetValue: null,
-      maxBudgetValue: null,
-      budgetType: null,
-      selectedDates: [],
-      dietaryRequirements: []
-    },
-    completedSteps: []
-  })
+  resetForm: () =>
+    set({
+      formData: buildInitialForm(),
+    }),
+
+  // === UI Feedback ===
+  setIssueFactor: (factor) => set({ issueFactor: factor }),
+  setSuggestionMessage: (message) => set({ suggestionMessage: message }),
+  setIsApiLoading: (loading) => set({ isApiLoading: loading }),
+
+  clearValidationFeedback: () =>
+    set({
+      issueFactor: null,
+      suggestionMessage: null,
+    }),
 }));
 
 export default useEnquiryStore;

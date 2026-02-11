@@ -8,15 +8,7 @@ import OptionCard from "../ServiceTypeComponents/OptionCard";
 const ServiceTypePage = ({ urlParams = {} }) => {
   // Use global store
   const { formData, updateFormData } = useEnquiryStore();
-  // Hydrate from URL params if formData.serviceType is empty (initial mount via URL)
-  useEffect(() => {
-    if (!formData.serviceType && urlParams.serviceType) {
-      const serviceId = decodeServiceTypeFromUrl(urlParams.serviceType);
-      if (serviceId) {
-        updateFormData("serviceType", serviceId);
-      }
-    }
-  }, [urlParams.serviceType]);
+
   return (
     <>
       <h1 className="text-xl font-semibold text-[#242424] mb-6 mx-2">

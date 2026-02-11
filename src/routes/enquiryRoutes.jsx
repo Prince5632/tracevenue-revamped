@@ -17,24 +17,16 @@ import RestaurantDetailModal from '@/features/venue/enquiry/components/shared/Re
  * etc.
  */
 export const enquiryRoutes = [
-    // Step-based enquiry routes
-    { path: '/', element: <EnquiryLayout /> },
-    { path: '/:location', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType/:gatheringAndBudget', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType/:gatheringAndBudget/:eventDate', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType/:gatheringAndBudget/:eventDate/:foodPreference', element: <EnquiryLayout /> },
+  { path: "/", element: <EnquiryLayout /> },
+  { path: "/:location", element: <EnquiryLayout /> },
+  { path: "/:location/:serviceType", element: <EnquiryLayout /> },
+  { path: "/:location/:serviceType/:eventType", element: <EnquiryLayout /> },
 
-    // Package details route
-    { path: "/package-details", element: <PackageDetails /> },
-    {path: '/quotation-card' , element:<QuotationCard/>}, 
-    { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
-    { path: "/package-details", element: <PackageDetails /> },
-    {path:'/quotation-page',element:<Quotationpage/>},
-    
+  { path: "/package-details", element: <PackageDetails /> },
+  { path: "/quotation-card", element: <QuotationCard /> },
+  { path: "/restaurant-detail-modal", element: <RestaurantDetailModal /> },
+  { path: "/quotation-page", element: <Quotationpage /> },
 
-    // Component documentation (dev only)
-    { path: '/docs', element: <ComponentDocs /> },
-    { path: '/CustomerCard', element: <CustomerCard /> }
+  { path: "/docs", element: <ComponentDocs /> },
+  { path: "/CustomerCard", element: <CustomerCard /> },
 ];

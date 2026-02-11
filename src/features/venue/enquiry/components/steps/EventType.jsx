@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { events, eventCategories } from "@features/venue/enquiry/constants";
 import { flattenEvents } from "@features/venue/enquiry/utils";
 import { IoArrowDownCircleOutline } from "react-icons/io5";
@@ -7,13 +7,20 @@ import EventTab from "../EventTypeComponents/EventTab";
 import SearchBar from "../EventTypeComponents/SearchBar";
 
 const EventType = ({ formData, updateFormData, urlParams }) => {
-  console.log(formData, urlParams, "event type");
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const openSearch = () => setIsSearchOpen(true);
   const toggleSearch = () => setIsSearchOpen((prev) => !prev);
   const closeSearch = () => setIsSearchOpen(false);
+
+  // Sync from store (formData) to local state on mount/update
+  useEffect(() => {
+    if (formData.selectedEventType) {
+      setSelectedEventId(formData.selectedEventType.id);
+      setSearchValue(formData.selectedEventType.label);
+    }
+  }, [formData.selectedEventType]);
 
   const allEvents = useMemo(() => flattenEvents(eventCategories), []);
 
@@ -25,14 +32,25 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
   }, [searchValue, allEvents]);
 
   const handleSelect = (event) => {
+    // Update local state is handled by useEffect if store updates, 
+    // but for immediate feedback we can set it here too if desired.
+    // Better to let store drive it, but setting local ensures snappiness.
     setSelectedEventId(event.id);
     setSearchValue(event.label);
     setIsSearchOpen(false);
+
+    // Update global store
+    updateFormData("selectedEventType", {
+      id: event.id,
+      label: event.label,
+      eventName: event.label // Ensure compatibility with backend/URL decoder
+    });
   };
 
   const clearSelection = () => {
     setSearchValue("");
     setSelectedEventId(null);
+    updateFormData("selectedEventType", null);
   };
 
   return (

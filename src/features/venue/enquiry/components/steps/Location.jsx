@@ -44,24 +44,7 @@ const Location = ({ urlParams = {} }) => {
     const libraries = useMemo(() => ["geometry", "places"], []);
     const mapInstanceRef = useRef(null);
 
-    // Hydrate from URL params if formData is empty (initial mount via URL)
-    useEffect(() => {
-        if (!formData.locations && urlParams.location) {
-            const locationData = decodeLocationFromUrl(urlParams.location);
-            if (locationData) {
-                setLocationInput(locationData.name);
-                setCenter({ lat: locationData.latitude, lng: locationData.longitude });
-                setRange(locationData.distance || 20);
-                setShowRadiusSlider(true);
-                setShowMapMarker(true);
-                // Update global state
-                updateFormData('locations', locationData.name);
-                updateFormData('latitude', locationData.latitude);
-                updateFormData('longitude', locationData.longitude);
-                updateFormData('radius', locationData.distance || 20);
-            }
-        }
-    }, [urlParams.location]);
+
 
     // Hydrate local state when formData changes (e.g. navigation back)
     useEffect(() => {
@@ -437,23 +420,22 @@ const Location = ({ urlParams = {} }) => {
                         </span>
                     </div>
                 )}
-               <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
-    <div className="flex bg-white rounded shadow-md border border-gray-200 overflow-hidden">
-        {['roadmap', 'satellite'].map((type) => (
-            <button
-                key={type}
-                onClick={() => setMapType(type)}
-                className={`px-4 py-1 text-sm font-medium transition-colors ${
-                    mapType === type
-                        ? 'text-[#f15a24]'
-                        : 'text-gray-600 hover:text-[#f15a24]'
-                }`}
-            >
-                {type === 'roadmap' ? 'Street' : 'Satellite'}
-            </button>
-        ))}
-    </div>
-</div>
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+                    <div className="flex bg-white rounded shadow-md border border-gray-200 overflow-hidden">
+                        {['roadmap', 'satellite'].map((type) => (
+                            <button
+                                key={type}
+                                onClick={() => setMapType(type)}
+                                className={`px-4 py-1 text-sm font-medium transition-colors ${mapType === type
+                                        ? 'text-[#f15a24]'
+                                        : 'text-gray-600 hover:text-[#f15a24]'
+                                    }`}
+                            >
+                                {type === 'roadmap' ? 'Street' : 'Satellite'}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
                 <LoadScript
                     googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
