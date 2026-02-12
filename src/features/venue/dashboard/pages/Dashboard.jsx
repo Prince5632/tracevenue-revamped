@@ -26,12 +26,14 @@ const Dashboard = () => {
   if (error) return <div>Error loading dashboard data</div>;
 
   const {
-    totalEnquiries,
-    totalPendingResponses,
-    totalCompletedEnquiries
+    totalEnquiries=0,
+    totalPendingResponses=0,
+    totalCompletedEnquiries=0,
   } =dashboardStats?.data?.stats || {}
 
   const {name = ''}=dashboardStats?.data?.user ||{}
+
+  const upcomingEvents = dashboardStats?.data?.upcomingEvents || []
   return <>
     <div className="flex flex-col gap-4 w-full">
 
@@ -96,9 +98,14 @@ const Dashboard = () => {
         </Card.Header>
 
         <Card.Body className='flex flex-wrap gap-3'>
-          {dashboardStats?.data?.upcomingEvents.map((item,idx)=>{
-            return <DashboardEventCard data={item}/>
-          })}
+
+           {(upcomingEvents.length > 0) ?
+              (upcomingEvents.map((item,idx)=>{
+                return <DashboardEventCard data={item}/>
+              })):(
+                <h2 className="font-semibold text-xl text-secondary">No Upcoming events</h2>
+              )
+          }
         </Card.Body>
 
       </Card>
