@@ -9,7 +9,7 @@ import tabler from "../../../../assets/dashboard/tabler_list-details.svg";
 import tick from "../../../../assets/images/tick.png";
 import { BsCheckLg } from "react-icons/bs";
 
-const Header = ({ heading, subheading, sortBy, setSortBy }) => {
+const Header = ({heading}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [event, setEvent] = useState('Latest Enquiries');
     const inputRef = useRef(null);
@@ -36,8 +36,8 @@ const Header = ({ heading, subheading, sortBy, setSortBy }) => {
                 {/* heading,subheading,button */}
                 <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-10 items-center'>
                     <div>
-                        <h1 className='text-body font-bold text-2xl text-[#373d42]'>{heading}</h1>
-                        <h2 className='mt-2 text-secondary'>{subheading}</h2>
+                        <h1 className='text-body font-bold text-2xl text-[#373d42] capitalize'>{heading} Enquiries</h1>
+                        <h2 className='mt-2 text-secondary'>Manage your all event leads in one place and respond instantly.</h2>
                     </div>
                     <div className='mt-2 lg:justify-self-end'>
                         <Button variant="outline" children="Plan My Event"
@@ -56,7 +56,7 @@ const Header = ({ heading, subheading, sortBy, setSortBy }) => {
                     <div className='grid grid-cols-1 lg:grid-cols-[55%_40%_auto] gap-4 mt-3'>
                         <Input placeholder="Search enquiries" leftIcon={<img src={tabler} alt="tabler" />} />
 
-                        <div ref={inputRef} className='relative rounded-[30px] border border-[1px] border-[#D7D9DA] hover:border-orange-600
+                        <div ref={inputRef} className='relative rounded-[30px] border  border-[#D7D9DA] hover:border-orange-600
                         cursor-pointer h-[47px] py-[10px] px-4'>
                             <div className='flex justify-between'>
                                 <div className='flex gap-2 whitespace-nowrap'>
