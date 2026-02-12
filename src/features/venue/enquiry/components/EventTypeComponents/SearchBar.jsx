@@ -1,6 +1,7 @@
 import { Input } from "@shared/components/ui";
 import calendarIcon from "@assets/step3/calendar-icon.png";
 import { IoChevronDown } from "react-icons/io5";
+import { useRef, useEffect } from "react";
 
 const SearchBar = ({
   value,
@@ -13,8 +14,23 @@ const SearchBar = ({
   onSelect,
   onToggle,
 }) => {
+  const wrapperRef = useRef(null);
+  useEffect(() => {
+  function handleClickOutside(event) {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      onclose()   // close dropdown
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={wrapperRef}>
       <Input
         value={value}
         placeholder="Type to search..."
@@ -46,7 +62,7 @@ const SearchBar = ({
                   <p
                     key={event.id}
                     onClick={() => onSelect(event)}
-                    className="cursor-pointer font-semibold !text-black hover:text-green-600 py-1 hover:!text-[#15b076]"
+                    className="cursor-pointer font-semibold !text-black  py-1 hover:!text-[#FF4000] hover"
                   >
                     {event.label}
                   </p>
@@ -68,7 +84,7 @@ const SearchBar = ({
                       <p
                         key={event.id}
                         onClick={() => onSelect(event)}
-                        className="cursor-pointer !text-black font-semibold hover:text-green-600 py-0.5 hover:!text-[#15b076]"
+                        className="cursor-pointer !text-black font-semibold py-0.5 hover:!text-[#FF4000] hover:underline hover:decoration-[#FF4000] "
                       >
                         {event.label}
                       </p>

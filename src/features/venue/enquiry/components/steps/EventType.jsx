@@ -53,9 +53,10 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
           closeSearch();
         }}
         onToggle={toggleSearch}
+        onClose = {closeSearch}
       />
 
-      <div className="py-5 px-2">
+      <div className="py-5 ">
         <p className="!font-bold !text-[18px] !text-black">Popular Events</p>
       </div>
 
@@ -64,7 +65,7 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
           grid grid-cols-2 
           sm:grid-cols-3 
           lg:grid-cols-4 
-          gap-5 px-2
+          gap-5 
         "
       >
         {events.map((event) => (
@@ -73,18 +74,19 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
             title={event.title}
             image={event.image}
             selected={selectedEventId === event.eventId}
-            onClick={() =>
+            onClick={() =>{
               handleSelect({
                 id: event.eventId,
                 label: event.title,
-              })
-            }
+              });
+              closeSearch();
+            }}
           />
         ))}
       </div>
 
       <div className="mt-5 text-lg">
-        <div className="flex justify-left items-center px-2 mb-5">
+        <div className="flex justify-left items-center mb-5">
           <p className="!font-bold !text-[18px] !text-black !font-Gilroy">
             All Events
           </p>
@@ -102,7 +104,7 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
         </div>
       </div>
 
-      <div id="event-tabs" className="space-y-6 px-2">
+      <div id="event-tabs" className="space-y-6">
         {eventCategories.map((category) => (
           <div key={category.id} className="space-y-3">
             <p className="text-sm font-bold text-gray-500">{category.title}</p>
@@ -114,7 +116,9 @@ const EventType = ({ formData, updateFormData, urlParams }) => {
                   value={event.label}
                   leftIcon={event.icon}
                   selected={selectedEventId === event.id}
-                  onClick={() => handleSelect(event)}
+                  onClick={() => {handleSelect(event);
+                    closeSearch()
+                  }}
                 />
               ))}
             </div>
