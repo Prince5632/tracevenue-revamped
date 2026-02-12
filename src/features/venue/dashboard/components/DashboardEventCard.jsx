@@ -17,7 +17,7 @@ const DashboardEventCard = ({ data }) => {
 
   return (
     <>
-      <Card className='relative p-4 w-full'>
+      <Card className='relative'>
         <Card.Header>
           <div className="flex justify-between relative">
             <GradientText className="text-[18px] font-bold tracking-tighter whitespace-nowrap overflow-hidden text-ellipsis">{data?.name}</GradientText>
