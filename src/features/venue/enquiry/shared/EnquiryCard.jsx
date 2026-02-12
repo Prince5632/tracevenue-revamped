@@ -101,7 +101,7 @@ const EnquiryCard = ({ data}) => {
                     <Card.Header>
                         <GradientText className='text-xl font-extrabold leading-none relative -top-1'>{eventName}</GradientText>
                     </Card.Header>
-                    <Card.Footer className='flex justify-end items-end mt-3   '>
+                    <Card.Footer className='flex justify-end items-end mt-3 border-none'>
                         <IconRenderer className={className}/>
                     </Card.Footer>
                 </Card>
@@ -118,7 +118,7 @@ const EnquiryCard = ({ data}) => {
                 </div>
 
 
-                <div className='border border-[1px] border-[#D7D9DA] rounded-[20px] bg-[#FFFFFF] px-2 !h-auto !w-auto my-4'>
+                <div className='border border-[#D7D9DA] rounded-[20px] bg-[#FFFFFF] px-2 !h-auto !w-auto my-4'>
                     <div className='grid grid-cols-1 lg:grid-cols-[58%_42%]'>
                         <div>
                             <div className='grid grid-cols-[58%_42%]'>
@@ -150,13 +150,13 @@ const EnquiryCard = ({ data}) => {
 
                         <div className='grid grid-cols-2 '>
                             {/* date and time */}
-                            <div className='flex flex-col flex-wrap !py-3 pl-4 leading-tight sm:items-center md:items-center'>
+                            <div className='flex flex-col flex-wrap !py-3  leading-tight sm:items-center md:items-center pr-5'>
                                 <GradientText className='font-bold text-[20px]'>{date && dayName(date)}</GradientText>
                                 <GradientText className='font-extrabold text-[20px]'>{date && formatDate(date)}</GradientText>
                             </div>
 
-                            <div className='flex !py-3 gap-2 flex-nowrap shrink-0 '>
-                                <div className='flex flex-col items-center shrink-0 pl:3md:pl-15 lg:pl-0'>
+                            <div className='flex !py-3 gap-2 pl:6 flex-nowrap shrink-0 '>
+                                <div className='flex flex-col items-center shrink-0 md:pl-15 lg:pl-0'>
                                     <div className='w-[10px] h-[10px] bg-[#15B076] rounded-full'></div>
                                     <div className='h-[27px] w-[4px] bg-[#B1F4D8] rounded-[30px]'></div>
                                     <div className='w-[10px] h-[10px] bg-[#15B076] rounded-full'></div>
