@@ -165,6 +165,10 @@ input[type="search"]::-webkit-search-results-decoration {
     width: 6px;
     height:6px;
 }
+.scrollbar-hide::-webkit-scrollbar{
+    width: 0;
+    height: 0;
+}
 .scrollbar-thin::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: var(--color-scrollbar-thumb);

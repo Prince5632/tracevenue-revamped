@@ -1,13 +1,38 @@
 import React from 'react'
 import MessageBubble from './MessageBubble'
 
-const ChatMessage = () => {
+const ChatMessage = ({ userData, isClick }) => {
   return (
-    <div className='flex-1 p-4 overflow-y-auto space-y-3'>
-        <div className='w-fit mx-auto rounded-xl text-center text-xs text-gray-400 bg-white '>
-            Sat, Mar 1
-        </div>
-        <MessageBubble
+    <div className='flex-1 p-4 overflow-y-auto space-y-3 col-span-12 row-span-11'>
+      <div className='w-fit mx-auto rounded-xl text-center text-xs text-gray-400 bg-white '>
+        Sat, Mar 1
+      </div>
+      {
+        userData?.map((data) => (
+          data.users?.map((user) => (
+            (isClick === user.id) ? <>
+              {
+                user.chats?.map((chat) => (
+                  chat.messages?.map((message) => {
+                    return <>
+                      <MessageBubble
+                        text={message.sendText}
+                        time={message.sendTime}
+                        isSender
+                      />
+                      <MessageBubble
+                        text={message.reciveText}
+                        time={message.reciveTime}
+                      />
+                    </>
+                  })
+                ))
+              }
+            </> : ""
+          ))
+        ))
+      }
+      {/* <MessageBubble
         text="hey there"
         time="09:32 PM"
         isSender
@@ -60,7 +85,7 @@ const ChatMessage = () => {
         <MessageBubble
         text="how are you"
         time="09:32 PM"
-        />
+        /> */}
     </div>
   )
 }

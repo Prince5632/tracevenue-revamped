@@ -31,7 +31,7 @@ import attachment from "@assets/attachment.svg";
 
 const ChatInput = () => {
   return (
-    <div className="flex items-center gap-2 p-3 px-15 w-full box-border">
+    <div className="flex items-center gap-2 p-3 px-15 w-full box-border col-span-12 row-span-1">
       <div className="relative flex-1">
         <input
           type="text"
