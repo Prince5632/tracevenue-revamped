@@ -14,7 +14,7 @@ const GreenLine = ({ type }) => {
     </div>
   ) : (
     // FULL DAY DESIGN
-    <div className="h-14 flex items-center rounded-lg py-1">
+    <div className="h-14 flex items-center rounded-lg py-1 gap-3">
       <div className="w-[10px] h-[10px] rounded-full bg-[#15B076]"></div>
 
       <span className="text-[#85878C] font-semibold text-[16px] w-[59px]">
