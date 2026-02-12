@@ -126,57 +126,6 @@ const Location = ({ urlParams = {} }) => {
     updateFormData("latitude", locationDetails.latitude);
     updateFormData("longitude", locationDetails.longitude);
     updateFormData("radius", distanceVal);
-
-    // Update complex objects for API payload
-    updateFormData("location", {
-      latitude: locationDetails.latitude,
-      longitude: locationDetails.longitude,
-    });
-
-    updateFormData("selectedCities", [
-      {
-        name: locationDetails.name,
-        city: locationDetails.city,
-        latitude: locationDetails.latitude,
-        longitude: locationDetails.longitude,
-        locality: locationDetails.locality,
-        subLocality: locationDetails.subLocality,
-      },
-    ]);
-  };
-
-  const handleSelectSuggestion = (prediction) => {
-    if (!placeDetailsServiceRef.current) return;
-
-    placeDetailsServiceRef.current.getDetails(
-      {
-        placeId: prediction.place_id,
-        fields: ["name", "formatted_address", "geometry", "address_components"],
-      },
-      (place, status) => {
-        if (
-          status === window.google.maps.places.PlacesServiceStatus.OK &&
-          place?.geometry?.location
-        ) {
-          const details = extractLocationDetails(
-            place.address_components,
-            place.formatted_address,
-            place.geometry,
-          );
-
-          // Update Local State
-          setCenter({ lat: details.latitude, lng: details.longitude });
-          setLocationInput(details.name);
-          setShowMapMarker(true);
-          setShowRadiusSlider(true);
-          setShowOptions(false);
-          setSuggestions([]);
-
-          // Update Global State
-          updateGlobalState(details, range);
-        }
-      },
-    );
   };
 
   const fetchSuggestions = (input) => {
@@ -495,40 +444,47 @@ const Location = ({ urlParams = {} }) => {
             showMarker={showMapMarker}
             setShowMarker={setShowMapMarker}
             zoom={11}
+          >
+            <div className='rounded-2xl mt-8 relative z-0 w-full overflow-hidden border border-gray-200 h-80'>
+              {isLoading && (
+                <div className="absolute inset-0 z-50 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center gap-3">
+                  <Spinner size='lg' color='gray' />
+                  <span className="text-sm text-gray-600 font-medium">
+                    Detecting your location…
+                  </span>
+                </div>
+              )}
 
-            // Add marker functionality to Map component if not already present
-            // Assuming Map component handles the marker logic via props
-          />
+            </div>
+
+          </Map>
         </LoadScript>
       </div>
-       <div className="absolute top-90 left-1/2 -translate-x-1/2  pointer-events-auto ">
-          <div className="flex bg-white rounded-[6px] shadow-md border border-gray-200 overflow-hidden px-2 py-1">
-           
-            {["roadmap", "satellite"].map((type, index) => (
-  <div
-    key={type}
-    className={`px-1 ${
-      index === 0 ? "border-r border-gray-200" : ""
-    }`}
-  >
-    <button
-      onClick={() => setMapType(type)}
-      className={`px-3 py-1 text-sm font-medium rounded-[4px] transition-colors ${
-        mapType === type
-          ? "text-[#f15a24] bg-[#fff1eb]"
-          : "text-gray-600 hover:text-[#f15a24] hover:bg-[#fff1eb]"
-      }`}
-    >
-      {type === "roadmap" ? "Street" : "Satellite"}
-    </button>
-  </div>
-))}
+      <div className="absolute top-90 left-1/2 -translate-x-1/2  pointer-events-auto ">
+        <div className="flex bg-white rounded-[6px] shadow-md border border-gray-200 overflow-hidden px-2 py-1">
 
-          </div>
+          {["roadmap", "satellite"].map((type, index) => (
+            <div
+              key={type}
+              className={`px-1 ${index === 0 ? "border-r border-gray-200" : ""
+                }`}
+            >
+              <button
+                onClick={() => setMapType(type)}
+                className={`px-3 py-1 text-sm font-medium rounded-[4px] transition-colors ${mapType === type
+                  ? "text-[#f15a24] bg-[#fff1eb]"
+                  : "text-gray-600 hover:text-[#f15a24] hover:bg-[#fff1eb]"
+                  }`}
+              >
+                {type === "roadmap" ? "Street" : "Satellite"}
+              </button>
+            </div>
+          ))}
+
         </div>
-
+      </div>
     </div>
   );
-};
+}
 
 export default Location;

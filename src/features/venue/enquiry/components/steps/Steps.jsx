@@ -9,7 +9,7 @@ const Steps = ({
   title,
   subtitle,
   stepKey,
-  FormData,
+  formData,
   updateFormData,
   urlParams,
   onNext,
@@ -28,7 +28,7 @@ const Steps = ({
       />
       <StepContent
         stepKey={stepKey}
-        FormData={FormData}
+        formData={formData}
         updateFormData={updateFormData}
         urlParams={urlParams}
       />

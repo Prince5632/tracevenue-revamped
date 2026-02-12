@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CustomTimePicker } from "@shared/components/ui";
 import { Calendar } from "react-date-range";
 import "react-date-range/dist/styles.css";
@@ -8,40 +8,85 @@ import hoursgreen from "@assets/new images/hours.png";
 import hoursgray from "@assets/new images/hoursgray.svg";
 import GreenLine from "../EventDate/GreenLine";
 
-const EventDate = () => {
+const EventDate = ({ formData, updateFormData }) => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
-  const dayName = date.toLocaleDateString("en-US", {
-    weekday: "long",
-  });
 
-  const dayNumber = date.toLocaleDateString("en-US", {
-    day: "2-digit",
-  });
-
-  const monthName = date.toLocaleDateString("en-US", {
-    month: "short",
-  });
+  // UI State for Hours toggle
   const [hoursimg, setHoursimg] = useState(hoursgray);
-  const [hours, setHours] = useState(false);
+  const [hours, setHours] = useState(false); // false = Time (default), true = Fullday
   const [fullday, setFullday] = useState("Time");
+
+  // Hydrate from store
+  useEffect(() => {
+    if (formData.selectedDates && formData.selectedDates.length > 0) {
+      const firstDate = formData.selectedDates[0];
+      if (firstDate && firstDate.date) {
+        setDate(new Date(firstDate.date));
+
+        // Hydrate All Day toggle
+        if (firstDate.allDay) {
+          setHours(true);
+          setHoursimg(hoursgreen);
+          setFullday("Fullday");
+        } else {
+          setHours(false);
+          setHoursimg(hoursgray);
+          setFullday("Time");
+        }
+      }
+    }
+  }, [formData.selectedDates]);
+
+  const updateStoreDate = (newDate, isAllDay) => {
+    const dateStr = newDate.toISOString().split("T")[0];
+    // Create new object for store
+    const newEntry = {
+      date: dateStr,
+      allDay: isAllDay,
+      startTime: isAllDay ? "00:00" : "09:00", // Default start
+      endTime: isAllDay ? "23:59" : "17:00", // Default end
+    };
+
+    // Update ONLY the first entry in selectedDates array
+    const currentDates = formData.selectedDates || [];
+    const newDates =
+      currentDates.length > 0
+        ? [newEntry, ...currentDates.slice(1)]
+        : [newEntry];
+
+    updateFormData("selectedDates", newDates);
+  };
+
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    setOpen(false);
+    updateStoreDate(newDate, hours);
+  };
+
   const handleHours = () => {
-    setHours(!hours);
-    if (!hours) {
+    const newHoursState = !hours;
+    setHours(newHoursState);
+    if (newHoursState) {
       setHoursimg(hoursgreen);
       setFullday("Fullday");
     } else {
       setHoursimg(hoursgray);
       setFullday("Time");
     }
+    updateStoreDate(date, newHoursState);
   };
-  const [openCalendarId, setOpenCalendarId] = useState(null);
 
+  // Dates for display
+  const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+  const dayNumber = date.toLocaleDateString("en-US", { day: "2-digit" });
+  const monthName = date.toLocaleDateString("en-US", { month: "short" });
+
+  const [openCalendarId, setOpenCalendarId] = useState(null);
   return (
     <>
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 justify-around gap-5">
         {/*Preffered Card 1*/}
-
         <div className="h-full w-full">
           <h1 className="font-semibold text-[18px] mb-5">Preffered Date</h1>
 
@@ -59,9 +104,7 @@ const EventDate = () => {
                 {dayNumber} {monthName}
               </div>
             </div>
-
-        
-           <div className="flex items-center  bg-[#C6FBE580]  rounded-xl px-3 py-1 sm:w-[30%] w-[34%] justify-between">
+            <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
               <GreenLine type={fullday} />
 
               {fullday === "Time" && (
@@ -122,17 +165,16 @@ const EventDate = () => {
                 </div>
               </div>
 
-          
               <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
-              <GreenLine type={fullday} />
+                <GreenLine type={fullday} />
 
-              {fullday === "Time" && (
-                <div className="flex flex-col">
-                  <CustomTimePicker />
-                  <CustomTimePicker />
-                </div>
-              )}
-            </div>
+                {fullday === "Time" && (
+                  <div className="flex flex-col">
+                    <CustomTimePicker />
+                    <CustomTimePicker />
+                  </div>
+                )}
+              </div>
 
               <div className="flex items-center">
                 <button onClick={handleHours}>
@@ -194,16 +236,16 @@ const EventDate = () => {
                 </div>
               </div>
 
-             <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
-              <GreenLine type={fullday} />
+              <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580]  rounded-xl px-3 py-1">
+                <GreenLine type={fullday} />
 
-              {fullday === "Time" && (
-                <div className="flex flex-col">
-                  <CustomTimePicker />
-                  <CustomTimePicker />
-                </div>
-              )}
-            </div>
+                {fullday === "Time" && (
+                  <div className="flex flex-col">
+                    <CustomTimePicker />
+                    <CustomTimePicker />
+                  </div>
+                )}
+              </div>
 
               <div className="flex items-center">
                 <button onClick={handleHours}>

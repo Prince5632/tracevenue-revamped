@@ -176,6 +176,86 @@ export const encodeFoodPreferencesToUrl = (dietaryRequirements = []) => {
 };
 
 /**
+ * Decode event type from URL slug by matching against events list
+ * Falls back to reconstructing a label from the slug if no match found
+ */
+export const decodeEventTypeFromUrl = (urlSlug, eventsList = []) => {
+    if (!urlSlug) return null;
+
+    const toKebabCase = (str) =>
+        str.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
+    // Try to match against the events list from API
+    const matched = eventsList.find((e) => {
+        const name = e.eventName || e.label || e.name || '';
+        return toKebabCase(name) === urlSlug.toLowerCase();
+    });
+
+    if (matched) return matched;
+
+    // Fallback: reconstruct a label from slug
+    const label = urlSlug
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+    return { label, eventName: label };
+};
+
+/**
+ * Decode event dates from URL segment
+ * Format: preferredDates|alternateDates
+ * Each part: startISO~endISO,startISO~allDay,...
+ */
+export const decodeDatesFromUrl = (urlSegment) => {
+    if (!urlSegment) return null;
+
+    const [preferredPart, alternatePart] = urlSegment.split('|');
+
+    const parseDateEntries = (part) => {
+        if (!part) return [];
+        return part
+            .split(',')
+            .map((entry) => {
+                const [start, end] = entry.split('~');
+                if (!start) return null;
+
+                const startDate = new Date(start);
+                if (isNaN(startDate.getTime())) return null;
+
+                const dateStr = startDate.toISOString().split('T')[0];
+                const startTime = `${String(startDate.getHours()).padStart(2, '0')}:${String(startDate.getMinutes()).padStart(2, '0')}`;
+
+                if (end === 'allDay') {
+                    return { date: dateStr, allDay: true, startTime: '00:00', endTime: '23:59' };
+                }
+
+                const endDate = new Date(end);
+                if (isNaN(endDate.getTime())) return null;
+
+                const endTime = `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
+                return { date: dateStr, allDay: false, startTime, endTime };
+            })
+            .filter(Boolean);
+    };
+
+    return {
+        selectedDates: parseDateEntries(preferredPart),
+        alternateDates: parseDateEntries(alternatePart),
+    };
+};
+
+/**
+ * Decode food preferences from URL segment
+ * Format: vegOnly-true+alcoholic-false
+ */
+export const decodeFoodPreferencesFromUrl = (urlSegment) => {
+    if (!urlSegment) return [];
+    const requirements = [];
+    if (urlSegment.includes('vegOnly-true')) requirements.push('vegOnly');
+    if (urlSegment.includes('alcoholic-true')) requirements.push('alcoholic');
+    return requirements;
+};
+
+/**
  * Build URL path for a given step index based on form data
  */
 export const buildStepUrl = (stepIndex, formData) => {
