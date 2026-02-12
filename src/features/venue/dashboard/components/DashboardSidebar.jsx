@@ -34,8 +34,8 @@ const DashboardSidebar = () => {
   const [activeTab, setActiveTab] = useState(null);
 
   const {
-    statusWise= {},
-    contractStats= {}
+    statusWise = {},
+    contractStats = {}
   } = dashboardStats?.data?.stats || {};
 
   const {
@@ -45,11 +45,11 @@ const DashboardSidebar = () => {
     InActive
   } = statusWise;
 
-  const 
-  { active,
-    pending,
-    completed
-  } = contractStats;
+  const
+    { active,
+      pending,
+      completed
+    } = contractStats;
 
   return (
     <div
@@ -68,7 +68,7 @@ const DashboardSidebar = () => {
 
       {/* Dashboard */}
       <div
-        onClick={() => { setActive("dashboard"); navigate("/dashboard") }}
+        onClick={() => { setActiveTab("dashboard"); navigate("/dashboard") }}
         className={`border-[#D7D9DA] flex items-center gap-4 w-85 h-14.5 border-t border-b px-7.5
                   ${active === "dashboard"
             ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -174,7 +174,7 @@ const DashboardSidebar = () => {
             ].map((item) => (
               <div
                 key={item}
-                onClick={() => setActive(item)}
+                onClick={() => setActiveTab(item)}
                 className={`w-full flex items-center text-[18px] h-12  pl-18 cursor-pointer
                   ${active === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -211,7 +211,7 @@ const DashboardSidebar = () => {
             {[].map((item) => (
               <div
                 key={item}
-                onClick={() => setActive(item)}
+                onClick={() => setActiveTab(item)}
                 className={`w-full h-12 flex items-center text-[18px]  pl-18 cursor-pointer
                   ${active === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -250,7 +250,7 @@ const DashboardSidebar = () => {
             {[].map((item) => (
               <div
                 key={item}
-                onClick={() => setActive(item)}
+                onClick={() => setActiveTab(item)}
                 className={`w-full h-12 flex items-center text-[18px] pl-18
                   ${active === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
