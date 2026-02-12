@@ -4,7 +4,10 @@ import ArrowImage from "@assets/QuotationCard/QuotationsArrow.png";
 import RatingImage from "@assets/QuotationCard/QuotationRating.png";
 import DirectionImage from "@assets/QuotationCard/QuotationDirectionLogo.png";
 import { Badge, Button, Card } from "@/shared";
+import RestaurantDetailModal from "../shared/RestaurantDetailModal";
+import { useState } from "react";
 const QuotationCard = () => {
+const [showModal ,setShowModal] = useState(false);
   return (
     <>
       {/* <div className="max-w-[444px]  mt-[70px] rounded-[30px] border-[1px] border-[#D7D9DA]  shadow-[0_4px_10px_#0000000d] mx-2"> */}
@@ -142,12 +145,18 @@ const QuotationCard = () => {
           </div>
           <Button
             variant="secondary"
+            onClick={()=> setShowModal(true)}
             className="bg-gradient-to-b from-[#FFF3EA] to-[#FDEAED] !transition-none flex !justify-between w-full border-none"
           >
-            <span className="pl-1.5 text-primary">View Quotations</span>
+            <span className="pl-1.5 text-primary" >View Quotations</span>
 
             <img src={ArrowImage} alt="" />
           </Button>
+          {
+            showModal ? (
+              <RestaurantDetailModal onClose={()=> setShowModal(false)}/>
+            ) :null
+          }
         </Card.Body>
       </Card>
 
@@ -164,6 +173,7 @@ const QuotationCard = () => {
 
       {/* </div> */}
       {/* </div> */}
+   {/* <RestaurantDetailModal /> */}
     </>
   );
 };
