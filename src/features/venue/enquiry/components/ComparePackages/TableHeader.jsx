@@ -72,7 +72,7 @@ const TableHeader = () => {
 
                         <div className='w-full px-5 py-6'>
                             <div className='w-full h-full'>
-                                <div className='flex gap-15'>
+                                <div className='flex flex-col sm:flex-row gap-2 sm:gap-15'>
                                     <div>
                                         <span className='uppercase text-[#888] text-[14px] font-bold'>price per guest</span>
                                         <h1 className='text-[#222] text-[18px] font-bold'>2500</h1>
