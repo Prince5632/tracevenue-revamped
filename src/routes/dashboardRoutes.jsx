@@ -1,10 +1,6 @@
 import Contract from "@/features/venue/dashboard/pages/Contract";
 import Dashboard from "@/features/venue/dashboard/pages/Dashboard";
-import ActiveEnquiries from "@/features/venue/enquiry/pages/ActiveEnquiries";
-import CompletedEnquiries from "@/features/venue/enquiry/pages/CompletedEnquiries";
-import DraftEnquiries from "@/features/venue/enquiry/pages/DraftEnquiries";
 import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail";
-import ExpiredEnquiries from "@/features/venue/enquiry/pages/ExpiredEnquiries";
 import Enquiries from "@/features/venue/enquiry/shared/Enquiries";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import RestaurantDetailModal from "@/features/venue/enquiry/components/shared/RestaurantDetailModal";
@@ -34,22 +30,22 @@ export const dashboardRoutes = [
         element: <Enquiries />,
       },
       // dummy routes for all type enquiries
-      {
-        path: "/service/venues/enquiry/active",
-        element: <ActiveEnquiries />,
-      },
-      {
-        path: "/service/venues/enquiry/completed",
-        element: <CompletedEnquiries />,
-      },
-      {
-        path: "/service/venues/enquiry/draft",
-        element: <DraftEnquiries />,
-      },
-      {
-        path: "/service/venues/enquiry/expired",
-        element: <ExpiredEnquiries />,
-      },
+      // {
+      //   path: "/service/venues/enquiry/active",
+      //   element: <ActiveEnquiries />,
+      // },
+      // {
+      //   path: "/service/venues/enquiry/completed",
+      //   element: <CompletedEnquiries />,
+      // },
+      // {
+      //   path: "/service/venues/enquiry/draft",
+      //   element: <DraftEnquiries />,
+      // },
+      // {
+      //   path: "/service/venues/enquiry/expired",
+      //   element: <ExpiredEnquiries />,
+      // },
 
       // contract routes
       {
