@@ -11,6 +11,7 @@ import { LoadScript } from "@react-google-maps/api";
 import { decodeLocationFromUrl } from "@features/venue/enquiry/utils";
 import useEnquiryStore from "../../context/useEnquiryStore";
 import { Spinner } from "@/shared";
+import LocationIcon from '@/assets/dashboard/location.svg'
 
 const Location = ({ urlParams = {} }) => {
   // Use global store
@@ -277,12 +278,12 @@ const Location = ({ urlParams = {} }) => {
         <div className="relative flex items-center w-full">
           <Input
             type="text"
-            inputClassName="text-secondary text-[14px] py-2 z-2 pr-20 font-normal" // Added padding-right for Clear button
+            inputClassName="text-secondary text-[14px] py-2 z-2 pr-20 font-normal" 
             placeholder="Enter Location"
             value={locationInput}
             onChange={handleInputChange}
             onFocus={() => setShowOptions(true)}
-            leftIcon={<img src="src\assets\dashboard\location.svg" />}
+            leftIcon={<img src={LocationIcon} alt="location_icon"/>}
             rightIcon={
               <Search size={18} className="text-primary cursor-pointer" />
             }
