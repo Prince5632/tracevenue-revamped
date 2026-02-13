@@ -53,7 +53,7 @@ const DashboardSidebar = () => {
 
   return (
     <div
-      className="sticky top-25 h-full w-auto h-130 rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] 
+      className="sticky top-25  w-auto  rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] 
 
     "
     >

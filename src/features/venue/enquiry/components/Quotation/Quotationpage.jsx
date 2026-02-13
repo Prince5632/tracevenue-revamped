@@ -15,6 +15,7 @@ import Filter from "@assets/FilterIcon.svg";
 import QuotationCard from "@features/venue/enquiry/components/Quotation/QuotationCard";
 import Eyeicon from '@assets/images/eyeicon.svg'
 import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail";
+import MapView from "./MapView";
 const STATUS_OPTIONS = ["Only-Invited", "Only-Shortlisted", "Hide-Rejected"];
 
 
@@ -265,7 +266,7 @@ const Quotationpage = ({
         {/* Cards */}
 
         {/* Cards / Detail Page */}
-        <div className="flex-1 px-4 mt-2">
+        {isMapView?<MapView/>:<div className="flex-1 px-4 mt-2">
           {!showDetailPage ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-5">
               {Array.from({ length: 15 }).map((_, i) => (
@@ -275,7 +276,10 @@ const Quotationpage = ({
           ) : (
             <EnquiriesDetail />
           )}
-        </div>
+        </div>}
+
+
+      
         </div>
     </div>
   );
