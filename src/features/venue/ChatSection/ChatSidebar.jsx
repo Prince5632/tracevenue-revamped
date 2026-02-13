@@ -10,18 +10,27 @@ function ChatSidebar({ userData, handleUserClick, setIsClick }) {
         setTabOpen((prev) => (prev === id ? null : id));
     }
     return <>
-        <h1 className='sticky flex gap-2 p-4 bg-[#ffffff] border-b border-b-[#e0e0e0] items-center justify-start text-[22px] font-bold tracking-wider text-[#ff4000] -mx-1  mb-1'><MessageSquare size={24} color='#4f709c' />Messages</h1>
+        <h1 className='sticky flex gap-2 p-6 bg-[#ffffff] border-b border-b-[#e0e0e0] items-center justify-start text-[22px] font-bold tracking-wider text-[#ff4000] -mx-1  mb-1'><MessageSquare size={24} color='#4f709c' />Messages</h1>
         {
             userData?.map((user) => (
 
                 user.users?.map((oneUser) => (
                     <div>
-                        <div key={user.id} onClick={() => handleTabOpen(user.id)} className='flex justify-between items-start px-4 py-[12px] cursor-pointer bg-[#ffffff] text-[#5c5f62] backdrop-blur-lg border hover:shadow-sm border-[#e0e0e0]  transition-all duration-300 ease-in-out mb-1 rounded-lg  '>
+                        <div key={user.id} onClick={() => handleTabOpen(user.id)} className='flex justify-between items-start px-4 py-[12px] cursor-pointer bg-[#f0f0f4] text-[#5c5f62] backdrop-blur-lg hover:bg-white hover:shadow-lg  transition-all duration-300 ease-in-out mb-1 rounded-lg  '>
                             <div className='flex justify-center items-start'>
 
-                                <h3 key={oneUser.id} className='max-w-[150px] text-[14.4px] text-[#5c5f62] font-semibold transition-all duration-300 ease-in-out'>{oneUser.description}</h3>
+                                <h3 key={oneUser.id} className='flex-1 text-[14.4px] text-[#5c5f62] font-semibold transition-all duration-300 ease-in-out'>{oneUser.description}</h3>
 
-                                <Badge variant="softSuccess" className="!text-[12px] !font-medium px-[8px] py-[2px]">{user.status}</Badge>
+                                {
+                                    user.status == "Active" &&
+                                    <Badge variant="softSuccess" className="!text-[12px] !font-medium px-[8px] py-[2px]">{user.status}</Badge>
+                                }
+                                {
+                                    user.status == "Closed" && <Badge variant="outline" className="!text-[12px] !font-medium px-[8px] py-[2px]">{user.status}</Badge>
+                                }
+                                {
+                                    user.status == "Pending" && <Badge variant="soft" className="!text-[12px] !font-medium px-[8px] py-[2px]">{user.status}</Badge>
+                                }
                             </div>
                             {
                                 tabOpen === user.id ? <>

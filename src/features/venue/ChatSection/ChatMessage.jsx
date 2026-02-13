@@ -3,7 +3,7 @@ import MessageBubble from './MessageBubble'
 
 const ChatMessage = ({ userData, isClick }) => {
   return (
-    <div className='flex-1 p-4 overflow-y-auto space-y-3 col-span-12 row-span-11'>
+    <div className='flex-1 p-4 overflow-y-auto space-y-3 '>
       <div className='w-fit mx-auto rounded-xl text-center text-xs text-gray-400 bg-white '>
         Sat, Mar 1
       </div>
@@ -13,19 +13,23 @@ const ChatMessage = ({ userData, isClick }) => {
             (isClick === user.id) ? <>
               {
                 user.chats?.map((chat) => (
-                  chat.messages?.map((message) => {
-                    return <>
-                      <MessageBubble
-                        text={message.sendText}
-                        time={message.sendTime}
-                        isSender
-                      />
-                      <MessageBubble
-                        text={message.reciveText}
-                        time={message.reciveTime}
-                      />
-                    </>
-                  })
+                  chat.messages?.map((message, msgIndex) => (
+                    <React.Fragment key={msgIndex}>
+                      {message.sendText?.map((singleMsg) => (
+                        <MessageBubble
+                          text={singleMsg}
+                          time={message.sendTime}
+                          isSender
+                        />
+                      ))}
+                      {message.reciveText?.map((singleMsg) => (
+                        <MessageBubble
+                          text={singleMsg}
+                          time={message.reciveTime}
+                        />
+                      ))}
+                    </React.Fragment>
+                  ))
                 ))
               }
             </> : ""
