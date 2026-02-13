@@ -63,16 +63,16 @@ const TableHeader = () => {
                                     <h1 className='text-[#1a1a1a] font-bold text-[20px]'>Gold Package</h1>
                                     <p className='text-[#1a1a1a] text-md'>ABS</p>
                                 </div>
-                                <div className='flex sm:flex-col justify-center items-center leading-tight bg-[#f0fdf4] w-auto h-12 sm:h-15 border border-[1px] border-[#dcfce7] rounded-[8px] '>
+                                <div className='flex sm:flex-col justify-center items-center leading-tight gap-2 sm:gap-0 bg-[#f0fdf4] w-auto h-12 sm:h-15 border border-[1px] border-[#dcfce7] rounded-[8px] '>
                                     <span className='text-[#10b981] font-extrabold !text-[20px]'>0%</span>
-                                    <span className='uppercase text-[#15803d] text-[10px] font-bold'>Match</span>
+                                    <span className='uppercase text-[#15803d] text-[12px] font-bold'>Match</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className='w-full px-5 py-6'>
                             <div className='w-full h-full'>
-                                <div className='flex flex-col sm:flex-row gap-2 sm:gap-15'>
+                                <div className='grid flex-col-1 sm:grid-cols-2 gap-2 sm:gap-15'>
                                     <div>
                                         <span className='uppercase text-[#888] text-[14px] font-bold'>price per guest</span>
                                         <h1 className='text-[#222] text-[18px] font-bold'>2500</h1>
