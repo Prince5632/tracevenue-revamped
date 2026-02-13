@@ -1,3 +1,4 @@
+import ProfileImage from "@/assets/chat images/profile.avif"
 export const userData = [
   {
     id: 1,
@@ -6,6 +7,7 @@ export const userData = [
       {
         id: 101,
         username: "ABS",
+        image: ProfileImage,
         description: "Birthday on fire (lets go)",
         chats: [
           {
@@ -49,6 +51,7 @@ export const userData = [
       {
         id: 102,
         username: "XYZ",
+        image: ProfileImage,
         description: "Looking venue for Birthday Party ",
         chats: [
           {
@@ -85,6 +88,7 @@ export const userData = [
       {
         id: 103,
         username: "JDS",
+        image: ProfileImage,
         description: "Need catering service for Wedding",
         chats: [
           {
@@ -121,6 +125,7 @@ export const userData = [
       {
         id: 104,
         username: "MKP",
+        image: ProfileImage,
         description: "Looking for DJ service for Corporate Event",
         chats: [
           {
@@ -157,6 +162,7 @@ export const userData = [
       {
         id: 105,
         username: "RTS",
+        image: ProfileImage,
         description: "Require photographer for Engagement Ceremony",
         chats: [
           {
@@ -193,6 +199,7 @@ export const userData = [
       {
         id: 106,
         username: "LKN",
+        image: ProfileImage,
         description: "Searching decorator for Baby Shower",
         chats: [
           {

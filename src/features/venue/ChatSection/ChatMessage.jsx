@@ -23,10 +23,15 @@ const ChatMessage = ({ userData, isClick }) => {
                         />
                       ))}
                       {message.reciveText?.map((singleMsg) => (
-                        <MessageBubble
+                        <div className='flex gap-2 items-center'>
+                          <div className='bg-[#15b076] h-6 w-6 flex justify-center items-center text-[18px] font-bold text-[#ffffff] rounded-[30px]'>
+                            <img src={user.image} className='h-full w-full rounded-[30px]' alt="profile picture" />
+                          </div>
+                            <MessageBubble
                           text={singleMsg}
                           time={message.reciveTime}
                         />
+                        </div>
                       ))}
                     </React.Fragment>
                   ))

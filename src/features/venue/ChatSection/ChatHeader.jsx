@@ -18,7 +18,7 @@ const ChatHeader = ({ userData, isClick, setIsClick, chatBox, setChatBox }) => {
           (isClick === oneUser.id) ? <>
             <div className="h-[80px] mx-auto w-full max-w-7xl flex items-center gap-3 border-b border-b-gray-200 p-3 bg-white" key={oneUser.id}>
               <div className="h-10 w-10 rounded-full bg-[#15B076] text-white flex items-center justify-center font-semibold">
-                {oneUser.username.charAt(0)}
+                <img src={oneUser.image} className="h-full w-full rounded-full" alt="profile image" />
               </div>
 
               <div className="flex-1 w-full">

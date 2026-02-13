@@ -10,13 +10,13 @@ function ChatSidebar({ userData, handleUserClick, setIsClick }) {
         setTabOpen((prev) => (prev === id ? null : id));
     }
     return <>
-        <h1 className='sticky flex gap-2 p-6 bg-[#ffffff] border-b border-b-[#e0e0e0] items-center justify-start text-[22px] font-bold tracking-wider text-[#ff4000] -mx-1  mb-1'><MessageSquare size={24} color='#4f709c' />Messages</h1>
+        <h1 className='sticky top-0 z-50 flex gap-2 p-6 bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)]  items-center justify-start text-[22px] font-bold tracking-wider text-[#ffffff] -mx-1  mb-1'><MessageSquare size={24} color='#ffffff' />Messages</h1>
         {
             userData?.map((user) => (
 
                 user.users?.map((oneUser) => (
                     <div>
-                        <div key={user.id} onClick={() => handleTabOpen(user.id)} className='flex justify-between items-start px-4 py-[12px] cursor-pointer bg-[#EEEBF8] text-[#5c5f62] backdrop-blur-lg hover:shadow-lg  transition-all duration-300 ease-in-out mb-1 rounded-lg bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg rounded-xl  hover:bg-white'>
+                        <div key={user.id} onClick={() => handleTabOpen(user.id)} className='flex justify-between items-start px-4 py-[12px] cursor-pointer bg-[#ffffff] text-[#5c5f62] backdrop-blur-lg hover:shadow-lg  transition-all duration-300 ease-in-out mb-1 rounded-lg '>
                             <div className='flex justify-center items-start'>
 
                                 <h3 key={oneUser.id} className='flex-1 text-[14.4px] text-[#5c5f62] font-semibold transition-all duration-300 ease-in-out'>{oneUser.description}</h3>
@@ -47,7 +47,7 @@ function ChatSidebar({ userData, handleUserClick, setIsClick }) {
                                 {
                                     user.users?.map((oneUser) => (
                                         <div key={oneUser.id} onClick={() => handleUserClick(oneUser.id)} className='flex items-center gap-3 px-4 py-[12px] rounded-lg bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] cursor-pointer mb-1 bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg rounded-xl'>
-                                            <CircleUser size={40} color='#4f709c' />
+                                            <img src={oneUser.image} className='h-12 w-12 rounded-full' alt="" />
                                             <div className='flex-1 flex flex-col'>
                                                 <div className='w-full flex justify-between '>
 
