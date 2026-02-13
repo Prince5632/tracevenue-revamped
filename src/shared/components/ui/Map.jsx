@@ -6,11 +6,12 @@ const containerStyle = {
   height: "300px",
 };
 
-function Map({ center, radius, setCenter, onLocationSelector }) {
+function Map({ center, radius, setCenter, onLocationSelector, mapTypeId, onMapLoad       }) {
   const mapRef = useRef(null);
 
   const onLoad = (map) => {
     mapRef.current = map;
+    onMapLoad?.(map);
   };
 
   useEffect(() => {
@@ -24,6 +25,10 @@ function Map({ center, radius, setCenter, onLocationSelector }) {
         center={center}
         zoom={11}
         onLoad={onLoad}
+        mapTypeId={mapTypeId}
+         options={{
+    mapTypeControl: false,      
+  }}
         onClick={(e) => {
           const lat = e.latLng.lat();
           const lng = e.latLng.lng();

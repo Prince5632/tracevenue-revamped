@@ -8,21 +8,13 @@ import OptionCard from "../ServiceTypeComponents/OptionCard";
 const ServiceTypePage = ({ urlParams = {} }) => {
   // Use global store
   const { formData, updateFormData } = useEnquiryStore();
-  // Hydrate from URL params if formData.serviceType is empty (initial mount via URL)
-  useEffect(() => {
-    if (!formData.serviceType && urlParams.serviceType) {
-      const serviceId = decodeServiceTypeFromUrl(urlParams.serviceType);
-      if (serviceId) {
-        updateFormData("serviceType", serviceId);
-      }
-    }
-  }, [urlParams.serviceType]);
+
   return (
     <>
-      <h1 className="text-xl font-semibold text-[#242424] mb-6 mx-2">
+      <h1 className="text-xl font-semibold text-[#242424] mb-6">
         What are you looking for?
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 px-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 ">
         {serviceOptions.map((option) => (
           <OptionCard
             key={option.id}

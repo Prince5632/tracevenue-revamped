@@ -2,27 +2,19 @@ import React, { useState } from "react";
 import Overview from "../../Overview";
 import Gallery from "../../Gallery";
 import VenueMap from "../../VenueMap";
+import { createPortal } from "react-dom";
 
-const RestaurantDetailModal = () => {
-    const [click, setClick] = useState(false);
+const RestaurantDetailModal = ({onClose}) => {
+
     const [tab, setTab] = useState("overview");
 
-    const handleClick = (data) => {
-        setClick(true);
-        console.log(data);
-    };
+   
 
-    return (
-        <>
-            <button
-                onClick={handleClick}
-                className="bg-green-300 px-4 py-2 rounded-full cursor-pointer"
-            >
-                Venue Gallery
-            </button>
-
-            {click && (
-                <div className="w-screen h-screen bg-[#00000030] fixed z-50 top-0 left-0 flex justify-end">
+    return createPortal(
+        
+   
+       
+                <div className="w-screen h-screen bg-[#00000030] fixed z-[9999] top-0 left-0 flex justify-end">
                     <div className="h-full md:w-1/2 sm:w-full w-full bg-white p-5 overflow-y-auto">
                         <div className="flex justify-between">
                             <div>
@@ -36,7 +28,7 @@ const RestaurantDetailModal = () => {
                                 </p>
                             </div>
                             <div
-                                onClick={() => setClick(false)}
+                                onClick={() => onClose(false)}
                                 className="h-6 w-6 cursor-pointer font-bold"
                             >
                                 ✕
@@ -82,11 +74,12 @@ const RestaurantDetailModal = () => {
 
                         {tab === "overview" && <Overview />}
                         {tab === "gallery" && <Gallery />}
-                        {tab === "map" && <VenueMap onTabClick={handleClick} click={click} setClick={setClick} />}
+                        {tab === "map" && <VenueMap />}
                     </div>
                 </div>
-            )}
-        </>
+                ,document.body
+     
+        
     );
 };
 

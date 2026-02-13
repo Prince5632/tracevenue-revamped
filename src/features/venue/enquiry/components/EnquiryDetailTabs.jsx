@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Tabs from '@shared/components/ui/Tabs';
 
-const BASE_PATH = "/service/venues/enquiry/enquiry-detail-layout";
+const BASE_PATH = "/enquiry-detail-layout";
 
 const steps = [
   {
