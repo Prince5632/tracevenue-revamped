@@ -39,19 +39,19 @@ const ChatLayout = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
   return <>
-    <div className='flex h-screen lg:-mb-48 mt-14 lg:-mt-8'>
-      <div className={`relative w-full md:w-[300px] border-r border-r-[#e0e0e0] px-1 bg-[#f0f0f4] overflow-y-auto scrollbar-hide ${chatBox ? "hidden" : "block"} `}>
+    <div className='flex h-screen mt-14 sm:mt-16 md:-mt-8'>
+      <div className={`relative h-full w-full md:w-[300px] border-r border-r-[#e0e0e0] px-1 bg-[#f0f0f4] overflow-y-auto scrollbar-hide ${chatBox ? "hidden" : "block"} `}>
         <ChatSidebar userData={userData} handleUserClick={handleUserClick} setIsClick={setIsClick} />
       </div>
-      <div className={` flex-1 bg-gray-100 md:flex md:flex-col font-sans overflow-hidden ${chatBox ? "block" : "hidden"} `}>
-
-        <ChatHeader userData={userData} isClick={isClick} setIsClick={setIsClick} chatBox={chatBox} setChatBox={setChatBox} />
-
-        <div className="flex-1 overflow-y-auto">
+      <div className={` relative flex-1 h-full bg-gray-100 md:flex md:flex-col font-sans overflow-hidden ${chatBox ? "block" : "hidden"} `}>
+        <div className=''>
+          <ChatHeader userData={userData} isClick={isClick} setIsClick={setIsClick} chatBox={chatBox} setChatBox={setChatBox} />
+        </div>
+        <div className="flex-1 h-full overflow-y-auto scrollbar-hide pb-34">
 
           <ChatMessage userData={userData} isClick={isClick} setIsClick={setIsClick} />
         </div>
-        <div className='border-t border-t-[#d7d9da] bg-white'>
+        <div className='fixed bottom-0 w-full border-t border-t-[#d7d9da] bg-white'>
           <ChatInput />
         </div>
       </div>

@@ -14,7 +14,7 @@ const MessageBubble = ({ text, time, isSender }) => {
 
       <span
         className={`block text-[10px] mt-1 text-right
-          ${isSender ? "text-violet-200" : "text-gray!"}`}
+          ${isSender ? "text-violet-200" : "text-[#9999B3]"}`}
       >
         {time}
       </span>
