@@ -1,7 +1,7 @@
 import { CirclePlus } from 'lucide-react'
 import React from 'react'
 
-const TableHeader = () => {
+const TableHeader = ({setOpenAddPackageModal = () => {}}) => {
     return (
         <>
             <thead className='mt-2 rounded-2xl'>
@@ -10,7 +10,7 @@ const TableHeader = () => {
                         Comparison Criteria</th>
                     <th className="w-1/4 bg-linear-to-r from-(--color-card-gradient-end) to-(--color-card-gradient-start) text-center p-3.5 whitespace-nowrap font-semibold">My Requirements</th>
                     <th className="w-1/4 text-center p-3.5 whitespace-nowrap">
-                        <div className='flex flex-col items-center justify-center cursor-pointer'>
+                        <div className='flex flex-col items-center justify-center cursor-pointer' onClick={() => {setOpenAddPackageModal(true)}}>
                             <CirclePlus className='text-primary-light' size={20} />
                             <p className='text-secondary font-normal'>Add Package</p>
                         </div>
