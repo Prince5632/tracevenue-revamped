@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import carbonDocumentIcon from "../../../../assets/dashboard/carbon_document-signed.svg";
 import mageDashboardIcon from "../../../../assets/dashboard/mage_dashboard.svg";
@@ -7,14 +7,23 @@ import userProfile from "../../../../assets/dashboard/user-profile.svg";
 import settings from "../../../../assets/dashboard/setting.svg";
 import logout from "../../../../assets/dashboard/switch.svg";
 import { useNavigate } from "react-router-dom";
+import { useDashboard } from "../context/DashboardContext";
 
 const DashboardSidebar = () => {
+  const { fetchDashboardStats, dashboardStats, error, isLoading } =
+    useDashboard();
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, [fetchDashboardStats]);
+
   const [openMenu, setOpenMenu] = useState({
     enquiries: false,
     contracts: false,
     profile: false,
     setting: false,
   });
+
   const navigate = useNavigate();
   const toggleMenu = (menu) => {
     setOpenMenu((openMenu) => ({
@@ -22,11 +31,29 @@ const DashboardSidebar = () => {
       [menu]: !openMenu[menu],
     }));
   };
-  const [active, setActive] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
+
+  const {
+    statusWise = {},
+    contractStats = {}
+  } = dashboardStats?.data?.stats || {};
+
+  const {
+    Active,
+    Draft,
+    Closed,
+    InActive
+  } = statusWise;
+
+  const
+    { active,
+      pending,
+      completed
+    } = contractStats;
 
   return (
     <div
-      className="sticky top-25 h-full w-auto h-130 rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] 
+      className="sticky top-25  w-auto  rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] 
 
     "
     >
@@ -41,7 +68,7 @@ const DashboardSidebar = () => {
 
       {/* Dashboard */}
       <div
-        onClick={() => { setActive("dashboard"); navigate("/dashboard") }}
+        onClick={() => { setActiveTab("dashboard"); navigate("/dashboard") }}
         className={`border-[#D7D9DA] flex items-center gap-4 w-85 h-14.5 border-t border-b px-7.5
                   ${active === "dashboard"
             ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -67,7 +94,7 @@ const DashboardSidebar = () => {
       <div className="border-b border-[#D7D9DA]">
         <button
           onClick={() => toggleMenu("enquiries")}
-          className="w-full flex justify-between items-center   font-medium h-14.5 px-7.5"
+          className="w-full flex justify-between items-center font-medium h-14.5 px-7.5"
         >
           <div className="flex gap-4 font-semibold items-center">
             <img
@@ -89,20 +116,20 @@ const DashboardSidebar = () => {
         {openMenu.enquiries && (
           <div className="w-full">
             {[
-              "Active Enquiries (4)",
-              "Draft Enquiries (7)",
-              "Completed Enquiries (1)",
-              "Expired Enquiries (7)",
+              `Active Enquiries (${Active})`,
+              `Draft Enquiries (${Draft})`,
+              `Completed Enquiries (${Closed})`,
+              `Expired Enquiries (${InActive})`,
             ].map((item) => (
               <div
                 key={item}
                 onClick={() => {
-                  setActive(item)
+                  setActiveTab(item)
                   navigate(`/service/venues/enquiry/${item.toLowerCase().split(" ")[0]}`)
                 }
                 }
                 className={`w-full h-12 flex items-center cursor-pointer font-medium text-[18px] pl-18
-                  ${active === item
+                  ${activeTab === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
                     : "text-black"
                   }
@@ -119,7 +146,7 @@ const DashboardSidebar = () => {
       <div className="border-b border-[#D7D9DA] ">
         <button
           onClick={() => toggleMenu("contracts")}
-          className="w-full flex justify-between items-center  h-14.5 font-medium px-7.5"
+          className="w-full flex justify-between items-center h-14.5 font-medium px-7.5"
         >
           <div className="flex gap-4 font-semibold">
             <img
@@ -141,13 +168,13 @@ const DashboardSidebar = () => {
         {openMenu.contracts && (
           <div className="w-full">
             {[
-              "Active Contracts (0)",
-              "Proposed Contracts (0)",
-              "Completed Contracts (1)",
+              `Active Contracts (${active})`,
+              `Proposed Contracts (${pending})`, ,
+              `Completed Contracts (${completed})`,
             ].map((item) => (
               <div
                 key={item}
-                onClick={() => setActive(item)}
+                onClick={() => setActiveTab(item)}
                 className={`w-full flex items-center text-[18px] h-12  pl-18 cursor-pointer
                   ${active === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -184,7 +211,7 @@ const DashboardSidebar = () => {
             {[].map((item) => (
               <div
                 key={item}
-                onClick={() => setActive(item)}
+                onClick={() => setActiveTab(item)}
                 className={`w-full h-12 flex items-center text-[18px]  pl-18 cursor-pointer
                   ${active === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
@@ -223,7 +250,7 @@ const DashboardSidebar = () => {
             {[].map((item) => (
               <div
                 key={item}
-                onClick={() => setActive(item)}
+                onClick={() => setActiveTab(item)}
                 className={`w-full h-12 flex items-center text-[18px] pl-18
                   ${active === item
                     ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"

@@ -1,44 +1,125 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Input } from '@shared/components/ui';
 import { Info } from 'lucide-react';
 
-const GatheringBudget = () => {
+const GatheringBudget = ({ formData, updateFormData }) => {
   const [budgetType, setBudgetType] = useState('perPerson');
   const [minPeople, setMinPeople] = useState("");
   const [maxPeople, setMaxPeople] = useState("");
   const [minBudget, setMinBudget] = useState("");
   const [maxBudget, setMaxBudget] = useState("");
-  const [budget, setBudget] = useState("");
+  const [budget, setBudget] = useState(""); // Total Budget for "lumpSum"
+
+  // Hydrate from store
+  useEffect(() => {
+    if (formData.selectedPeopleRange) {
+      setMinPeople(formData.selectedPeopleRange.minPeople);
+      setMaxPeople(formData.selectedPeopleRange.maxPeople);
+    }
+    if (formData.minBudgetValue) setMinBudget(formData.minBudgetValue);
+    if (formData.maxBudgetValue) setMaxBudget(formData.maxBudgetValue);
+
+    // Logic for total budget if lumpsum
+    // Our store structure keeps min/max budget separately.
+    // If budgetType is lumpSum, user enters one figure? No, UI shows "Total Budget".
+    // Let's deduce budgetType from formData if available
+    if (formData.budgetType) {
+      setBudgetType(formData.budgetType);
+      if (formData.budgetType === 'lumpSum' && formData.maxBudgetValue) {
+        // For lumpSum, store uses maxBudgetValue as total budget?
+        // Or maybe minBudgetValue=0, maxBudgetValue=total?
+        // Let's assume total budget is stored in maxBudgetValue for now,
+        // or check how old system did it. 
+        // Logic below sets budget state.
+        setBudget(formData.maxBudgetValue);
+      }
+    }
+  }, [formData.selectedPeopleRange, formData.minBudgetValue, formData.maxBudgetValue, formData.budgetType]);
 
 
-
-  {/**This Line of Code tell us if maxPeople and maxBudget is less than we have to put the warning. */ }
+  // Helper validators
   const isInvalidPeopleRange =
     minPeople !== "" &&
     maxPeople !== "" &&
     Number(maxPeople) < Number(minPeople);
 
   const isInvalidBudgetRange =
+    budgetType === 'perPerson' &&
     minBudget !== "" &&
     maxBudget !== "" &&
     Number(maxBudget) < Number(minBudget);
 
-  {/**
-       * The Card, Input and Button are taken from the Component(Common).
-       * Collect Gathering Size.
-       * Collect Budget.
-       *    -> Budget Can be either.
-       *         -> Per Person 
-       *         -> Lump Sum
-      */}
+  // Update handlers
+  const handlePeopleChange = (key, value) => {
+    if (key === 'min') setMinPeople(value);
+    if (key === 'max') setMaxPeople(value);
+
+    // Update store object
+    const newRange = {
+      minPeople: key === 'min' ? value : minPeople,
+      maxPeople: key === 'max' ? value : maxPeople
+    };
+    updateFormData('selectedPeopleRange', newRange);
+  };
+
+  const handleBudgetChange = (key, value) => {
+    if (budgetType === 'perPerson') {
+      if (key === 'min') setMinBudget(value);
+      if (key === 'max') setMaxBudget(value);
+
+      updateFormData('minBudgetValue', key === 'min' ? value : minBudget);
+      updateFormData('maxBudgetValue', key === 'max' ? value : maxBudget);
+      updateFormData('budgetType', 'perPerson');
+    } else {
+      // Lump sum
+      setBudget(value);
+      // For lump sum, typically min=0, max=value?
+      // Or min=value, max=value?
+      // Let's set max to value, min to 0
+      updateFormData('minBudgetValue', 0);
+      updateFormData('maxBudgetValue', value);
+      updateFormData('budgetType', 'lumpSum');
+    }
+  };
+
+  const handleBudgetTypeSelect = (type) => {
+    setBudgetType(type);
+    updateFormData('budgetType', type);
+
+    // Reset values or convert?
+    // Existing logic kept values but converted them.
+    // Let's stick to simple reset or re-calculation if needed.
+    if (type === 'lumpSum') {
+      // Auto-calculate if data exists
+      if (maxPeople && maxBudget && budgetType === 'perPerson') {
+        const total = String(Number(maxPeople) * Number(maxBudget));
+        setBudget(total);
+        handleBudgetChange('total', total); // triggers store update inside logic above? No, need to change logic.
+        updateFormData('minBudgetValue', 0);
+        updateFormData('maxBudgetValue', total);
+      } else {
+        setBudget("");
+        updateFormData('minBudgetValue', 0);
+        updateFormData('maxBudgetValue', "");
+      }
+    } else {
+      // Switching to perPerson
+      if (maxBudget && budgetType === 'lumpSum') {
+        // Approximate? 
+        // Logic: 80% of (Total / MaxPeople)? 
+        // Simple: Clear fields to avoid confusion.
+        setMinBudget("");
+        setMaxBudget("");
+        updateFormData('minBudgetValue', "");
+        updateFormData('maxBudgetValue', "");
+      }
+    }
+  };
 
   return (
     <div className="bg-white grid grid-cols-1 sm:grid-cols-2 gap-6">
-      {/**
-           * Gathering Size Card
-        */}
-
-      <Card padding="md" className="max-w-full">
+      {/** Gathering Size Card */}
+      <Card padding="md" className="max-w-full pb-10">
         <Card.Header>
           <h2 className="text-xl font-semibold text-gray-800">Gathering Size</h2>
         </Card.Header>
@@ -56,7 +137,7 @@ const GatheringBudget = () => {
                 required
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^0-9]/g, "");
-                  setMinPeople(value)
+                  handlePeopleChange('min', value);
                 }}
               />
             </div>
@@ -72,7 +153,7 @@ const GatheringBudget = () => {
                 value={maxPeople}
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^0-9]/g, "");
-                  setMaxPeople(value);
+                  handlePeopleChange('max', value);
                 }}
               />
             </div>
@@ -84,13 +165,10 @@ const GatheringBudget = () => {
             </p>
           )}
         </Card.Body>
-
       </Card>
 
 
-      {/**
-        *  Budget Card
-        */}
+      {/** Budget Card */}
       <Card padding="md" className="w-full ">
         <Card.Header>
           <div className="flex items-center justify-between gap-3 text-gray-800">
@@ -100,13 +178,7 @@ const GatheringBudget = () => {
               <Button
                 variant="outline"
                 size="3xs"
-                onClick={() => {
-                  setBudgetType('perPerson')
-                  if (maxBudget) {
-                    const eightyPercentage = Math.floor(Number(maxBudget) * 0.8);
-                    setMinBudget(String(eightyPercentage))
-                  }
-                }}
+                onClick={() => handleBudgetTypeSelect('perPerson')}
                 className={`rounded-full px-2 ${budgetType === 'perPerson'
                   ? 'text-orange-600 border-[#ff4000]'
                   : 'text-gray-700 border-gray-400'
@@ -118,15 +190,7 @@ const GatheringBudget = () => {
               <Button
                 variant="outline"
                 size="3xs"
-                onClick={() => {
-                  setBudgetType('lumpSum');
-
-                  if (maxPeople && maxBudget) {
-                    setBudget(String(Number(maxPeople) * Number(maxBudget)));
-                  } else {
-                    setBudget("");
-                  }
-                }}
+                onClick={() => handleBudgetTypeSelect('lumpSum')}
                 className={`rounded-full px-2 ${budgetType === 'lumpSum'
                   ? 'text-orange-600 border-[#ff4000]'
                   : 'text-gray-700 border-gray-400'
@@ -156,7 +220,7 @@ const GatheringBudget = () => {
                     value={minBudget}
                     onChange={(e) => {
                       const value = e.target.value.replace(/[^0-9]/g, "");
-                      setMinBudget(value)
+                      handleBudgetChange('min', value);
                     }}
                   />
                 </div>
@@ -175,7 +239,7 @@ const GatheringBudget = () => {
                     value={maxBudget}
                     onChange={(e) => {
                       const value = e.target.value.replace(/[^0-9]/g, "");
-                      setMaxBudget(value)
+                      handleBudgetChange('max', value);
                     }}
                   />
                 </div>
@@ -204,7 +268,7 @@ const GatheringBudget = () => {
                 value={budget}
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^0-9]/g, "");
-                  setBudget(value);
+                  handleBudgetChange('total', value);
                 }}
               />
 

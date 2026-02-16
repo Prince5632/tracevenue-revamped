@@ -1,6 +1,10 @@
+import React from "react";
 import { Button } from "@/shared/components/ui";
+import PreviewEnquiry from "./PreviewEnquiry";
+import { useState } from "react";
 
 function PackageFooter() {
+  let [isModalOpen, setIsModalOpen] = useState(false);
   return <>
     <div
       className="
@@ -87,6 +91,7 @@ function PackageFooter() {
         >
           <Button
             variant="outline"
+            onClick={() => setIsModalOpen(true)}
             className="
                   w-full
                   px-[20px] py-[12px]
@@ -101,6 +106,7 @@ function PackageFooter() {
           >
             Preview Enquiry
           </Button>
+          <PreviewEnquiry isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
           <Button
             variant="gradient"
             className="

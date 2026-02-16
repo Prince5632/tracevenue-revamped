@@ -19,7 +19,7 @@ const EventTab = ({ value, leftIcon, selected, onClick, readOnly = true }) => {
             !font-semibold
                 transition
                 ${selected
-            ? "border border-[#15b076]"
+            ? "border border-[#FF4000]"
             : "border border-gray-300"
           }
             `}
@@ -27,7 +27,7 @@ const EventTab = ({ value, leftIcon, selected, onClick, readOnly = true }) => {
         <img src={leftIcon} alt="icon" className="h-6 w-6" /> {value}
         {selected && (
           <svg
-            className="ml-auto h-5 w-5 text-[#15b076]"
+            className="ml-auto h-5 w-5 text-[#FF4000]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

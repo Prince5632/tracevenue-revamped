@@ -18,27 +18,16 @@ import ChatLayout from "@features/venue/ChatSection/ChatLayout"
  * etc.
  */
 export const enquiryRoutes = [
-    // Step-based enquiry routes
-    { path: '/', element: <EnquiryLayout /> },
-    { path: '/:location', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType/:gatheringAndBudget', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType/:gatheringAndBudget/:eventDate', element: <EnquiryLayout /> },
-    { path: '/:location/:serviceType/:eventType/:gatheringAndBudget/:eventDate/:foodPreference', element: <EnquiryLayout /> },
+  { path: "/", element: <EnquiryLayout /> },
+  { path: "/:location", element: <EnquiryLayout /> },
+  { path: "/:location/:serviceType", element: <EnquiryLayout /> },
+  { path: "/:location/:serviceType/:eventType", element: <EnquiryLayout /> },
 
-    // Package details route
-    { path: "/package-details", element: <PackageDetails /> },
-    {path: '/quotation-card' , element:<QuotationCard/>}, 
-    { path: '/restaurant-detail-modal', element: <RestaurantDetailModal /> },
-    { path: "/package-details", element: <PackageDetails /> },
-    {path:'/quotation-page',element:<Quotationpage/>},
-
-    // ChatSection Route
-    { path: '/chat-section', element: <ChatLayout/>},
-    
-
-    // Component documentation (dev only)
-    { path: '/docs', element: <ComponentDocs /> },
-    { path: '/CustomerCard', element: <CustomerCard /> }
+  { path: "/package-details", element: <PackageDetails /> },
+  { path: "/quotation-card", element: <QuotationCard /> },
+  { path: "/restaurant-detail-modal", element: <RestaurantDetailModal /> },
+  { path: "/quotation-page", element: <Quotationpage /> },
+  { path: '/chat-section', element: <ChatLayout/>},
+  { path: "/docs", element: <ComponentDocs /> },
+  { path: "/CustomerCard", element: <CustomerCard /> },
 ];
