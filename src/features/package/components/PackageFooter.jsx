@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/shared/components/ui";
-import PackageModal from "./PackageModal";
+import PreviewEnquiry from "./PreviewEnquiry";
 import { useState } from "react";
 
 function PackageFooter() {
@@ -106,7 +106,7 @@ function PackageFooter() {
           >
             Preview Enquiry
           </Button>
-          <PackageModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          <PreviewEnquiry isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
           <Button
             variant="gradient"
             className="

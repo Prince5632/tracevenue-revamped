@@ -5,7 +5,7 @@ import { ProgressBar } from '@/shared/components/feedback';
 import { Download, Pencil } from 'lucide-react';
 import jsPDF from "jspdf";
 
-function PackageModal({ isModalOpen, setIsModalOpen }) {
+function PreviewEnquiry({ isModalOpen, setIsModalOpen }) {
     const [isClick, setIsClick] = useState(false);
     const [isFocus, setIsFoucus] = useState(false);
 
@@ -119,4 +119,4 @@ function PackageModal({ isModalOpen, setIsModalOpen }) {
         </Modal>
     </>
 }
-export default PackageModal;
+export default PreviewEnquiry;
