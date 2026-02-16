@@ -68,7 +68,7 @@ const MapView = ({ onTabClick, click, setClick }) => {
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <div className="flex relative">
+    <div className="flex relative px-4 ">
       {/* Sidebar */}
       <div
         className={`
