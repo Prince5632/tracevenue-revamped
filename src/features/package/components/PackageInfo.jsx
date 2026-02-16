@@ -43,13 +43,12 @@ function PackageInfo(props) {
     <>
       <main
         className="
-          max-w-full pt-[65px] p-[10px] pb-[200px]
+          max-w-full p-[10px] pb-[200px]
           lg:px-[40px]
         "
       >
         <div
           className="
-            pt-[32px]
             lg:flex lg:justify-between
           "
         >
