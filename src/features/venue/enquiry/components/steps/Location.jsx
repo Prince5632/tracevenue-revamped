@@ -5,7 +5,7 @@ import { LoadScript } from '@react-google-maps/api';
 import { decodeLocationFromUrl } from '@features/venue/enquiry/utils';
 import useEnquiryStore from '../../context/useEnquiryStore';
 import { Spinner } from '@/shared';
-
+import LocationIcon from '@/assets/dashboard/location.svg'
 
 const Location = ({ urlParams = {} }) => {
     // Use global store
@@ -304,7 +304,7 @@ const Location = ({ urlParams = {} }) => {
                         value={locationInput}
                         onChange={handleInputChange}
                         onFocus={() => setShowOptions(true)}
-                        leftIcon={<img src="src\assets\dashboard\location.svg" />}
+                        leftIcon={<img src={LocationIcon} alt="location_icon"/>}
                         rightIcon={<Search size={18} className='text-primary cursor-pointer' />}
                     />
 
