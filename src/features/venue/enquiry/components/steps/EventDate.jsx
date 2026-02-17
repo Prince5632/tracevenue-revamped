@@ -9,6 +9,7 @@ import hoursgray from "@assets/new images/hoursgray.svg";
 import GreenLine from "../EventDate/GreenLine";
 
 const EventDate = ({ formData, updateFormData }) => {
+
   /* -------------------- STATE -------------------- */
 
   const [preferred, setPreferred] = useState({
@@ -39,8 +40,11 @@ const EventDate = ({ formData, updateFormData }) => {
     return [preferredDate, ...altDates];
   };
 
-  const isDateDisabled = (date) => {
-    return getAllSelectedDates().includes(date.toDateString());
+  const isDateDisabled = (date, currentDate = null) => {
+    const selected = getAllSelectedDates().filter(
+      (d) => d !== (currentDate ? currentDate.toDateString() : null)
+    );
+    return selected.includes(date.toDateString());
   };
 
   /* -------------------- STORE UPDATE -------------------- */
@@ -76,12 +80,12 @@ const EventDate = ({ formData, updateFormData }) => {
 
   /* -------------------- PREFERRED -------------------- */
 
-  const togglePreferredAllDay = () => {
-    setPreferred((prev) => ({ ...prev, allDay: !prev.allDay }));
-  };
-
   const handlePreferredDate = (date) => {
     setPreferred((prev) => ({ ...prev, date, open: false }));
+  };
+
+  const togglePreferredAllDay = () => {
+    setPreferred((prev) => ({ ...prev, allDay: !prev.allDay }));
   };
 
   const handlePreferredTimeChange = (field, value) => {
@@ -100,41 +104,55 @@ const EventDate = ({ formData, updateFormData }) => {
         allDay: false,
         startTime: "09:00",
         endTime: "17:00",
-        open:false
+        open: false,
       },
     ]);
   };
 
   const handleAlternateDate = (index, date) => {
-    const updated = [...alternateDates];
-    updated[index].date = date;
-    updated[index].open = false;
-    setAlternateDates(updated);
-  };
-
-  const handleAlternateTimeChange = (index, field, value) => {
-    const updated = [...alternateDates];
-    updated[index][field] = value;
-    setAlternateDates(updated);
+    setAlternateDates((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, date, open: false } : item
+      )
+    );
   };
 
   const toggleAlternateAllDay = (index) => {
-    const updated = [...alternateDates];
-    updated[index].allDay = !updated[index].allDay;
-    setAlternateDates(updated);
+    setAlternateDates((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, allDay: !item.allDay } : item
+      )
+    );
+  };
+
+  const handleAlternateTimeChange = (index, field, value) => {
+    setAlternateDates((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const toggleAlternateCalendar = (index) => {
+    setAlternateDates((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, open: !item.open } : item
+      )
+    );
   };
 
   const removeAlternate = (index) => {
-    const updated = alternateDates.filter((_, i) => i !== index);
-    setAlternateDates(updated);
+    setAlternateDates((prev) =>
+      prev.filter((_, i) => i !== index)
+    );
   };
 
-  /*UI  */
+  /* -------------------- UI -------------------- */
 
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-5">
-      
-      {/*  Preferred Date  */}
+
+      {/* Preferred Date */}
       <div className="w-full">
         <h1 className="font-semibold text-[18px] mb-5">
           Preferred Date
@@ -145,9 +163,7 @@ const EventDate = ({ formData, updateFormData }) => {
           padding="md"
           className="relative flex items-center justify-around gap-5"
         >
-          <div className="text-left">
-            {renderDateText(preferred.date)}
-          </div>
+          <div>{renderDateText(preferred.date)}</div>
 
           <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580] rounded-xl px-3 py-1">
             <GreenLine type={preferred.allDay ? "Fullday" : "Time"} />
@@ -170,29 +186,25 @@ const EventDate = ({ formData, updateFormData }) => {
           </div>
 
           <button onClick={togglePreferredAllDay}>
-            <img
-              src={preferred.allDay ? hoursgreen : hoursgray}
-              alt=""
-            />
+            <img src={preferred.allDay ? hoursgreen : hoursgray} alt="" />
           </button>
 
-          {/* Calendar Button */}
           <div className="relative">
-            <button
-              onClick={() =>
-                setPreferred((p) => ({ ...p, open: !p.open }))
-              }
-            >
+            <button onClick={() =>
+              setPreferred((p) => ({ ...p, open: !p.open }))
+            }>
               <img src={imgcal} alt="" />
             </button>
 
             {preferred.open && (
-              <div className="absolute top-full left-3/2 -translate-x-2/2 mt-2 rounded-xl shadow-lg z-50 bg-white ">
+              <div className="absolute top-full left-3/2 -translate-x-2/2 mt-2 rounded-xl shadow-lg z-50 bg-white">
                 <Calendar
                   date={preferred.date}
                   onChange={handlePreferredDate}
-                  disabledDay={isDateDisabled}
-                  minDate={new Date()} 
+                  disabledDay={(date) =>
+                    isDateDisabled(date, preferred.date)
+                  }
+                  minDate={new Date()}
                 />
               </div>
             )}
@@ -215,24 +227,23 @@ const EventDate = ({ formData, updateFormData }) => {
               className="relative flex items-center justify-around gap-2"
             >
               {!alt.date ? (
-  <div className="w-full flex justify-center">
-    <div className="rounded-xl shadow-lg bg-white p-2">
-      <Calendar
-        date={new Date()}
-        onChange={(date) =>
-          handleAlternateDate(index, date)
-        }
-        disabledDay={isDateDisabled}
-        minDate={new Date()}
-      />
-    </div>
-  </div>
-) : (
-
-                <>
-                  <div className="text-left">
-                    {renderDateText(alt.date)}
+                <div className="w-full flex justify-center">
+                  <div className="rounded-xl shadow-lg bg-white p-2">
+                    <Calendar
+                      date={new Date()}
+                      onChange={(date) =>
+                        handleAlternateDate(index, date)
+                      }
+                      disabledDay={(date) =>
+                        isDateDisabled(date)
+                      }
+                      minDate={new Date()}
+                    />
                   </div>
+                </div>
+              ) : (
+                <>
+                  <div>{renderDateText(alt.date)}</div>
 
                   <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580] rounded-xl px-3 py-1">
                     <GreenLine type={alt.allDay ? "Fullday" : "Time"} />
@@ -241,21 +252,13 @@ const EventDate = ({ formData, updateFormData }) => {
                         <CustomTimePicker
                           value={alt.startTime}
                           onChange={(val) =>
-                            handleAlternateTimeChange(
-                              index,
-                              "startTime",
-                              val
-                            )
+                            handleAlternateTimeChange(index, "startTime", val)
                           }
                         />
                         <CustomTimePicker
                           value={alt.endTime}
                           onChange={(val) =>
-                            handleAlternateTimeChange(
-                              index,
-                              "endTime",
-                              val
-                            )
+                            handleAlternateTimeChange(index, "endTime", val)
                           }
                         />
                       </div>
@@ -263,11 +266,29 @@ const EventDate = ({ formData, updateFormData }) => {
                   </div>
 
                   <button onClick={() => toggleAlternateAllDay(index)}>
-                    <img
-                      src={alt.allDay ? hoursgreen : hoursgray}
-                      alt=""
-                    />
+                    <img src={alt.allDay ? hoursgreen : hoursgray} alt="" />
                   </button>
+
+                  <div className="relative">
+                    <button onClick={() => toggleAlternateCalendar(index)}>
+                      <img src={imgcal} alt="" />
+                    </button>
+
+                    {alt.open && (
+                      <div className="absolute top-full left-3/2 -translate-x-2/2 mt-2 rounded-xl shadow-lg z-50 bg-white">
+                        <Calendar
+                          date={alt.date}
+                          onChange={(date) =>
+                            handleAlternateDate(index, date)
+                          }
+                          disabledDay={(date) =>
+                            isDateDisabled(date, alt.date)
+                          }
+                          minDate={new Date()}
+                        />
+                      </div>
+                    )}
+                  </div>
 
                   <div
                     className="cursor-pointer"
@@ -282,8 +303,8 @@ const EventDate = ({ formData, updateFormData }) => {
                       strokeWidth="2"
                       className="text-red-600"
                       viewBox="0 0 24 24"
-                      strokeLinecap="rounded"
-                      strokeLinejoin="rounded"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
                       <path d="M18 6 6 18" />
                       <path d="m6 6 12 12" />
@@ -308,8 +329,8 @@ const EventDate = ({ formData, updateFormData }) => {
                 stroke="currentColor"
                 strokeWidth="2"
                 viewBox="0 0 24 24"
-                strokeLinecap="rounded"
-                strokeLinejoin="rounded"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
                 <path d="M5 12h14" />
                 <path d="M12 5v14" />
