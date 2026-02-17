@@ -1,3 +1,14 @@
+import carParking from "@/assets/package images/packageServicesIcons/car_parking.png";
+import bikeParking from "@/assets/package images/packageServicesIcons/bike_parking.png";
+import mike from "@/assets/package images/packageServicesIcons/mike.png";
+import internet from "@/assets/package images/packageServicesIcons/internet.png";
+import beverages from "@/assets/package images/packageServicesIcons/beverage.png";
+import snacks from "@/assets/package images/packageServicesIcons/snacks.png";
+import mainCourse from "@/assets/package images/packageServicesIcons/main_course.png";
+import salad from "@/assets/package images/packageServicesIcons/salad.png";
+import starters from "@/assets/package images/packageServicesIcons/starters.png";
+import desserts from "@/assets/package images/packageServicesIcons/desserts.png";
+
 export const packageInformation = [
   {
     step: "Step 2",
@@ -75,6 +86,7 @@ export const packageInformation = [
             content: "Beverages",
             subHeading: "Cold Drinks",
             subContent: ["Coca Cola", "Coke", "Water"],
+            icon:beverages,
             count: "3",
           },
           {
@@ -82,6 +94,7 @@ export const packageInformation = [
             content: "Starter/Snacks",
             subHeading: "Veg items",
             subContent: ["Honey Chilli Potato", "Tangy Potato Tikki"],
+            icon: snacks,
             count: "2",
           },
           {
@@ -93,6 +106,7 @@ export const packageInformation = [
               "Veg Hot N Sour Soup",
               "Veg Clear Soup",
             ],
+            icon:salad,
             count: "3",
           },
           {
@@ -100,6 +114,7 @@ export const packageInformation = [
             content: "Complimentary",
             subHeading: "veg items",
             subContent: ["Papad"],
+            icon:desserts,
             count: "1",
           },
         ],
@@ -119,6 +134,8 @@ export const packageInformation = [
               },
             ],
             count: "1",
+            icon: carParking,
+            available: "Free",
           },
           {
             id: 102,
@@ -137,6 +154,8 @@ export const packageInformation = [
               },
             ],
             count: "2",
+            icon: bikeParking,
+            available: "Free",
           },
           {
             id: 103,
@@ -154,6 +173,8 @@ export const packageInformation = [
               },
             ],
             count: "2",
+            icon: mike,
+            available: "Paid",
           },
           {
             id: 104,
@@ -176,6 +197,8 @@ export const packageInformation = [
               },
             ],
             count: "3",
+            icon: internet,
+            available: "Free",
           },
         ],
       },
