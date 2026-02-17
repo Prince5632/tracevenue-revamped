@@ -8,6 +8,8 @@ import QuotationCard from '@/features/venue/enquiry/components/Quotation/Quotati
 import Quotationpage from '@/features/venue/enquiry/components/Quotation/Quotationpage';
 import EnquiryDetailLayout from '@/features/venue/enquiry/Layout/EnquiryDetailLayout';
 import RestaurantDetailModal from '@/features/venue/enquiry/components/shared/RestaurantDetailModal';
+import AddPackagemodal from '@/features/venue/enquiry/components/shared/AddPackagemodal/index';
+import ChatLayout from "@features/venue/ChatSection/ChatLayout"
 /**
  * Enquiry step routes with URL-based step progression
  * Each route segment adds to the URL path as user progresses through steps:
@@ -26,7 +28,9 @@ export const enquiryRoutes = [
   { path: "/quotation-card", element: <QuotationCard /> },
   { path: "/restaurant-detail-modal", element: <RestaurantDetailModal /> },
   { path: "/quotation-page", element: <Quotationpage /> },
-
+  { path: '/chat-section', element: <ChatLayout/>},
   { path: "/docs", element: <ComponentDocs /> },
   { path: "/CustomerCard", element: <CustomerCard /> },
+  { path: "/packageModalPage", element: <AddPackagemodal/> },
+
 ];
