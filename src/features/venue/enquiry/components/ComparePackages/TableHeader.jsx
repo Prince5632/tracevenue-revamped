@@ -4,7 +4,7 @@ import { PiForkKnifeFill } from "react-icons/pi";
 import { BsGrid3X3GapFill } from "react-icons/bs";
 import { FaGift } from "react-icons/fa";
 
-const TableHeader = () => {
+const TableHeader = ({setOpenAddPackageModal = () => {}}) => {
     const [addPackage, setAddPackage] = useState(false)
     const [criteriaCard, setCriteriaCard] = useState(false)
     return (
@@ -14,7 +14,7 @@ const TableHeader = () => {
                     <th className="w-1/4 bg-linear-to-r from-(--color-card-gradient-end) to-(--color-card-gradient-start)  text-center p-3.5 whitespace-nowrap font-semibold">
                         Comparison Criteria</th>
                     <th className="w-1/4 bg-linear-to-r from-(--color-card-gradient-end) to-(--color-card-gradient-start) text-center p-3.5 whitespace-nowrap font-semibold">My Requirements</th>
-                    <th className="w-1/4 text-center p-3.5 whitespace-nowrap bg-linear-to-r from-(--color-card-gradient-end) to-(--color-card-gradient-start)">
+                    <th className="w-1/4 text-center p-3.5 whitespace-nowrap bg-linear-to-r from-(--color-card-gradient-end) to-(--color-card-gradient-start)" onClick={()=>setAddPackage(true)}>
                         <div className=''>
                             {!addPackage ? ( 
                                 <div className='flex flex-col items-center justify-center cursor-pointer'>
@@ -32,7 +32,7 @@ const TableHeader = () => {
                     </th>
 
                     <th className="w-1/4  text-center p-3.5 whitespace-nowrap bg-linear-to-r from-(--color-card-gradient-end) to-(--color-card-gradient-start)">
-                        <div className='flex flex-col items-center justify-center cursor-pointer' onClick={()=>setAddPackage(true)}>
+                        <div className='flex flex-col items-center justify-center cursor-pointer' onClick={() => {setOpenAddPackageModal(true)}}>
                             <CirclePlus className='text-primary-light' size={20}/>
                             <p className='text-secondary font-normal'>Add Package</p>
                         </div>

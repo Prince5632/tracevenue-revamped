@@ -7,12 +7,12 @@ const PackageCard = () => {
     <>
       <Card
         variant="default"
-        className="max-w-[444px] rounded-[30px] border border-[#D7D9DA] !p-0 ml-0 mt-24 "
+        className="max-w-[444px] rounded-[30px] border border-[#D7D9DA] !p-0 !mb-0 ml-0 mt-3 "
       >
         <Card.Body className="">
           <div
             className="
-        relative w-[442px]  h-[206px] mb-[10px] rounded-tl-[29px] rounded-tr-[29px] !bg-cover"
+        relative max-w-[442px]  h-[206px] mb-[10px] rounded-tl-[29px] rounded-tr-[29px] !bg-cover"
             style={{
               background: `url(${CustomerCardImage})`,
               backgroundPosition: "center bottom 20%",
@@ -27,7 +27,7 @@ const PackageCard = () => {
               </Button>
               <Button
                 variant="ghost"
-                className="w-[44px] h-[44px] bg-white !rounded-[14px] !p-[10px] !text-center"
+                className="w-[44px] h-[44px] bg-white !rounded-[14px] !p-[10px] !text-center flex justify-center items-center"
               >
                 <i class="fa-solid fa-ban text-[18px]"></i>
               </Button>
@@ -52,7 +52,7 @@ const PackageCard = () => {
           </div>
           <div className="p-2">
             <div className="px-4">
-              <div className="max-w-[385px]   pl-[12px] mr-2 ">
+              <div className="max-w-[385px]   pl-[8px] mr-2 ">
                 <div className="max-w-[full] font-bold text-[#060606] text-[20px]">
                   Mega 10-Cuisine Celebration Spread
                 </div>
@@ -77,11 +77,11 @@ const PackageCard = () => {
                 </div>
               </div>
 
-              <div className="w-full pl-[12px] mt-[20px] flex justify-between mr-2 mb-4">
+              <div className="w-full pl-[8px] mt-[20px] flex justify-between mr-2 mb-4">
                 <div className="max-w-[96px] text-[14px] text-[#15B076] font-semibold italic ">
                   <span>78% Matched</span>
 
-                  <div className="w-[160px] h-[4px] rounded-[5px] bg-[#F0F0F4] ">
+                  <div className="w-[125px] h-[4px] rounded-[5px] bg-[#F0F0F4] ">
                     <div className="w-[100px] h-[4px] bg-[#15B076] rounded-[3px]"></div>
                   </div>
                 </div>
@@ -95,7 +95,7 @@ const PackageCard = () => {
                 </div>
 
                 <div className=" bg-[#573BB6] rounded-[10px] text-[#FFFFFF] flex justify-center items-center py-[4px] px-[16px]  cursor-pointer">
-                  <button className="font-semibold w-[70px]  text-[16px] cursor-pointer ">
+                  <button className="font-semibold w-[70px]  text-[16px] cursor-pointer mr-1.5 ">
                     Compare
                   </button>
                   <i class="fa-solid fa-plus text-[16px]"></i>
