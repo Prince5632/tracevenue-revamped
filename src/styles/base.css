@@ -173,3 +173,7 @@ input[type="search"]::-webkit-search-results-decoration {
     border-radius: 10px;
     background-color: var(--color-scrollbar-track);
 }
+.dashboard-scrollbar::-webkit-scrollbar{
+    width: 0;
+    height: 0;
+}
