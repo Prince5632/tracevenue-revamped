@@ -5,3 +5,4 @@ export * as userService from '@/services/userService';
 export { default as chatService } from '@/services/chatService';
 export * as messageService from '@/services/messageService';
 export {packageInformation} from '@/services/packageData.mock';
+export { userData } from '@/services/chat_data.mock';
