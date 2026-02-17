@@ -8,28 +8,47 @@ import hoursgreen from "@assets/new images/hours.png";
 import hoursgray from "@assets/new images/hoursgray.svg";
 import GreenLine from "../EventDate/GreenLine";
 
+const parseStoredDate = (entry) => ({
+  date: entry?.date ? new Date(entry.date + "T00:00:00") : new Date(),
+  allDay: Boolean(entry?.allDay),
+  startTime: entry?.allDay ? "09:00" : (entry?.startTime || "09:00"),
+  endTime: entry?.allDay ? "17:00" : (entry?.endTime || "17:00"),
+  open: false,
+});
+
 const EventDate = ({ formData, updateFormData }) => {
 
   /* -------------------- STATE -------------------- */
 
-  const [preferred, setPreferred] = useState({
-    date: new Date(),
-    allDay: false,
-    startTime: "09:00",
-    endTime: "17:00",
-    open: false,
-  });
+  const storedDates = formData?.selectedDates;
+  const hasStored = Array.isArray(storedDates) && storedDates.length > 0;
 
-  const [alternateDates, setAlternateDates] = useState([]);
+  const [preferred, setPreferred] = useState(() =>
+    hasStored
+      ? parseStoredDate(storedDates[0])
+      : { date: new Date(), allDay: false, startTime: "09:00", endTime: "17:00", open: false }
+  );
+
+  const [alternateDates, setAlternateDates] = useState(() =>
+    hasStored && storedDates.length > 1
+      ? storedDates.slice(1).map(parseStoredDate)
+      : []
+  );
 
   /* -------------------- HELPERS -------------------- */
 
-  const formatDateForStore = (obj) => ({
-    date: obj.date.toISOString().split("T")[0],
-    allDay: obj.allDay,
-    startTime: obj.allDay ? "00:00" : obj.startTime,
-    endTime: obj.allDay ? "23:59" : obj.endTime,
-  });
+  const formatDateForStore = (obj) => {
+    const d = obj.date;
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return {
+      date: `${yyyy}-${mm}-${dd}`,
+      allDay: obj.allDay,
+      startTime: obj.allDay ? "00:00" : obj.startTime,
+      endTime: obj.allDay ? "23:59" : obj.endTime,
+    };
+  };
 
   const getAllSelectedDates = () => {
     const preferredDate = preferred.date.toDateString();

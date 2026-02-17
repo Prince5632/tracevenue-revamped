@@ -325,7 +325,7 @@ const EnquiryLayout = () => {
       wizardSnapshot.formData,
     );
 
-    if (shouldValidateCuisine(currentStep?.id)) {
+    if (shouldValidateCuisine(currentStep?.id) && currentStep?.id === STEP_IDS.FOOD_PREFERENCES) {
       setIsApiLoading(true);
       try {
         const response = await fetchCuisineCombinations(formData);

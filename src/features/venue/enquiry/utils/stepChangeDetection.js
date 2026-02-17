@@ -9,7 +9,6 @@ export const deepEqual = (a, b) => {
 
 export const CUISINE_VALIDATION_STEPS = new Set([
     STEP_IDS.GATHERING_BUDGET,
-    STEP_IDS.EVENT_DATE,
     STEP_IDS.FOOD_PREFERENCES,
 ]);
 
