@@ -28,11 +28,11 @@ const DashboardLayout = () => {
             lg:translate-x-0
           `}
         >
-          <DashboardSidebar />
+          <DashboardSidebar setIsSidebarOpen={setIsSidebarOpen}/>
 
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="lg:hidden absolute top-4 right-6 bg-primary text-white rounded-full p-1 shadow"
+            className="lg:hidden absolute top-7 right-2 lg:top-1 lg:-right-2 bg-primary text-white rounded-full p-1 shadow cursor-pointer"
           >
             <X size={18} />
           </button>
