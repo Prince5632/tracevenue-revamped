@@ -9,3 +9,7 @@ export * from './comparisonHelpers';
 export * from './confirmationKeyHelper';
 export * from './flattenEvents';
 export * from './enquiryConfig';
+
+export * from './validation';
+
+export * from './stepChangeDetection';

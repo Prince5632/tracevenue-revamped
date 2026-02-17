@@ -16,6 +16,22 @@ import {
 import { fetchCuisineCombinations } from "@/features/venue/services/cuisineComboService";
 import { matchEventFromCatalog, isObjectId } from "@/features/venue/enquiry/utils/eventMatching";
 import { Button } from "@shared/components/ui";
+import { STEP_IDS } from "@/features/venue/enquiry/constants/steps";
+import {
+  validateLocationStep,
+  validateServiceTypeStep,
+  validateEventTypeStep,
+  validateGatheringBudgetStep,
+  validateEventDateStep,
+  validateFoodPreferencesStep,
+  isEmptyValue,
+  hasPastDate,
+  hasInvalidDuration
+} from "@/features/venue/enquiry/utils/validation";
+import {
+  hasStepChanged,
+  shouldValidateCuisine,
+} from "@/features/venue/enquiry/utils/stepChangeDetection";
 
 const EnquiryLayout = () => {
   const navigate = useNavigate();
@@ -91,7 +107,7 @@ const EnquiryLayout = () => {
       return buildWizardUrl({
         formData: wizardSnapshot.formData,
         steps,
-        includeStepId: "location",
+        includeStepId: STEP_IDS.LOCATION,
       });
     }
 
@@ -99,7 +115,7 @@ const EnquiryLayout = () => {
       return buildWizardUrl({
         formData: wizardSnapshot.formData,
         steps,
-        includeStepId: "service_type",
+        includeStepId: STEP_IDS.SERVICE_TYPE,
       });
     }
 
@@ -160,14 +176,7 @@ const EnquiryLayout = () => {
   const isFirstStep = boundedStepIndex === 0;
   const isLastStep = boundedStepIndex === steps.length - 1;
 
-  const isEmptyValue = useCallback((value) => {
-    if (value === null || value === undefined) return true;
-    if (typeof value === "string" && value.trim() === "") return true;
-    if (Array.isArray(value) && !value.length) return true;
-    if (typeof value === "object" && Object.keys(value || {}).length === 0)
-      return true;
-    return false;
-  }, []);
+
 
   const formatSuggestion = (payload) => {
     if (!payload) return null;
@@ -188,7 +197,7 @@ const EnquiryLayout = () => {
           formatSuggestion(result?.suggestions) || result?.message;
         setSuggestionMessage(
           formattedSuggestion ||
-            "Please adjust your selection before continuing.",
+          "Please adjust your selection before continuing.",
         );
         return false;
       }
@@ -196,28 +205,6 @@ const EnquiryLayout = () => {
     },
     [formData, setIssueFactor, setIsApiLoading, setSuggestionMessage],
   );
-
-  const hasPastDate = (entries = []) => {
-    if (!Array.isArray(entries)) return false;
-    const now = new Date();
-    return entries.some((entry) => {
-      if (!entry?.date) return false;
-      const dateTime = new Date(
-        `${entry.date}T${entry.allDay ? "00:00" : entry.startTime || "00:00"}`,
-      );
-      return dateTime < now;
-    });
-  };
-
-  const hasInvalidDuration = (entries = []) =>
-    entries.some((entry) => {
-      if (entry?.allDay) return false;
-      if (!entry?.startTime || !entry?.endTime) return false;
-      const [sH, sM] = entry.startTime.split(":").map(Number);
-      const [eH, eM] = entry.endTime.split(":").map(Number);
-      const diff = eH * 60 + eM - (sH * 60 + sM);
-      return diff < 60;
-    });
 
   const runStepGuards = useCallback(async () => {
     if (!currentStep) return false;
@@ -229,128 +216,61 @@ const EnquiryLayout = () => {
       return false;
     };
 
-    const ensureLocation = () => {
-      if (
-        isEmptyValue(formData?.locations) ||
-        isEmptyValue(formData?.latitude) ||
-        isEmptyValue(formData?.longitude)
-      ) {
-        return fail("Please select your preferred location.", "location");
-      }
-      return true;
-    };
-
-    const ensureService = () => {
-      if (isEmptyValue(formData?.serviceType)) {
-        return fail("Please select a service type.", "service_type");
-      }
-      return true;
-    };
-
-    const ensureEvent = () => {
-      if (isEmptyValue(formData?.selectedEventType)) {
-        return fail("Please select an event type.", "event_type");
-      }
-      const eventId = formData?.selectedEventType?.value;
-      if (!isObjectId(eventId)) {
-        return fail(
-          "Fetching event details. Please wait a moment and try again.",
-          "event_type",
-        );
-      }
-      return true;
-    };
-
-    const ensurePeopleAndBudget = () => {
-      const minPeople = Number(formData?.selectedPeopleRange?.minPeople);
-      const maxPeople = Number(formData?.selectedPeopleRange?.maxPeople);
-      const minBudget = Number(formData?.minBudgetValue);
-      const maxBudget = Number(formData?.maxBudgetValue);
-
-      if (!minPeople) {
-        return fail("Please select minimum guest count.", "gathering_budget");
-      }
-      if (!maxPeople) {
-        return fail("Please select maximum guest count.", "gathering_budget");
-      }
-      if (maxPeople < minPeople) {
-        return fail(
-          "Max guests should be greater than min guests.",
-          "gathering_budget",
-        );
-      }
-      if (!minBudget || !maxBudget) {
-        return fail("Please enter your budget.", "gathering_budget");
-      }
-      if (maxBudget < minBudget) {
-        return fail(
-          "Max budget should be greater than min budget.",
-          "gathering_budget",
-        );
-      }
-      return true;
-    };
-
     switch (stepId) {
-      case "location":
-        if (!ensureLocation()) return false;
-        return runCuisineGate("location");
+      case STEP_IDS.LOCATION: {
+        const result = validateLocationStep(formData);
+        if (!result.isValid) return fail(result.message, result.issue);
+        return runCuisineGate(STEP_IDS.LOCATION);
+      }
 
-      case "service_type":
-        if (!ensureLocation() || !ensureService()) return false;
-        return runCuisineGate("service_type");
+      case STEP_IDS.SERVICE_TYPE: {
+        const locResult = validateLocationStep(formData);
+        if (!locResult.isValid) return fail(locResult.message, locResult.issue);
 
-      case "event_type":
-        if (!ensureLocation() || !ensureService() || !ensureEvent()) {
-          return false;
-        }
-        return runCuisineGate("event_type");
+        const svcResult = validateServiceTypeStep(formData);
+        if (!svcResult.isValid) return fail(svcResult.message, svcResult.issue);
 
-      case "gathering_budget":
-        if (
-          !ensureLocation() ||
-          !ensureService() ||
-          !ensureEvent() ||
-          !ensurePeopleAndBudget()
-        ) {
-          return false;
-        }
-        return runCuisineGate("gathering_budget");
+        return runCuisineGate(STEP_IDS.SERVICE_TYPE);
+      }
 
-      case "event_date": {
-        if (isEmptyValue(formData?.selectedDates)) {
-          return fail("Please select at least one preferred date.", stepId);
-        }
-        if (hasPastDate(formData.selectedDates)) {
-          return fail(
-            "Your preferred date is in the past. Please choose a future date.",
-            stepId,
-          );
-        }
-        if (hasPastDate(formData?.alternateDates || [])) {
-          return fail(
-            "One or more alternate dates are in the past.",
-            stepId,
-          );
-        }
-        if (hasInvalidDuration(formData.selectedDates)) {
-          return fail(
-            "End time must be at least 1 hour after the start time.",
-            stepId,
-          );
-        }
+      case STEP_IDS.EVENT_TYPE: {
+        const locResult = validateLocationStep(formData);
+        if (!locResult.isValid) return fail(locResult.message, locResult.issue);
+
+        const svcResult = validateServiceTypeStep(formData);
+        if (!svcResult.isValid) return fail(svcResult.message, svcResult.issue);
+
+        const evtResult = validateEventTypeStep(formData);
+        if (!evtResult.isValid) return fail(evtResult.message, evtResult.issue);
+
+        return runCuisineGate(STEP_IDS.EVENT_TYPE);
+      }
+
+      case STEP_IDS.GATHERING_BUDGET: {
+        const locResult = validateLocationStep(formData);
+        if (!locResult.isValid) return fail(locResult.message, locResult.issue);
+
+        const svcResult = validateServiceTypeStep(formData);
+        if (!svcResult.isValid) return fail(svcResult.message, svcResult.issue);
+
+        const evtResult = validateEventTypeStep(formData);
+        if (!evtResult.isValid) return fail(evtResult.message, evtResult.issue);
+
+        const budgetResult = validateGatheringBudgetStep(formData);
+        if (!budgetResult.isValid) return fail(budgetResult.message, budgetResult.issue);
+
+        return runCuisineGate(STEP_IDS.GATHERING_BUDGET);
+      }
+
+      case STEP_IDS.EVENT_DATE: {
+        const dateResult = validateEventDateStep(formData);
+        if (!dateResult.isValid) return fail(dateResult.message, dateResult.issue);
         return true;
       }
 
-      case "food_preferences": {
-        const result = await ensureCuisineCombinations(formData);
-        if (!result?.ok) {
-          return fail(
-            result?.message ||
-              "No packages are available for your current selection.",
-            result?.issueFactor || stepId,
-          );
-        }
+      case STEP_IDS.FOOD_PREFERENCES: {
+        const foodResult = await validateFoodPreferencesStep(formData);
+        if (!foodResult.isValid) return fail(foodResult.message, foodResult.issue);
         return true;
       }
 
@@ -360,7 +280,6 @@ const EnquiryLayout = () => {
   }, [
     currentStep,
     formData,
-    isEmptyValue,
     runCuisineGate,
     setIssueFactor,
     setSuggestionMessage,
@@ -502,9 +421,8 @@ const EnquiryLayout = () => {
         />
       )}
       <div
-        className={`fixed z-50 lg:z-auto top-0 lg:top-27 transform transition-transform duration-300 ${
-          isSidebarOpen ? "rounded-t-none" : "rounded-t-xl"
-        } ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+        className={`fixed z-50 lg:z-auto top-0 lg:top-27 transform transition-transform duration-300 ${isSidebarOpen ? "rounded-t-none" : "rounded-t-xl"
+          } ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
         style={{
           left: "max(0px, calc((100vw - 76rem) / 2))",
         }}
@@ -520,9 +438,8 @@ const EnquiryLayout = () => {
 
         <button
           onClick={() => setIsSidebarOpen(false)}
-          className={`lg:hidden absolute top-1 ${
-            isSidebarOpen ? "-right-2" : "!right-0"
-          } sm:-right-2 bg-primary text-white rounded-full p-1 shadow cursor-pointer z-60`}
+          className={`lg:hidden absolute top-1 ${isSidebarOpen ? "-right-2" : "!right-0"
+            } sm:-right-2 bg-primary text-white rounded-full p-1 shadow cursor-pointer z-60`}
         >
           <X size={20} />
         </button>
@@ -560,104 +477,4 @@ const EnquiryLayout = () => {
 
 export default EnquiryLayout;
 
-const deepEqual = (a, b) => {
-  if (a === b) return true;
-  const normalizedA = a ?? null;
-  const normalizedB = b ?? null;
-  return JSON.stringify(normalizedA) === JSON.stringify(normalizedB);
-};
 
-const CUISINE_VALIDATION_STEPS = new Set([
-  "gathering_budget",
-  "event_date",
-  "food_preferences",
-]);
-
-const shouldValidateCuisine = (stepId) =>
-  stepId ? CUISINE_VALIDATION_STEPS.has(stepId) : false;
-
-const normalizeDietaryRequirements = (list = []) =>
-  Array.isArray(list) ? [...list].sort() : [];
-
-const extractStepPayload = (data = {}, stepId) => {
-  switch (stepId) {
-    case "location":
-      return {
-        locations: data.locations || "",
-        latitude: toNullableNumber(data.latitude),
-        longitude: toNullableNumber(data.longitude),
-        radius: toNullableNumber(data.radius) ?? 20,
-      };
-    case "service_type":
-      return {
-        serviceType: data.serviceType || null,
-      };
-    case "event_type":
-      return {
-        eventTypeId: normalizeEventTypeId(data.selectedEventType),
-        label: data.selectedEventType?.label || data.selectedEventType?.eventName || "",
-      };
-    case "gathering_budget":
-      return {
-        minPeople: toNullableNumber(data.selectedPeopleRange?.minPeople),
-        maxPeople: toNullableNumber(data.selectedPeopleRange?.maxPeople),
-        minBudgetValue: toNullableNumber(data.minBudgetValue),
-        maxBudgetValue: toNullableNumber(data.maxBudgetValue),
-        budgetType: data.budgetType ?? null,
-      };
-    case "event_date":
-      return {
-        selectedDates: normalizeDateEntries(data.selectedDates),
-        alternateDates: normalizeDateEntries(data.alternateDates),
-      };
-    case "food_preferences":
-      return {
-        vegOnly: typeof data.vegOnly === "boolean"
-          ? data.vegOnly
-          : data.dietaryRequirements?.includes("vegOnly") || false,
-        alcoholic: typeof data.alcoholic === "boolean"
-          ? data.alcoholic
-          : data.dietaryRequirements?.includes("alcoholic") || false,
-        dietaryRequirements: normalizeDietaryRequirements(
-          data.dietaryRequirements || [],
-        ),
-      };
-    default:
-      return null;
-  }
-};
-
-const hasStepChanged = (stepId, currentData, persistedData) => {
-  if (!stepId) return false;
-  return !deepEqual(
-    extractStepPayload(currentData, stepId),
-    extractStepPayload(persistedData, stepId),
-  );
-};
-
-const toNullableNumber = (value) => {
-  if (value === null || value === undefined || value === "") return null;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
-};
-
-const normalizeDateEntries = (entries = []) =>
-  Array.isArray(entries)
-    ? entries.map((entry) => ({
-        date: entry?.date || "",
-        allDay: Boolean(entry?.allDay),
-        startTime: entry?.startTime || "",
-        endTime: entry?.endTime || "",
-      }))
-    : [];
-
-const normalizeEventTypeId = (eventType) => {
-  if (!eventType) return null;
-  return (
-    eventType.id ||
-    eventType.value ||
-    eventType.eventName ||
-    eventType.label ||
-    null
-  );
-};
