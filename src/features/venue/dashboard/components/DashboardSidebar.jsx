@@ -8,8 +8,9 @@ import settings from "../../../../assets/dashboard/setting.svg";
 import logout from "../../../../assets/dashboard/switch.svg";
 import { useNavigate } from "react-router-dom";
 import { useDashboard } from "../context/DashboardContext";
+import SidebarTab from "../shared/SidebarTab";
 
-const DashboardSidebar = () => {
+const DashboardSidebar = ({ setIsSidebarOpen }) => {
   const { fetchDashboardStats, dashboardStats, error, isLoading } =
     useDashboard();
 
@@ -52,225 +53,138 @@ const DashboardSidebar = () => {
     } = contractStats;
 
   return (
-    <div
-      className="sticky top-25 h-full w-auto h-130 rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] 
-
-    "
-    >
-      <div className="h-20 flex items-center px-7.5">
-        <h1
-          className="w-45.25 h-6   font-semibold text-[24px] leading-none tracking-normal rotate-0 opacity-100 text-black
-"
-        >
+    <div className=" sticky top-25 w-[300px] h-[100vh] lg:h-[540px] lg:rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] overflow-y-auto dashboard-scrollbar">
+      <div className=" sticky top-0 h-20 flex items-center px-7.5 bg-[#ffffff] z-50">
+        <h1 className="w-45.25 h-6   font-semibold text-[24px] leading-none tracking-normal rotate-0 opacity-100 text-black">
           Welcome back!
         </h1>
       </div>
 
       {/* Dashboard */}
-      <div
-        onClick={() => { setActiveTab("dashboard"); navigate("/dashboard") }}
-        className={`border-[#D7D9DA] flex items-center gap-4 w-85 h-14.5 border-t border-b px-7.5
-                  ${active === "dashboard"
-            ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-            : "text-black"
-          }
-                  `}
-      >
-        <img
-          src={mageDashboardIcon}
-          alt="Dashboard"
-          className="w-6 h-6"
-        />
-        <div
-          className="
-         h-4.5 font-semibold text-[18px] leading-none tracking-normal 
-        "
-        >
-          Dashboard
-        </div>
-      </div>
+      <SidebarTab
+        active={active}
+        Icon={mageDashboardIcon}
+        value="Dashboard"
+        onclick={() => { setActiveTab("dashboard"); navigate("/dashboard"); setIsSidebarOpen(false) }}
+        classname={` 
+        ${activeTab === "dashboard" ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]" : "text-black"}`} />
 
       {/* Enquiries */}
-      <div className="border-b border-[#D7D9DA]">
-        <button
-          onClick={() => toggleMenu("enquiries")}
-          className="w-full flex justify-between items-center font-medium h-14.5 px-7.5"
-        >
-          <div className="flex gap-4 font-semibold items-center">
-            <img
-              src={tableListDetails}
-              alt="Table List Detail"
-              className="w-6 h-6"
-            />
-            <span className="text-[18px] leading-none text-black">
-              Enquiries
-            </span>
-          </div>
-
-          <ChevronDown
-            className={`transition-transform duration-300 ${openMenu.enquiries ? "rotate-180" : ""
-              }`}
-          />
-        </button>
-
-        {openMenu.enquiries && (
-          <div className="w-full">
-            {[
-              `Active Enquiries (${Active})`,
-              `Draft Enquiries (${Draft})`,
-              `Completed Enquiries (${Closed})`,
-              `Expired Enquiries (${InActive})`,
-            ].map((item) => (
-              <div
-                key={item}
-                onClick={() => {
-                  setActiveTab(item)
-                  navigate(`/service/venues/enquiry/${item.toLowerCase().split(" ")[0]}`)
-                }
-                }
-                className={`w-full h-12 flex items-center cursor-pointer font-medium text-[18px] pl-18
+      <SidebarTab
+        value="Enquiries"
+        Icon={tableListDetails}
+        dropdown={<ChevronDown className={`transition-transform duration-300 ${openMenu.enquiries ? "rotate-180" : ""
+          }`} />}
+        onclick={() => toggleMenu("enquiries")}
+      />
+      {openMenu.enquiries && (
+        <div className="w-full">
+          {[
+            `Active Enquiries (${Active})`,
+            `Draft Enquiries (${Draft})`,
+            `Completed Enquiries (${Closed})`,
+            `Expired Enquiries (${InActive})`,
+          ].map((item) => (
+            <div
+              key={item}
+              onClick={() => {
+                setActiveTab(item)
+                setIsSidebarOpen(false)
+                navigate(`/service/venues/enquiry/${item.toLowerCase().split(" ")[0]}`)
+              }
+              }
+              className={`w-full flex items-center cursor-pointer font-medium text-[14px] text-[#060606] pl-18 py-2  transition-all duration-300 ease-in cursor-pointer
                   ${activeTab === item
-                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                    : "text-black"
-                  }
+                  ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+                  : "text-black"
+                }
                   `}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Contracts */}
-      <div className="border-b border-[#D7D9DA] ">
-        <button
-          onClick={() => toggleMenu("contracts")}
-          className="w-full flex justify-between items-center h-14.5 font-medium px-7.5"
-        >
-          <div className="flex gap-4 font-semibold">
-            <img
-              src={carbonDocumentIcon}
-              alt="Carbon Document"
-              className="w-6 h-6"
-            />
-            <span className=" text-[18px] leading-none text-black">
-              Contracts
-            </span>
-          </div>
-
-          <ChevronDown
-            className={`transition-transform duration-300 ${openMenu.contracts ? "rotate-180" : ""
-              }`}
-          />
-        </button>
-
-        {openMenu.contracts && (
-          <div className="w-full">
-            {[
-              `Active Contracts (${active})`,
-              `Proposed Contracts (${pending})`, ,
-              `Completed Contracts (${completed})`,
-            ].map((item) => (
-              <div
-                key={item}
-                onClick={() => setActiveTab(item)}
-                className={`w-full flex items-center text-[18px] h-12  pl-18 cursor-pointer
-                  ${active === item
-                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                    : "text-black"
-                  }
+      <SidebarTab
+        value="Contracts"
+        Icon={carbonDocumentIcon}
+        dropdown={<ChevronDown className={`transition-transform duration-300 ${openMenu.contracts ? "rotate-180" : ""
+          }`} />}
+        onclick={() => toggleMenu("contracts")}
+      />
+      {openMenu.contracts && (
+        <div className="w-full">
+          {[
+            `Active Contracts (${active})`,
+            `Proposed Contracts (${pending})`, ,
+            `Completed Contracts (${completed})`,
+          ].map((item) => (
+            <div
+              key={item}
+              onClick={() => {
+                setActiveTab(item)
+                setIsSidebarOpen(false)
+              }}
+              className={`w-full flex items-center text-[14px]  pl-18 py-2 text-[#060606] cursor-pointer transition-all duration-300 ease-in cursor-pointer
+                  ${activeTab === item
+                  ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+                  : "text-black"
+                }
                   `}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Profile */}
-      <div className="border-b border-[#D7D9DA]">
-        <button
-          onClick={() => toggleMenu("profile")}
-          className="w-full flex justify-between items-center h-14.5 font-medium px-7.5"
-        >
-          <div className="flex gap-4 font-semibold">
-            <img src={userProfile} alt="Profile" className="h-6 w-6" />
-            <span className="text-[18px] leading-none text-black">Profile</span>
-          </div>
-
-          <ChevronDown
-            className={`transition-transform duration-300 ${openMenu.profile ? "rotate-180" : ""
-              }`}
-          />
-        </button>
-
-        {openMenu.profile && (
-          <div className="w-full">
-            {[].map((item) => (
-              <div
-                key={item}
-                onClick={() => setActiveTab(item)}
-                className={`w-full h-12 flex items-center text-[18px]  pl-18 cursor-pointer
-                  ${active === item
-                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                    : "text-black"
-                  }
+      <SidebarTab
+        value="Profile"
+        Icon={userProfile}
+        dropdown={<ChevronDown className={`transition-transform duration-300 ${openMenu.profile ? "rotate-180" : ""
+          }`} />}
+        onclick={() => toggleMenu("profile")}
+      />
+      {openMenu.profile && (
+        <div className="w-full">
+          {[].map((item) => (
+            <div
+              key={item}
+              onClick={() => {
+                setActiveTab(item)
+                setIsSidebarOpen(false)
+              }}
+              className={`w-full h-12 flex items-center text-[18px]  pl-18 cursor-pointer
+                  ${activeTab === item
+                  ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+                  : "text-black"
+                }
                   `}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Settings */}
-      <div className="border-b border-[#D7D9DA] ">
-        <button
-          onClick={() => toggleMenu("setting")}
-          className="w-full flex justify-between items-center font-medium h-14.5 px-7.5"
-        >
-          <div className="flex gap-4 font-semibold">
-            <img src={settings} alt="Setting" className="h-6 w-6" />
-            <span className="text-[18px] leading-none text-black">
-              Settings
-            </span>
-          </div>
+      <SidebarTab
+        value="Settings"
+        Icon={settings}
+        dropdown={<ChevronDown className={`transition-transform duration-300 ${openMenu.setting ? "rotate-180" : ""
+          }`} />}
+        onclick={() => toggleMenu("setting")} />
 
-          <ChevronDown
-            className={`transition-transform duration-300 ${openMenu.setting ? "rotate-180" : ""
-              }`}
-          />
-        </button>
+      {/* Logout */}
+      <SidebarTab
+        value="Logout"
+        Icon={logout}
+        classname="text-[#ff4000]"
+        onclick={() => toggleMenu("profile")} />
 
-        {openMenu.setting && (
-          <div className="w-full">
-            {[].map((item) => (
-              <div
-                key={item}
-                onClick={() => setActiveTab(item)}
-                className={`w-full h-12 flex items-center text-[18px] pl-18
-                  ${active === item
-                    ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
-                    : "text-black"
-                  }
-                  `}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="border-b border-[#D7D9DA] flex items-center gap-4 h-14.5 px-7.5">
-        <img src={logout} alt="Logout" className="h-6 w-6" />
-        <div className="h-4.5 font-semibold text-[18px] leading-none tracking-normal text-[#FF4000]">
-          Logout
-        </div>
-      </div>
     </div>
   );
 };

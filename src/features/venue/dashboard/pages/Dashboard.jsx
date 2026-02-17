@@ -26,12 +26,12 @@ const Dashboard = () => {
   if (error) return <div>Error loading dashboard data</div>;
 
   const {
-    totalEnquiries=0,
-    totalPendingResponses=0,
-    totalCompletedEnquiries=0,
-  } =dashboardStats?.data?.stats || {}
+    totalEnquiries = 0,
+    totalPendingResponses = 0,
+    totalCompletedEnquiries = 0,
+  } = dashboardStats?.data?.stats || {}
 
-  const {name = ''}=dashboardStats?.data?.user ||{}
+  const { name = '' } = dashboardStats?.data?.user || {}
 
   const upcomingEvents = dashboardStats?.data?.upcomingEvents || []
   return <>
@@ -90,26 +90,38 @@ const Dashboard = () => {
       </div>
 
 
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4 mt-6">
-      {/* Upcoming events */}
-      <Card variant="default" className="h-65">
-        <Card.Header>
-          <h3 className="font-semibold text-xl text-[#212529]">Upcoming events</h3>
-        </Card.Header>
+      <div>
+        {/* Upcoming events */}
+        <Card
+          variant="default"
+          className="min-w-0 flex flex-col"
+        >
+          <Card.Header>
+            <h3 className="font-semibold text-xl text-[#212529]">
+              Upcoming events
+            </h3>
+          </Card.Header>
 
-        <Card.Body className='flex flex-wrap gap-3'>
+          <Card.Body className="flex-1 overflow-y-auto grid grid-cols-2 gap-3">
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((item, idx) => (
+                <>
+                <DashboardEventCard key={idx} data={item} />
+                </>
+              ))
+            ) : (
+              <h2 className="font-semibold text-xl text-secondary">
+                No Upcoming events
+              </h2>
+            )}
+          </Card.Body>
+        </Card>
 
-           {(upcomingEvents.length > 0) ?
-              (upcomingEvents.map((item,idx)=>{
-                return <DashboardEventCard data={item}/>
-              })):(
-                <h2 className="font-semibold text-xl text-secondary">No Upcoming events</h2>
-              )
-          }
-        </Card.Body>
+      </div>
 
-      </Card>
-         <Card className='w-full h-65'>
+      {/* Recent Activity Card */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card className='w-full'>
           <Card.Header>
             <h2 className="font-bold text-[18px] text-gray-800">Event Planning Tips</h2>
           </Card.Header>
@@ -140,10 +152,6 @@ const Dashboard = () => {
             </p>
           </Card.Footer>
         </Card>
-    </div>
-
-      {/* Recent Activity Card */}
-      <div className="w-full">
         <Card>
           <Card.Header className="font-semibold text-2xl text-gray-800">Recent Activity</Card.Header>
           <Card.Body className="font-bold text-secondary">No Recent Activity</Card.Body>
