@@ -13,6 +13,7 @@ import {
   HelpCircle,
   UserRound,
   Power,
+  BellRing,
 } from "lucide-react";
 import Login from "../../../features/auth/components/Login";
 import { logout } from "@/services/userService";
@@ -28,8 +29,12 @@ const Navbar = () => {
   const [cardOpen, setCardOpen] = useState({ show: false, type: "login" });
   const { user, isLoggedIn, setIsLoggedIn, clearUser } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-
   const profileMenuRef = useRef(null);
+
+  const [showNotification, setShowNotification] = useState(false);
+  const notificationRef = useRef(null);
+
+  const mobileMenuRef = useRef(null);
 
   // Get first letter of logged in user
   const getUserInitial = () => {
@@ -45,6 +50,19 @@ const Navbar = () => {
         !profileMenuRef.current.contains(event.target)
       ) {
         setShowProfileMenu(false);
+      }
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setShowNotification(false);
+      }
+
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
+        setOpen(false);
       }
     };
 
@@ -119,11 +137,23 @@ const Navbar = () => {
                   <div className="w-[8px] h-[8px] rounded-full bg-[#FF4000] absolute top-0 right-0"></div>
                 </div>
 
-                <div className="relative">
-                  <div className=" cursor-pointer">
-                    <Bell size={22} />
+                <div ref={notificationRef} className="">
+                  <div className="relative">
+                    <Bell
+                      size={22}
+                      className="cursor-pointer"
+                      onClick={() => setShowNotification((prev) => !prev)}
+                    />
+                    <div className="w-[8px] h-[8px] rounded-full bg-[#FF4000] absolute top-0 right-1"></div>
                   </div>
-                  <div className="w-[8px] h-[8px] rounded-full bg-[#FF4000] absolute top-0 right-1"></div>
+
+                  {showNotification && (
+                    <div className=" z-50">
+                      <NotificationLayout
+                        onClose={() => setShowNotification(false)}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* PROFILE MENU */}
@@ -213,10 +243,11 @@ const Navbar = () => {
 
         {open && (
           <div
+            ref={mobileMenuRef}
             className="
       bg-white
       absolute w-[200px]
-      top-16 right-2
+      top-17 right-2
       lg:hidden
       flex flex-col gap-3
       p-5
@@ -237,10 +268,18 @@ const Navbar = () => {
               How it works
             </Link>
 
-            <div className="h-[1px] bg-gray-300 mb-1"></div>
-
             {isLoggedIn ? (
               <>
+                <div
+                  onClick={() => {
+                    setShowNotification(true);
+                  }}
+                  className="flex  items-center gap-2 cursor-pointer"
+                >
+                  <BellRing size={20} className="" />
+                  <h6 className="font-semibold">Notifications</h6>
+                </div>
+                <div className="h-[1px] bg-gray-300 mb-1"></div>
                 <Link
                   to="/profile"
                   className="
@@ -266,6 +305,7 @@ const Navbar = () => {
               </>
             ) : (
               <>
+                <div className="h-[1px] bg-gray-300 mb-1"></div>
                 <button
                   onClick={handleLoginClick}
                   className="
@@ -299,7 +339,9 @@ const Navbar = () => {
               </>
             )}
           </div>
- 
+        )}
+        {showNotification && (
+          <NotificationLayout onClose={() => setShowNotification(false)} />
         )}
       </nav>
 
