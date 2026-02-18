@@ -39,7 +39,7 @@ const ChatLayout = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
   return <>
-    <div className='flex h-[calc(100vh-64px)] mt-14 sm:mt-16 md:-mt-8'>
+    <div className='flex h-[calc(100vh-64px)] mt-14 sm:mt-16 md:-mt-8 -mb-4'>
       <div className={`relative h-full w-full md:w-[300px] px-1 bg-[#f0f0f4] overflow-y-auto scrollbar-hide ${chatBox ? "hidden" : "block"} `}>
         <ChatSidebar userData={userData} handleUserClick={handleUserClick} setIsClick={setIsClick} />
       </div>

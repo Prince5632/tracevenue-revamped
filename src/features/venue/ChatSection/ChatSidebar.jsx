@@ -10,7 +10,7 @@ function ChatSidebar({ userData, handleUserClick, setIsClick }) {
         setTabOpen((prev) => (prev === id ? null : id));
     }
     return <>
-        <h1 className='sticky top-0 z-50 flex gap-2 p-6 bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)]  items-center justify-start text-[22px] font-bold tracking-wider text-[#ffffff] -mx-1  mb-1'><MessageSquare size={24} color='#ffffff' />Messages</h1>
+        <h1 className='sticky top-0 z-1 flex gap-2 p-6 bg-[linear-gradient(99.68deg,#F08E45_0%,#EE5763_100%)]  items-center justify-start text-[22px] font-bold tracking-wider text-[#ffffff] -mx-1  mb-1'><MessageSquare size={24} color='#ffffff' />Messages</h1>
         {
             userData?.map((user) => (
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@shared/components/ui";
 import tracevenue from "@assets/images/Tracevenue.png";
 import logo from "@assets/images/logo.png";
+import { useNavigate } from "react-router-dom";
 import {
   MenuIcon,
   Bell,
@@ -29,6 +30,8 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const profileMenuRef = useRef(null);
+
+  const navigate = useNavigate();
 
   // Get first letter of logged in user
   const getUserInitial = () => {
@@ -83,6 +86,10 @@ const Navbar = () => {
   }
   };
 
+  // go to messages route
+  const goToMessages = ()=>{
+    navigate("/messages");
+  }
   return (
     <>
       <nav className="w-full bg-white shadow-lg fixed top-0 left-0 !z-10">
@@ -113,7 +120,7 @@ const Navbar = () => {
             {isLoggedIn ? (
               <>
                 <div className="relative pl-5">
-                  <div className=" cursor-pointer">
+                  <div onClick={goToMessages} className=" cursor-pointer">
                     <MessageCircleMore size={22} />
                   </div>
                   <div className="w-[8px] h-[8px] rounded-full bg-[#FF4000] absolute top-0 right-0"></div>
