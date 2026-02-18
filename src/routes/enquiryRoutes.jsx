@@ -28,7 +28,7 @@ export const enquiryRoutes = [
   { path: "/quotation-card", element: <QuotationCard /> },
   { path: "/restaurant-detail-modal", element: <RestaurantDetailModal /> },
   { path: "/quotation-page", element: <Quotationpage /> },
-  { path: '/chat-section', element: <ChatLayout/>},
+  { path: "/messages", element: <ChatLayout/>},
   { path: "/docs", element: <ComponentDocs /> },
   { path: "/CustomerCard", element: <CustomerCard /> },
   { path: "/packageModalPage", element: <AddPackagemodal/> },
