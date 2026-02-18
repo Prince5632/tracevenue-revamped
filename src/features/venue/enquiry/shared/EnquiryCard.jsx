@@ -94,7 +94,7 @@ const EnquiryCard = ({ data}) => {
     }
     return (
         <>
-        <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]' onClick={() => navigate("/enquiry-detail-layout")}>
+        <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]' onClick={() => navigate(`/service/venues/enquiry/details/${data?._id || data?.id}`)}>
             {/* image */}
             <div className='p-4 lg:w-55'>
                 <Card variant="bordered" className="lg:h-44 rounded-[30px] !m-0 relative -top-2 -left-2">
