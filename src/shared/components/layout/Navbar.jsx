@@ -21,6 +21,7 @@ import { useAuth } from "@/features/auth/context/useAuthStore.jsx";
 import userProfile from "../../../assets/dashboard/user-profile.svg";
 import settings from "../../../assets/dashboard/setting.svg";
 import logoutButton from "../../../assets/dashboard/switch.svg";
+import NotificationLayout from "../notification/NotificationLayout";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -51,7 +52,7 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
         setOpen(false);
@@ -62,10 +63,10 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-    const handleLoginClick = () => {
-      setCardOpen({ show: true, type: "login" });
-      setOpen(false);
-    };
+  const handleLoginClick = () => {
+    setCardOpen({ show: true, type: "login" });
+    setOpen(false);
+  };
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
@@ -73,14 +74,14 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-     try {
-    await logout();
-    clearUser();
-  } catch (error) {
-    console.log("Logout failed", error);
-  } finally {
-    setShowProfileMenu(false);
-  }
+    try {
+      await logout();
+      clearUser();
+    } catch (error) {
+      console.log("Logout failed", error);
+    } finally {
+      setShowProfileMenu(false);
+    }
   };
 
   return (
@@ -106,7 +107,6 @@ const Navbar = () => {
               className="text-[#060606] font-semibold flex gap-1"
             >
               How it works
-              <ChevronDown className="w-4 " />
             </Link>
             {/* ===================================== */}
 
@@ -211,9 +211,9 @@ const Navbar = () => {
 
         {/* MOBILE MENU */}
 
-{open && (
-  <div
-    className="
+        {open && (
+          <div
+            className="
       bg-white
       absolute w-[200px]
       top-16 right-2
@@ -224,52 +224,51 @@ const Navbar = () => {
       shadow-[0_8px_30px_rgba(0,0,0,0.08)]
       border border-gray-100
     "
-  >
-   
-    <Link
-      to="https://tracevenue.com/how-it-works/"
-      className="
+          >
+            <Link
+              to="https://tracevenue.com/how-it-works/"
+              className="
         text-gray-800
         text-base font-semibold
         text-center flex gap-2
       "
-    >
-      <HelpCircle className="w-5"/>How it works
-    </Link>
+            >
+              <HelpCircle className="w-5" />
+              How it works
+            </Link>
 
-    <div className="h-[1px] bg-gray-300 mb-1"></div>
+            <div className="h-[1px] bg-gray-300 mb-1"></div>
 
-    {isLoggedIn ? (
-      <>
-         <Link
-          to="/profile"
-          className="
+            {isLoggedIn ? (
+              <>
+                <Link
+                  to="/profile"
+                  className="
             flex items-center gap-2
             px-2 py-2 !text-gray-700
             bg-gray-50 rounded-lg border border-gray-300         "
-        >
-          <UserRound  size={18} />
-          Profile
-        </Link>
+                >
+                  <UserRound size={18} />
+                  Profile
+                </Link>
 
-        <button
-          onClick={handleLogout}
-          className="
+                <button
+                  onClick={handleLogout}
+                  className="
             flex items-center gap-2
             px-2 py-2 text-red-600
             bg-red-50 rounded-lg
           "
-        >
-          <Power  size={18} />
-          Logout
-        </button>
-      </>
-    ) : (
-      <>
-       
-        <button
-          onClick={handleLoginClick}
-          className="
+                >
+                  <Power size={18} />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={handleLoginClick}
+                  className="
             flex items-center gap-2
             py-2.5 px-3
             rounded-lg
@@ -278,15 +277,14 @@ const Navbar = () => {
             text-gray-700
             text-[16px] font-semibold
           "
-        >
-          <LogIn className="w-4 text-gray-500" />
-          Login
-        </button>
+                >
+                  <LogIn className="w-4 text-gray-500" />
+                  Login
+                </button>
 
-      
-        <button
-         onClick={() => setCardOpen({ show: true, type: "signup" })}
-          className="
+                <button
+                  onClick={() => setCardOpen({ show: true, type: "signup" })}
+                  className="
             flex items-center gap-2
             py-2.5 px-3
             rounded-lg
@@ -294,21 +292,15 @@ const Navbar = () => {
             text-white
             bg-gradient-to-r from-[#e67e22] to-[#e63900]
           "
-        >
-          <UserPlus className="w-4 text-white" />
-          Sign up
-        </button>
-        
-      </>
-    )}
-  </div>
-)}
-
-
-
-
-        
-
+                >
+                  <UserPlus className="w-4 text-white" />
+                  Sign up
+                </button>
+              </>
+            )}
+          </div>
+ 
+        )}
       </nav>
 
       {cardOpen.show && (
@@ -319,8 +311,7 @@ const Navbar = () => {
         />
       )}
     </>
-  )
-}
-
+  );
+};
 
 export default Navbar;
