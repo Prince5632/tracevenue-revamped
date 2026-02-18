@@ -1,16 +1,10 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import { MapPin, Search, LocateFixed, X } from "lucide-react";
-import {
-  Button,
-  Divider,
-  GradientText,
-  Input,
-  Map,
-} from "@shared/components/ui";
-import { LoadScript } from "@react-google-maps/api";
-import { decodeLocationFromUrl } from "@features/venue/enquiry/utils";
-import useEnquiryStore from "../../context/useEnquiryStore";
-import { Spinner } from "@/shared";
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { MapPin, Search, LocateFixed, X } from 'lucide-react';
+import { Button, Divider, GradientText, Input, Map } from '@shared/components/ui';
+import { LoadScript } from '@react-google-maps/api';
+import { decodeLocationFromUrl } from '@features/venue/enquiry/utils';
+import useEnquiryStore from '../../context/useEnquiryStore';
+import { Spinner } from '@/shared';
 import LocationIcon from '@/assets/dashboard/location.svg'
 
 const Location = ({ urlParams = {} }) => {
