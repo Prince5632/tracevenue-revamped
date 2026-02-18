@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { useDashboard } from "@/features/venue/dashboard/context/DashboardContext";
-
+import ContractsCard from '../shared/ContractsCard';
 const Contract = () => {
   const { status } = useParams();
   const { fetchJobsByStatus, jobs, error, isLoading } = useDashboard();
@@ -32,7 +32,14 @@ const Contract = () => {
   if (error) return <div>Error loading contracts</div>;
 
   return (
-    <div>Contract - {apiStatus}</div>
+    <div className='h-screen grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4'>
+      <ContractsCard/>
+      <ContractsCard/>
+      <ContractsCard/>
+      <ContractsCard/>
+      <ContractsCard/>
+      <ContractsCard/>
+    </div>
   )
 }
 
