@@ -179,7 +179,7 @@ function PackageInfo(props) {
             ))}
           </Card.Body>
         </Card>
-        <PackageFooter />
+        <PackageFooter job={props.job} />
         <div className="flex flex-col md:!flex-row items-start sticky top-24"
         >
           {/* Menu Categories */}

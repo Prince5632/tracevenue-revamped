@@ -100,6 +100,7 @@ function PackageDetails() {
         description={"Based on your location and event type, restaurants are offering a variety of packages with different cuisine combinations."}
         packageName={packageTitle || "Custom Food Package"}
         price={formatPrice()}
+        job={clubbedData?.job || jobStatus?.job}   /* Pass job data */
         services={packageData?.services}
         cardInfo={[
           {

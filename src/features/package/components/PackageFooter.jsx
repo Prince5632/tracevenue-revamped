@@ -3,7 +3,7 @@ import { Button } from "@/shared/components/ui";
 import PreviewEnquiry from "./PreviewEnquiry";
 import { useState } from "react";
 
-function PackageFooter() {
+function PackageFooter({ job }) {
   let [isModalOpen, setIsModalOpen] = useState(false);
   return <>
     <div
@@ -106,7 +106,7 @@ function PackageFooter() {
           >
             Preview Enquiry
           </Button>
-          <PreviewEnquiry isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          <PreviewEnquiry job={job} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
           <Button
             variant="gradient"
             className="
