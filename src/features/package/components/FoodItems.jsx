@@ -79,7 +79,7 @@ const RenderOffering = ({ offering }) => {
                     {selectionCount && (
                         <Badge
                             variant="soft"
-                            className="ml-[6px] px-[6px] py-[2px] text-[11.2px] !font-bold"
+                            className="ml-[6px] px-[6px] py-[2px] text-[11.2px] font-bold!"
                         >
                             {allIncluded ? "All Included" : `Any ${selectionCount}`}
                         </Badge>
@@ -123,7 +123,7 @@ function FoodItems({ packageMenu, sectionRefs }) {
     });
 
     return (
-        <Card variant="default" padding="md" className="border-none shadow-none !pt-0">
+        <Card variant="default" padding="md" className="border-none shadow-none pt-0!">
             <Card.Body>
                 <div className="flex-1 w-full">
                     <div className="w-full">
@@ -139,7 +139,7 @@ function FoodItems({ packageMenu, sectionRefs }) {
                                 className="w-full px-[6px] pb-4 lg:px-[24px] bg-[#ffffff] lg:border lg:border-[#e5e7eb] rounded-[30px] mb-6 scroll-mt-[80px]"
                             >
                                 {/* Category heading */}
-                                <h5 className="mb-[16px] p-[10px] text-[#1a1a1a] text-[18.4px] font-bold bg-white border-b-[2px] border-[#e29f55]">
+                                <h5 className="mb-[16px] p-[10px] text-[#1a1a1a] text-[18.4px] font-bold bg-white border-b-2 border-[#e29f55]">
                                     {category.categoryName}
                                 </h5>
 

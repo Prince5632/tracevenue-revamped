@@ -68,11 +68,11 @@ function PackageServices({ services }) {
                                     variant="default"
                                     padding="md"
                                     key={getServiceIdentifier(service)}
-                                    className="mb-2 !p-2 !rounded-[30px]"
+                                    className="mb-2 p-2! rounded-[30px]!"
                                 >
                                     <Card.Body className="flex gap-4">
                                         {/* Icon */}
-                                        <div className="h-[78px] w-[78px] rounded-[20px] bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] flex justify-center items-center flex-shrink-0">
+                                        <div className="h-[78px] w-[78px] rounded-[20px] bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] flex justify-center items-center shrink-0">
                                             <IconComponent size={32} color="#E29F55" strokeWidth={1.5} />
                                         </div>
 

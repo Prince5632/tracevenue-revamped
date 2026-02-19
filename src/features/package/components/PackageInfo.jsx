@@ -8,10 +8,12 @@ import { ProgressBar } from "@/shared/components/feedback";
 import MenuCategories from "./MenuCategories";
 import PackageServices from "./PackageServices";
 import FoodItems from "./FoodItems";
+import { useNavigate } from "react-router-dom";
 
 function PackageInfo(props) {
   const sectionRefs = useRef({});
   const [active, setActive] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -91,6 +93,7 @@ function PackageInfo(props) {
                 !text-[16px] !font-bold
                 lg:mt-0
               "
+              onClick={() => navigate("/")}
             >
               Plan New Event
               <i
@@ -115,7 +118,7 @@ function PackageInfo(props) {
                 md:text-[20px]
               "
             >
-              {props.subHeading}
+              {props.packageName}
             </h2>
             <div
               className="
@@ -129,7 +132,7 @@ function PackageInfo(props) {
                   md:text-end
                 "
               >
-                &#8377;{props.price}
+                {props.price}
               </span>
               <span
                 className="
@@ -137,7 +140,7 @@ function PackageInfo(props) {
                   md:text-end
                 "
               >
-                Lumpsum
+                {props.budgetType}
               </span>
             </div>
           </div>
