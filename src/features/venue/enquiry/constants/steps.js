@@ -5,4 +5,5 @@ export const STEP_IDS = {
     GATHERING_BUDGET: "gathering_budget",
     EVENT_DATE: "event_date",
     FOOD_PREFERENCES: "food_preferences",
+    DISCOVER_PACKAGES: "discover_packages",
 };
