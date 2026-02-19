@@ -284,8 +284,7 @@ export const fetchCuisineAnalysisForSuggestions = async ({
 };
 
 export const fetchSelectedCuisineComboDetails = async (
-    variantIds,
-    setIndependentValue
+    variantIds
 ) => {
     try {
         const response = await API.post(`/analysis/selected-combination-data`, {
@@ -294,6 +293,5 @@ export const fetchSelectedCuisineComboDetails = async (
         return response?.data;
     } catch (error) {
         console.error("Error fetching cuisine combinations:", error);
-        setIndependentValue("selectedCuisineCombo", []);
     }
 };
