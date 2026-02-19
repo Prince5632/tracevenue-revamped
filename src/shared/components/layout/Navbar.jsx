@@ -32,9 +32,6 @@ const Navbar = () => {
   const profileMenuRef = useRef(null);
 
   const [showNotification, setShowNotification] = useState(false);
-  const notificationRef = useRef(null);
-
-  const mobileMenuRef = useRef(null);
 
   // Get first letter of logged in user
   const getUserInitial = () => {
@@ -51,24 +48,13 @@ const Navbar = () => {
       ) {
         setShowProfileMenu(false);
       }
-      if (
-        notificationRef.current &&
-        !notificationRef.current.contains(event.target)
-      ) {
-        setShowNotification(false);
-      }
-
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target)
-      ) {
-        setOpen(false);
-      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -137,7 +123,7 @@ const Navbar = () => {
                   <div className="w-[8px] h-[8px] rounded-full bg-[#FF4000] absolute top-0 right-0"></div>
                 </div>
 
-                <div ref={notificationRef} className="">
+                <div  className="">
                   <div className="relative">
                     <Bell
                       size={22}
@@ -243,7 +229,6 @@ const Navbar = () => {
 
         {open && (
           <div
-            ref={mobileMenuRef}
             className="
       bg-white
       absolute w-[200px]
@@ -270,15 +255,14 @@ const Navbar = () => {
 
             {isLoggedIn ? (
               <>
-                <div
-                  onClick={() => {
-                    setShowNotification(true);
-                  }}
+                    <div
                   className="flex  items-center gap-2 cursor-pointer"
+                  onClick={() => setShowNotification((prev) => !prev)}
                 >
                   <BellRing size={20} className="" />
                   <h6 className="font-semibold">Notifications</h6>
                 </div>
+
                 <div className="h-[1px] bg-gray-300 mb-1"></div>
                 <Link
                   to="/profile"
@@ -305,26 +289,27 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <div className="h-[1px] bg-gray-300 mb-1"></div>
-                <button
-                  onClick={handleLoginClick}
-                  className="
-            flex items-center gap-2
-            py-2.5 px-3
-            rounded-lg
-            border border-gray-300
-            bg-gray-100
-            text-gray-700
-            text-[16px] font-semibold
-          "
-                >
-                  <LogIn className="w-4 text-gray-500" />
-                  Login
-                </button>
+               
+                  <div className="h-[1px] bg-gray-300 mb-1"></div>
+                  <button
+                    onClick={handleLoginClick}
+                    className="
+                          flex items-center gap-2
+                          py-2.5 px-3
+                          rounded-lg
+                          border border-gray-300
+                        bg-gray-100
+                        text-gray-700
+                          text-[16px] font-semibold
+                          "
+                  >
+                    <LogIn className="w-4 text-gray-500" />
+                    Login
+                  </button>
 
-                <button
-                  onClick={() => setCardOpen({ show: true, type: "signup" })}
-                  className="
+                  <button
+                    onClick={() => setCardOpen({ show: true, type: "signup" })}
+                    className="
             flex items-center gap-2
             py-2.5 px-3
             rounded-lg
@@ -332,19 +317,33 @@ const Navbar = () => {
             text-white
             bg-gradient-to-r from-[#e67e22] to-[#e63900]
           "
-                >
-                  <UserPlus className="w-4 text-white" />
-                  Sign up
-                </button>
+                  >
+                    <UserPlus className="w-4 text-white" />
+                    Sign up
+                  </button>
+                
+               
               </>
             )}
+         
+        {showNotification && (
+  <div className="fixed inset-0 z-50 flex items-end lg:hidden">
+
+    <div className=" w-full bg-white rounded-t-3xl p-4 overflow-y-auto">
+      <NotificationLayout
+        onClose={() =>{
+          setShowNotification(false),
+          setOpen(false)
+        } }
+      />
+    </div>
+  </div>
+)}
+
           </div>
         )}
-        {showNotification && (
-          <NotificationLayout onClose={() => setShowNotification(false)} />
-        )}
+        
       </nav>
-
       {cardOpen.show && (
         <Login
           onLoginSuccess={handleLoginSuccess}

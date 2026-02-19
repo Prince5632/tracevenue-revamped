@@ -4,7 +4,7 @@ import Notification from "./Notification";
 const NotificationLayout = ({onClose}) => {
   const [activeTab, setActiveTab] = useState("notifications");
   return (
-    <div className="h-[392px] w-[48%] md:w-[26%] absolute top-17 right-2 md:right-38  rounded-[16px]   shadow-[0_0_20px_rgba(0,0,0,0.12)] bg-[#FAFAFA] p-1">
+    <div className=" w-[80%]  sm:w-[48%] md:w-[26%] absolute top-17 right-2 md:right-38  rounded-[16px]   shadow-[0_0_20px_rgba(0,0,0,0.12)] bg-[#FAFAFA] p-1">
       <div className="flex justify-between items-center px-4 pb-2 bg-[linear-gradient(95.02deg,#F08E45_0.07%,#EE5763_61.45%)] pt-2 rounded-t-[16px]">
         <div className="flex gap-1 items-center">
           <BellRing size={16} className="text-white fill-white stroke-white" />
