@@ -5,6 +5,7 @@ import PackageInfo from "@/features/package/components/PackageInfo";
 import { packageInformation } from "@shared/services";
 import { getClubbedCuisineById } from "@/features/venue/services/clubbedPackageService";
 import { checkJobStatus } from "@/features/venue/services/jobService";
+import { fetchSelectedCuisineComboDetails } from "@/utils/helperCuisineApi";
 
 function PackageDetails() {
   const { id, jobId } = useParams();
@@ -22,7 +23,13 @@ function PackageDetails() {
           getClubbedCuisineById(id),
           checkJobStatus(jobId),
         ]);
-        setPackageData(pkgRes?.data || pkgRes);
+        const variantIds = pkgRes?.clubbedData?.matching_variants?.map(
+          (variant) => variant.variant_id
+        );
+        const cuisine_details = await fetchSelectedCuisineComboDetails(
+          variantIds
+        );
+        setPackageData(cuisine_details);
         setJobStatus(statusRes?.data || statusRes);
       } catch (error) {
         console.error("Failed to fetch package details:", error);
@@ -39,57 +46,36 @@ function PackageDetails() {
     if (loading) {
       return (
         <>
-          <Navbar />
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
           </div>
         </>
       );
     }
-
-    return (
-      <>
-        <Navbar />
-        <div className="max-w-[1200px] mx-auto px-6 py-8">
-          {packageData ? (
-            <div>
-              <h1 className="text-2xl font-bold mb-4">Package Details</h1>
-              <p className="text-gray-500 mb-6">
-                Package ID: {id} | Job ID: {jobId}
-              </p>
-              {/* TODO: Full Package Details UI — follow-up task */}
-              <pre className="bg-gray-50 p-4 rounded-xl text-sm overflow-auto max-h-[60vh]">
-                {JSON.stringify(packageData, null, 2)}
-              </pre>
-            </div>
-          ) : (
-            <p className="text-center text-gray-500 mt-20">
-              Package not found.
-            </p>
-          )}
-        </div>
-      </>
-    );
   }
-
-  // Fallback: static mock data for the /package-details route
+  console.log(packageData)
   return (
     <>
-      <Navbar />
-      {packageInformation.map((item, index) => (
-        <PackageInfo
-          key={index}
-          step={item.step}
-          heading={item.heading}
-          description={item.description}
-          subHeading={item.subHeading}
-          price={item.price}
-          services={item.services}
-          cardInfo={item.cardInfo}
-          cuisines={item.cuisines}
-          packageMenu={item.packageMenu}
-        />
-      ))}
+      <PackageInfo
+        step={1}
+        heading={"Package Details"}
+        description={"This is package"}
+        subHeading={"This is sub heading"}
+        price={"1000"}
+        services={packageData?.services}
+        cardInfo={[
+          {
+            title: "Cuisines",
+            value: packageData?.cuisineNames,
+          },
+          {
+            title: "Services",
+            value: packageData?.services,
+          },
+        ]}
+        cuisines={packageData?.cuisineNames}
+        packageMenu={packageData?.menuTree}
+      />
     </>
   );
 }

@@ -12,14 +12,13 @@ import FoodItems from "./FoodItems";
 function PackageInfo(props) {
   const sectionRefs = useRef({});
   const [active, setActive] = useState(null);
-  const [itemId, setItemId] = useState(1)
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = entry.target.getAttribute("data-id");
-            setActive(Number(id));
+            setActive(id);
           }
         });
       },
@@ -37,7 +36,6 @@ function PackageInfo(props) {
 
   const handleMenuClick = (id) => {
     setActive(id);
-    setItemId(id);
     sectionRefs.current[id]?.scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -149,6 +147,7 @@ function PackageInfo(props) {
           cardInfo={props.cardInfo}
           cardHeading={props.cardHeading}
           services={props.services}
+          packageMenu={props.packageMenu}
           CardImage={CardImage}
         />
 
@@ -159,7 +158,7 @@ function PackageInfo(props) {
             </h4>
           </Card.Header>
           <Card.Body>
-            {props.cuisines.map((item, index) => (
+            {props?.cuisines?.map((item, index) => (
               <Badge
                 variant="outline"
                 key={index}
@@ -182,17 +181,17 @@ function PackageInfo(props) {
         >
           {/* Menu Categories */}
           <div className="hidden lg:block">
-            <MenuCategories packageMenu={props.packageMenu} isActive={active} handleMenuClick={() => handleMenuClick} />
+            <MenuCategories packageMenu={props?.packageMenu} isActive={active} handleMenuClick={() => handleMenuClick} />
           </div>
           {/* food items */}
           <div className="w-full md:max-w-[600px] ">
             <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
             <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
-              <FoodItems packageMenu={props.packageMenu} sectionRefs={sectionRefs} />
+              <FoodItems packageMenu={props?.packageMenu} sectionRefs={sectionRefs} />
             </div>
           </div>
           {/* Amenities & Services */}
-          <PackageServices packageMenuDetails={props.packageMenu} handleMenuClick={() => handleMenuClick} sectionRefs={sectionRefs} />
+          <PackageServices services={props?.services} handleMenuClick={() => handleMenuClick} sectionRefs={sectionRefs} />
         </div>
       </main>
     </>

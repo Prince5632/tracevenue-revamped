@@ -1,4 +1,5 @@
 import { Card } from "@/shared/components/ui";
+import CategoryIcon from "./CategoryIcon";
 
 /* Count all items in a category (direct offerings + subcategory offerings) */
 const countItems = (category) => {
@@ -35,11 +36,12 @@ function MenuCategories({ packageMenu, isActive, handleMenuClick }) {
                             <div
                                 key={category.categoryId}
                                 onClick={() => onMenuClick?.(category.categoryId)}
-                                className={`h-[20px] p-[12px] mb-[14px] w-full flex items-center justify-start cursor-pointer hover:border-l-2 border-l-2 ${isActiveCategory
-                                        ? "border-l-[#ff4000]"
-                                        : "border-l-[#ffffff]"
+                                className={`h-[20px] p-[12px] mb-[14px] gap-1 w-full flex items-center justify-start cursor-pointer hover:border-l-2 border-l-2 ${isActiveCategory
+                                    ? "border-l-[#ff4000]"
+                                    : "border-l-[#ffffff]"
                                     }`}
                             >
+                                <CategoryIcon name={category.categoryName} size={16} className="mr-[3px]" />
                                 <span
                                     className={`text-[16px] font-semibold ${isActiveCategory ? "text-[#060606]" : "text-[#5C5F62]"
                                         } transition-all duration-300`}
