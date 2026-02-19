@@ -2,14 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import Map from '@/components/common/Map';
 import { LoadScript } from '@react-google-maps/api';
 import { Card } from '@shared/components/ui';
-import Veg from '@assets/images/veg.svg';
 import LocationIcon from '@assets/images/locationPin.svg' // Renamed to avoid conflict
 import NonVeg from '@assets/images/non-veg.svg';
 import ColdDrink from '@assets/images/colddrink.svg';
 import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
-import { datePrettify } from "@/utils/date-item"; // Assuming this exists or I'll use local helper
 
 const EnquiriesDetail = ({ job }) => {
   const [center, setCenter] = useState(null);
