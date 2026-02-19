@@ -166,6 +166,34 @@ const Location = ({ urlParams = {} }) => {
     }, 400);
   };
 
+  const handleSelectSuggestion = (suggestion) => {
+    if (!placeDetailsServiceRef.current) return;
+
+    placeDetailsServiceRef.current.getDetails(
+      { placeId: suggestion.place_id, fields: ["geometry", "formatted_address", "address_components"] },
+      (place, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
+          const details = extractLocationDetails(
+            place.address_components,
+            place.formatted_address,
+            place.geometry,
+          );
+
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+
+          setLocationInput(details.name);
+          setCenter({ lat, lng });
+          setSuggestions([]);
+          setShowOptions(false);
+          setShowRadiusSlider(true);
+          setShowMapMarker(true);
+          updateGlobalState(details, range);
+        }
+      },
+    );
+  };
+
   const detectCurrentLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation not supported");
@@ -272,12 +300,12 @@ const Location = ({ urlParams = {} }) => {
         <div className="relative flex items-center w-full">
           <Input
             type="text"
-            inputClassName="text-secondary text-[14px] py-2 z-2 pr-20 font-normal" 
+            inputClassName="text-secondary text-[14px] py-2 z-2 pr-20 font-normal"
             placeholder="Enter Location"
             value={locationInput}
             onChange={handleInputChange}
             onFocus={() => setShowOptions(true)}
-            leftIcon={<img src={LocationIcon} alt="location_icon"/>}
+            leftIcon={<img src={LocationIcon} alt="location_icon" />}
             rightIcon={
               <Search size={18} className="text-primary cursor-pointer" />
             }

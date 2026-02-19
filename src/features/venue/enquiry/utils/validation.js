@@ -105,12 +105,25 @@ export const validateGatheringBudgetStep = (formData) => {
             issue: STEP_IDS.GATHERING_BUDGET,
         };
     }
-    if (!minBudget || !maxBudget) {
-        return {
-            isValid: false,
-            message: "Please enter your budget.",
-            issue: STEP_IDS.GATHERING_BUDGET,
-        };
+    const isLumpSum = formData?.budgetType === 'lumpSum';
+    if (isLumpSum) {
+        // Lump sum: only maxBudget (total) is required, minBudget is 0
+        if (!maxBudget || isNaN(maxBudget)) {
+            return {
+                isValid: false,
+                message: "Please enter your budget.",
+                issue: STEP_IDS.GATHERING_BUDGET,
+            };
+        }
+    } else {
+        // Per person: both min and max are required
+        if (!minBudget || !maxBudget) {
+            return {
+                isValid: false,
+                message: "Please enter your budget.",
+                issue: STEP_IDS.GATHERING_BUDGET,
+            };
+        }
     }
     if (maxBudget < minBudget) {
         return {

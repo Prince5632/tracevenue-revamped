@@ -14,6 +14,8 @@ import {
   validateWithCuisineApi,
 } from "@/features/venue/services/enquiryValidationService";
 import { fetchCuisineCombinations } from "@/features/venue/services/cuisineComboService";
+import { createJob, updateJob } from "@/features/venue/services/jobService";
+import { saveClubbedData } from "@/features/venue/services/clubbedPackageService";
 import { matchEventFromCatalog, isObjectId } from "@/features/venue/enquiry/utils/eventMatching";
 import { Button } from "@shared/components/ui";
 import { STEP_IDS } from "@/features/venue/enquiry/constants/steps";
@@ -63,6 +65,10 @@ const EnquiryLayout = () => {
     eventOptions,
     eventOptionsLoading,
     loadEventOptions,
+    jobId,
+    setJobId,
+    setCuisineCombinationsData,
+    setClubbedPackageId,
   } = useEnquiryStore();
 
   useLayoutEffect(() => {
@@ -174,7 +180,9 @@ const EnquiryLayout = () => {
 
   const currentStep = steps[boundedStepIndex] || null;
   const isFirstStep = boundedStepIndex === 0;
-  const isLastStep = boundedStepIndex === steps.length - 1;
+  const isLastStep = boundedStepIndex === steps.length - 2;
+  const totalSteps = steps.length - 1;
+  const isDiscoverPackagesStep = currentStep?.componentKey === "DiscoverPackages";
 
 
 
@@ -324,8 +332,7 @@ const EnquiryLayout = () => {
       formData,
       wizardSnapshot.formData,
     );
-
-    if (shouldValidateCuisine(currentStep?.id) && currentStep?.id === STEP_IDS.FOOD_PREFERENCES) {
+    if (!shouldValidateCuisine(currentStep?.id) && currentStep?.id === STEP_IDS.FOOD_PREFERENCES) {
       setIsApiLoading(true);
       try {
         const response = await fetchCuisineCombinations(formData);
@@ -341,6 +348,8 @@ const EnquiryLayout = () => {
             setSuggestionMessage(msg);
             return;
           }
+          // Store cuisine API response for draft job creation
+          updateFormData("cuisineApiResponse", data);
         }
       } catch (error) {
         console.error("Cuisine API verification failed", error);
@@ -359,7 +368,81 @@ const EnquiryLayout = () => {
     commitAnswersThroughStep(commitIndex);
 
     if (isLastStep) {
-      alert("Enquiry flow complete!");
+      // === Step 6 complete: Create draft job + save clubbed data ===
+      setIsApiLoading(true);
+      try {
+        // 1. Build job data from formData
+        const jobData = {
+          name: formData?.jobTitle || "Untitled Enquiry",
+          description: "",
+          status: "Draft",
+          eventType: formData?.selectedEventType?.value || formData?.selectedEventType?.id,
+          cuisines: formData?.selectedCuisines?.map((c) => c?.value?.id || c?.value) || [],
+          budget: {
+            min: formData?.yourBudget?.min || 0,
+            max: formData?.yourBudget?.max || 0,
+          },
+          serviceType: formData?.selectedServiceType?.value || formData?.selectedServiceType,
+          services: formData?.services || [],
+          menuSections: formData?.countData || [],
+          numberOfGuests: formData?.selectedPeopleRange?.value,
+          peopleRange: {
+            minPeople: formData?.selectedPeopleRange?.minPeople,
+            maxPeople: formData?.selectedPeopleRange?.maxPeople,
+          },
+          isBudgetPerPerson: formData?.budgetType === "perPerson",
+          budgetType: formData?.budgetType || "perPerson",
+          dietaryRequirements: formData?.dietaryRequirements || [],
+          location: formData?.locationData,
+          selectedCities: formData?.selectedCities || [],
+          radius: String(formData?.distance || ""),
+          eventDate: formData?.selectedDates?.[0]?.date || "",
+          eventDateOptions: {
+            preferredDates: formData?.selectedDates?.slice(0, 1) || [],
+            alternateDates: formData?.selectedDates?.slice(1) || [],
+          },
+          vegOnly: formData?.dietaryRequirements?.includes("vegOnly") || false,
+          nonAlcoholicOnly: !formData?.dietaryRequirements?.includes("alcoholic"),
+        };
+
+        // 2. Create or update draft job
+        let currentJobId = jobId;
+        if (currentJobId) {
+          await updateJob(currentJobId, jobData);
+        } else {
+          const jobRes = await createJob(jobData);
+          currentJobId = jobRes?.jobId || jobRes?.data?._id;
+          setJobId(currentJobId);
+        }
+
+        // 3. Save clubbed cuisine data (from the cuisine API response)
+        // NOTE: Must read fresh state — formData above is a stale closure
+        const freshFormData = useEnquiryStore.getState().formData;
+        const cuisineResponse = freshFormData?.cuisineApiResponse;
+        const sortedCombinations = cuisineResponse?.data?.sorted_cuisine_combinations || [];
+        if (sortedCombinations.length > 0) {
+          const saveRes = await saveClubbedData(sortedCombinations);
+          console.log(saveRes, "saveRessaveRessaveRes");
+          // Store the savedDocs from API response — these have _id and wrapped cuisine format
+          const savedDocs = saveRes?.savedDocs || [];
+          if (savedDocs.length > 0) {
+            setCuisineCombinationsData(savedDocs);
+            // Use the first doc's _id as clubbedPackageId for reference
+            setClubbedPackageId(savedDocs[0]?._id);
+          } else {
+            // Fallback: use raw sorted combinations from cuisine API
+            setCuisineCombinationsData(sortedCombinations);
+          }
+        }
+
+        // 4. Advance to Discover Packages step (step 7 within wizard)
+        setActiveStepIndex((prev) => prev + 1);
+      } catch (error) {
+        console.error("Failed to create draft job:", error);
+        setSuggestionMessage("Something went wrong while saving. Please try again.");
+      } finally {
+        setIsApiLoading(false);
+      }
       return;
     }
 
@@ -457,7 +540,7 @@ const EnquiryLayout = () => {
 
         <Steps
           currentStep={currentStepNumber}
-          totalSteps={steps?.length}
+          totalSteps={totalSteps}
           title={currentStep?.title}
           subtitle={currentStep?.description}
           stepKey={currentStep?.componentKey}
@@ -468,6 +551,7 @@ const EnquiryLayout = () => {
           onBack={handleBack}
           isFirstStep={isFirstStep}
           isLastStep={isLastStep}
+          isDiscoverPackagesStep={isDiscoverPackagesStep}
           footerMessage={suggestionMessage}
         />
       </div>

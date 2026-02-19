@@ -16,6 +16,7 @@ const Steps = ({
   onBack,
   isFirstStep,
   isLastStep,
+  isDiscoverPackagesStep,
   footerMessage,
 }) => {
   return (
@@ -38,6 +39,7 @@ const Steps = ({
         isFirstStep={isFirstStep}
         isLastStep={isLastStep}
         message={footerMessage}
+        isDiscoverPackagesStep={isDiscoverPackagesStep}
       />
     </>
   );
