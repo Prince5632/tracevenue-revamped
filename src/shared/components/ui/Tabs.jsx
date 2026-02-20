@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * Tabs Component - TraceVenue Design System
@@ -16,6 +16,13 @@ const Tabs = ({
     ...props
 }) => {
      const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
+
+  // Sync internal state when defaultTab changes externally
+  useEffect(() => {
+    if (defaultTab) {
+      setActiveTab(defaultTab);
+    }
+  }, [defaultTab]);
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
