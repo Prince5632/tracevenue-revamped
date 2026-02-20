@@ -2,18 +2,27 @@ import React, { useState, useRef, useEffect } from 'react';
 import Map from '@/components/common/Map';
 import { LoadScript } from '@react-google-maps/api';
 import { Card } from '@shared/components/ui';
-import LocationIcon from '@assets/images/locationPin.svg' // Renamed to avoid conflict
+import LocationIcon from '@assets/images/locationPin.svg'
 import NonVeg from '@assets/images/non-veg.svg';
 import ColdDrink from '@assets/images/colddrink.svg';
 import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
+import { newFormatDate } from "@/utils/date-item";
 
 const EnquiriesDetail = ({ job }) => {
   const [center, setCenter] = useState(null);
 
   // Formatters
   const formatRupees = (value) => new Intl.NumberFormat('en-IN').format(value);
+
+  const formatTo12Hour = (time) => {
+    if (!time) return "";
+    const [h, m] = time.split(":").map(Number);
+    const period = h >= 12 ? "PM" : "AM";
+    const hour12 = h % 12 || 12;
+    return `${hour12}:${m.toString().padStart(2, "0")} ${period}`;
+  };
 
   // Derived Data
   const budgetMin = job?.budget?.min || 0;
@@ -24,7 +33,11 @@ const EnquiriesDetail = ({ job }) => {
   const maxPeople = job?.peopleRange?.maxPeople || 0;
 
   const city = job?.selectedCities?.[0];
-  const locationLabel = city ? `${city.subLocality?.long_name || ''}, ${city.locality?.long_name || ''}` : 'Location';
+  const locationLabel = city
+    ? (city.subLocality?.long_name && city.locality?.long_name
+      ? `${city.subLocality.long_name}, ${city.locality.long_name}`
+      : city.name || city.city || 'Location')
+    : 'Location';
 
   useEffect(() => {
     if (city?.latitude && city?.longitude) {
@@ -132,7 +145,7 @@ const EnquiriesDetail = ({ job }) => {
                 </div>
               </div>
               <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-                <Map center={center} radius={center ? (parseInt(job?.radius) || 10000) : 0} handleLocation={() => { }} />
+                <Map center={center} radius={center && job?.radius ? (parseInt(job.radius) || 10000) : 0} handleLocation={() => { }} />
               </LoadScript>
             </div>
           </div>
@@ -145,22 +158,23 @@ const EnquiriesDetail = ({ job }) => {
           <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Date & Time</h2>
           <div className="grid grid-row-2 gap-1">
             {dates.map((dateObj, idx) => {
-              const dateKey = Object.keys(dateObj)[0];
-              const dateVal = new Date(dateKey); // Simple parsing
-              const dayName = dateVal.toLocaleDateString('en-US', { weekday: 'long' });
-              const dayNum = dateVal.getDate();
-              const month = dateVal.toLocaleDateString('en-US', { month: 'short' });
+              const formatted = newFormatDate(dateObj.date || dateObj);
+              const dayName = formatted.date;
+              const dayNum = formatted.year;
+
+              const isAllDay = dateObj.allDay;
+              const timeDisplay = isAllDay ? "Full Day" : `${formatTo12Hour(dateObj.startTime)} - ${formatTo12Hour(dateObj.endTime)}`;
 
               return (
                 <Card key={idx} variant="default" padding="md" className="flex items-center justify-between gap-5">
                   <div className="text-left">
                     <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayName}</div>
-                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayNum} {month}</div>
+                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayNum}</div>
                   </div>
                   <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
                     <img src={Icon} alt="connector" className='pr-2' />
                     <div className="flex flex-col leading-tight text-center">
-                      <span>{dateObj[dateKey]}</span>
+                      <span>{timeDisplay}</span>
                     </div>
                   </div>
                 </Card>
@@ -168,21 +182,23 @@ const EnquiriesDetail = ({ job }) => {
             })}
             {alternateDates.length > 0 && <h2 className="font-gilroy font-bold text-lg mb-2 text-[#6c757d]">Alternate Dates</h2>}
             {alternateDates.map((dateObj, idx) => {
-              const dateKey = Object.keys(dateObj)[0];
-              const dateVal = new Date(dateKey);
-              const dayName = dateVal.toLocaleDateString('en-US', { weekday: 'long' });
-              const dayNum = dateVal.getDate();
-              const month = dateVal.toLocaleDateString('en-US', { month: 'short' });
+              const formatted = newFormatDate(dateObj.date || dateObj);
+              const dayName = formatted.date;
+              const dayNum = formatted.year;
+
+              const isAllDay = dateObj.allDay;
+              const timeDisplay = isAllDay ? "Full Day" : `${formatTo12Hour(dateObj.startTime)} - ${formatTo12Hour(dateObj.endTime)}`;
+
               return (
                 <Card key={`alt-${idx}`} variant="default" padding="md" className="flex items-center justify-between gap-5">
                   <div className="text-left">
                     <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayName}</div>
-                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayNum} {month}</div>
+                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayNum}</div>
                   </div>
                   <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
                     <img src={Icon} alt="connector" className='pr-2' />
                     <div className="flex flex-col leading-tight text-center">
-                      <span>{dateObj[dateKey]}</span>
+                      <span>{timeDisplay}</span>
                     </div>
                   </div>
                 </Card>
