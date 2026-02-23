@@ -9,6 +9,7 @@ import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
 import { newFormatDate } from "@/utils/date-item";
+import FoodItems from "@/features/package/components/FoodItems";
 
 const EnquiriesDetail = ({ job }) => {
   const [center, setCenter] = useState(null);
@@ -55,28 +56,50 @@ const EnquiriesDetail = ({ job }) => {
   const menuData = job?.menuSections || [];
   const servicesList = job?.services || [];
 
+  // Transform menuData for FoodItems component
+  const transformedMenu = React.useMemo(() => {
+    return menuData.map((section, index) => ({
+      categoryId: section.section || `cat-${index}`,
+      categoryName: section.section,
+      offerings: section.groups?.map(group => ({
+        itemTypeId: group.title,
+        itemTypeName: group.title,
+        items: group.items?.map(item => ({ name: item })) || [],
+        selectionLimit: null
+      })) || [],
+      subcategories: []
+    }));
+  }, [menuData]);
+
   /* SCROLL SPY LOGIC  */
-  const sectionRefs = useRef([]);
-  const [activeSection, setActiveSection] = useState(0);
+  const sectionRefs = useRef({});
+  const [activeSection, setActiveSection] = useState(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(Number(entry.target.dataset.index));
+            const id = entry.target.getAttribute("data-id");
+            setActiveSection(id);
           }
         });
       },
-      { root: null, threshold: 0.4 }
+      { root: null, threshold: 0.2, rootMargin: "-10% 0px -70% 0px" }
     );
-    sectionRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, [menuData]);
 
-  const scrollToSection = (index) => {
-    const section = sectionRefs.current[index];
+    // Slight delay to ensure refs are set
+    setTimeout(() => {
+      Object.values(sectionRefs.current).forEach((el) => el && observer.observe(el));
+    }, 100);
+
+    return () => observer.disconnect();
+  }, [transformedMenu]);
+
+  const scrollToSection = (categoryId) => {
+    const section = sectionRefs.current[categoryId];
     if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveSection(categoryId);
   };
 
   const selectedServiceType = job?.serviceType || 'both'; // 'venue', 'catering', 'both'
@@ -252,15 +275,18 @@ const EnquiriesDetail = ({ job }) => {
             <Card className="h-105.25 w-70">
               <h2 className="font-sans text-lg mb-4 h-5.25">Menu</h2>
               <ul className="space-y-1 mb-6">
-                {menuData.map((section, index) => (
-                  <li key={index}>
-                    <button type="button" onClick={() => scrollToSection(index)}
-                      className={`w-full flex items-center justify-between px-2 py-3 rounded transition cursor-pointer text-left ${activeSection === index ? "bg-[#FFF8F0] text-[#E29F55] border-l-4 border-[#e0a057]" : "text-gray-600 hover:bg-gray-50"}`}>
-                      <span className="text-base font-sans">{section.section}</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded">{section.count}</span>
-                    </button>
-                  </li>
-                ))}
+                {menuData.map((section, index) => {
+                  const catId = section.section || `cat-${index}`;
+                  return (
+                    <li key={index}>
+                      <button type="button" onClick={() => scrollToSection(catId)}
+                        className={`w-full flex items-center justify-between px-2 py-3 rounded transition cursor-pointer text-left ${activeSection === catId ? "bg-[#FFF8F0] text-[#E29F55] border-l-4 border-[#e0a057]" : "text-gray-600 hover:bg-gray-50"}`}>
+                        <span className="text-base font-sans">{section.section}</span>
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded">{section.count || section.groups?.reduce((acc, g) => acc + (g.items?.length || 0), 0)}</span>
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
               {/* Services in side menu */}
               {servicesList.length > 0 && (
@@ -279,30 +305,10 @@ const EnquiriesDetail = ({ job }) => {
 
         {/* RIGHT FOOD */}
         <div id="food-scroll" className="flex-1 w-full lg:w-[65%] space-y-6 grid grid-cols-1">
-          <Card className="hidden lg:block">
+          <div className="hidden lg:block w-full">
             <h1 className="font-sans text-lg mb-4 h-5.25">Food Items</h1>
-            {menuData.map((section, index) => (
-              <div key={index} ref={(el) => (sectionRefs.current[index] = el)} data-index={index} className="mb-10">
-                <h2 className="font-sans text-[18.4px] h-11 border-b-2 border-[#e29f55] mb-4 pb-2.5 text-[#1A1A1A]">{section.section}</h2>
-                {section.groups?.map((group, gIndex) => (
-                  <Card key={gIndex} className="mb-5">
-                    <div className="flex items-center gap-3 mb-3">
-                      <h3 className="font-sans text-lg h-5.5 text-[#060606] mb-2.5">{group.title}</h3>
-                    </div>
-                    <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-                      {group.items?.map((item, i) => (
-                        <li key={i} className="flex items-start gap-1">
-                          {/* Icons aren't dynamically mapped easily, falling back to section icon if available or dot */}
-                          <img src={Icon} className="w-4 h-4 mt-1" />
-                          <span className="font-sans pr-2.5 text-sm">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </Card>
-                ))}
-              </div>
-            ))}
-          </Card>
+            <FoodItems packageMenu={transformedMenu} sectionRefs={sectionRefs} />
+          </div>
 
           {/* Services bottom card */}
           <Card className="hidden lg:block">

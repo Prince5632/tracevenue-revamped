@@ -18,7 +18,8 @@ export const generateToken = async (formData, showErrorToast) => {
 };
 export const userIsLogged = async () => {
   try {
-    const response = await API.get("users/verify");
+    // Add silent: true to prevent global login modal on 401
+    const response = await API.get("users/verify", { silent: true });
     if (response?.status === 200 && response?.data?.message === "no token") {
       localStorage.removeItem("userDetails");
     }

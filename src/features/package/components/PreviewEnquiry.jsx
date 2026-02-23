@@ -6,12 +6,17 @@ import { Download, Pencil, Loader2 } from 'lucide-react';
 import jsPDF from "jspdf";
 import { updateJob } from "@/features/venue/services/jobService";
 import { useNavigate } from "react-router-dom";
+import { useLogin } from "@/hooks/useLogin";
+import { useRaiseEnquiry } from "@/features/venue/enquiry/utils/raiseEnquiry";
 
 function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
+    console.log(job, "job")
     const [isClick, setIsClick] = useState(false);
     const [isFocus, setIsFoucus] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { login, isLoggedIn } = useLogin();
+    const { raiseEnquiry } = useRaiseEnquiry();
 
     const [value, setValue] = useState(job?.name || "");
     const [editValue, setEditValue] = useState(job?.name || "");
@@ -49,11 +54,12 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
     }
 
     const handleRaiseEnquiry = async () => {
+        if (!login()) return;
+
         setLoading(true);
         try {
-            // Update job status to Active if it's Draft, or just proceed
-            await updateJob(job._id, { status: "Active" });
-            navigate(`/service/venues/enquiry/details/${job._id}`);
+            await raiseEnquiry(value, job, job._id);
+            // Hook handles navigation
             setIsModalOpen(false);
         } catch (error) {
             console.error("Error raising enquiry:", error);
@@ -147,7 +153,6 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
                         class="
                     ml-1
                     text-[14px] text-[#ffffff]
-                    transition-transform transition-all
                     fa-solid fa-arrow-right group-hover:translate-x-1 duration-300 ease-in font-extrabold!
                   "
                     ></i>}

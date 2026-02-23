@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
 
     // Convenience getters
     const userId = user?._id || user?.id || null;
-    const userName = user?.userName || user?.name || null;
+    const userName = user?.userName || null;
     const userEmail = user?.email || null;
     const userPhone = user?.phoneNumber || null;
 

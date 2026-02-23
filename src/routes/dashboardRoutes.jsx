@@ -8,6 +8,7 @@ import ComparePackages from "@/features/venue/enquiry/components/ComparePackages
 import EnquiryDetailLayout from "@/features/venue/enquiry/Layout/EnquiryDetailLayout";
 import Quotationpage from "@/features/venue/enquiry/components/Quotation/Quotationpage";
 import Offer_booking from "@/features/venue/enquiry/components/OfferBooking/Offer_booking";
+import ProtectedRoute from "@/routes/ProtectedRoute";
 /**
  * Dashboard routes - protected routes requiring authentication
  * These will be implemented as the project grows
@@ -15,7 +16,11 @@ import Offer_booking from "@/features/venue/enquiry/components/OfferBooking/Offe
 
 export const dashboardRoutes = [
   {
-    element: <DashboardLayout />,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "/dashboard",
@@ -52,20 +57,13 @@ export const dashboardRoutes = [
         path: "/service/venues/contracts/:status",
         element: <Contract />,
       },
-      // enquiry detail routes
-      {
-        path: "/service/venues/enquiry/enquiry-detail",
-        element: <EnquiriesDetail />,
-      },
-
-      // other routes
       {
         path: "/venueGallery",
         element: <RestaurantDetailModal />,
       },
 
       {
-        path: "/enquiry-detail-layout",
+        path: "/service/venues/enquiry/details/:id",
         element: <EnquiryDetailLayout />,
         children: [
           { index: true, element: <Quotationpage /> }, // default
