@@ -32,6 +32,7 @@ const Steps = ({
         formData={formData}
         updateFormData={updateFormData}
         urlParams={urlParams}
+        onNext={onNext}
       />
       <StepControlFooter
         onNext={onNext}
