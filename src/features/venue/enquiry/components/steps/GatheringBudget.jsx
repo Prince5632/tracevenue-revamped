@@ -185,6 +185,7 @@ const GatheringBudget = ({ formData, updateFormData }) => {
               <Button
                 variant="outline"
                 size="3xs"
+                tabIndex={-1}
                 onClick={() => handleBudgetTypeSelect('perPerson')}
                 className={`rounded-full px-2 ${budgetType === 'perPerson'
                   ? 'text-orange-600 border-[#ff4000]'
@@ -197,6 +198,7 @@ const GatheringBudget = ({ formData, updateFormData }) => {
               <Button
                 variant="outline"
                 size="3xs"
+                tabIndex={-1}
                 onClick={() => handleBudgetTypeSelect('lumpSum')}
                 className={`rounded-full px-2 ${budgetType === 'lumpSum'
                   ? 'text-orange-600 border-[#ff4000]'
