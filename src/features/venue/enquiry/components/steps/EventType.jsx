@@ -12,7 +12,7 @@ import EventTab from "../EventTypeComponents/EventTab";
 import SearchBar from "../EventTypeComponents/SearchBar";
 import useEnquiryStore from "../../context/useEnquiryStore";
 
-const EventType = ({ formData: propFormData, updateFormData: propUpdater }) => {
+const EventType = ({ formData: propFormData, updateFormData: propUpdater, onNext }) => {
   const formData = useEnquiryStore((state) => propFormData ?? state.formData);
   const updateFormData =
     propUpdater ?? useEnquiryStore((state) => state.updateFormData);
@@ -24,6 +24,7 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater }) => {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [autoNext, setAutoNext] = useState(false);
   const openSearch = () => setIsSearchOpen(true);
   const toggleSearch = () => setIsSearchOpen((prev) => !prev);
   const closeSearch = () => setIsSearchOpen(false);
@@ -129,12 +130,12 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater }) => {
     const match = matchEventFromCatalog(eventOptions, event);
     const normalized = match
       ? {
-          id: match._id,
-          value: match._id,
-          eventName: match.eventName || match.label,
-          label: match.eventName || match.label,
-          slug: match.slug,
-        }
+        id: match._id,
+        value: match._id,
+        eventName: match.eventName || match.label,
+        label: match.eventName || match.label,
+        slug: match.slug,
+      }
       : normalizeEventSelection(event);
 
     if (!normalized) return;
@@ -143,6 +144,7 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater }) => {
     setSearchValue(normalized.label || "");
     setIsSearchOpen(false);
     updateFormData("selectedEventType", normalized);
+    setAutoNext(true);
   };
 
   const clearSelection = () => {
@@ -150,6 +152,13 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater }) => {
     setSelectedEventId(null);
     updateFormData("selectedEventType", null);
   };
+
+  useEffect(() => {
+    if (autoNext && formData.selectedEventType && onNext) {
+      onNext();
+      setAutoNext(false);
+    }
+  }, [autoNext, formData.selectedEventType, onNext]);
 
   return (
     <>
@@ -169,7 +178,7 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater }) => {
           closeSearch();
         }}
         onToggle={toggleSearch}
-        onClose = {closeSearch}
+        onClose={closeSearch}
       />
 
       <div className="py-5 ">

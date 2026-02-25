@@ -24,17 +24,17 @@ const Sidebar = ({
           className="absolute inset-0 flex items-center text-white 
         text-2xl font-bold z-10 ml-10 leading-none"
         >
-          Plan Your Event<br /> in 
+          Plan Your Event<br /> in
           Minutes
         </h2>
       </div>
 
       {/* Steps Section */}
       <div className="flex-1 ml-7 z-10 mt-2 pr-8 ">
-        {steps.map((step, index) => {
+        {steps.filter((s) => s.id !== "discover_packages").map((step, index) => {
           return (
-            <li 
-              key={step.id} 
+            <li
+              key={step.id}
               className="list-none cursor-pointer"
               onClick={() => onStepClick && onStepClick(index)}
             >
@@ -43,7 +43,7 @@ const Sidebar = ({
                 step2={{ ...step, subheading: step.shortTitle }}
                 index={index + 1}
                 currentStep={currentStep}
-                isLast={index === steps.length - 1}
+                isLast={index === steps.length - 2}
                 formData={formData}
               />
             </li>

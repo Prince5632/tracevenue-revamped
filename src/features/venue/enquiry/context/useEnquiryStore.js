@@ -14,6 +14,11 @@ const useEnquiryStore = create((set, get) => ({
   eventOptions: [],
   eventOptionsLoading: false,
 
+  // Draft job & cuisine data (set after step 6)
+  jobId: null,
+  cuisineCombinationsData: null,
+  clubbedPackageId: null,
+
   // === Form Data Actions ===
   hydrateFromUrl: (nextData) =>
     set({
@@ -62,6 +67,11 @@ const useEnquiryStore = create((set, get) => ({
       set({ eventOptionsLoading: false });
     }
   },
+
+  // === Draft Job & Cuisine Setters ===
+  setJobId: (id) => set({ jobId: id }),
+  setCuisineCombinationsData: (data) => set({ cuisineCombinationsData: data }),
+  setClubbedPackageId: (id) => set({ clubbedPackageId: id }),
 
   clearValidationFeedback: () =>
     set({

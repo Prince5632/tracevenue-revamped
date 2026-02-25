@@ -1,4 +1,5 @@
 import { API } from "@/shared";
+import useEnquiryStore from "@/features/venue/enquiry/context/useEnquiryStore";
 
 const getSelectedCities = (formData = {}) => {
   if (Array.isArray(formData.selectedCities) && formData.selectedCities.length) {
@@ -194,6 +195,9 @@ export const validateWithCuisineApi = async (stepId, formData = {}) => {
       };
     }
 
+    // Store cuisine API response on every successful call
+    useEnquiryStore.getState().updateFormData("cuisineApiResponse", data);
+
     return {
       ok: true,
       raw: data,
@@ -250,6 +254,7 @@ export const ensureCuisineCombinations = async (formData = {}) => {
         suggestions: data?.suggestions,
       };
     }
+    useEnquiryStore.getState().updateFormData("cuisineApiResponse", data);
     return { ok: true, raw: data };
   } catch (error) {
     console.error("Cuisine combination check failed", error);

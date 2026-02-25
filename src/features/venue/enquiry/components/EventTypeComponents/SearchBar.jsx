@@ -18,7 +18,7 @@ const SearchBar = ({
   useEffect(() => {
   function handleClickOutside(event) {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      onclose()   // close dropdown
+      // onclose()   // close dropdown
     }
   }
 

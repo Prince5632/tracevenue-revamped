@@ -24,6 +24,7 @@
   "dependencies": {
     "@marsidev/react-turnstile": "^1.4.1",
     "@react-google-maps/api": "^2.20.8",
+    "@react-pdf/pdfkit": "^4.1.0",
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.16",

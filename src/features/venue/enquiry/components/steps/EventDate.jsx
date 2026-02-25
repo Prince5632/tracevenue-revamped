@@ -8,36 +8,56 @@ import hoursgreen from "@assets/new images/hours.png";
 import hoursgray from "@assets/new images/hoursgray.svg";
 import GreenLine from "../EventDate/GreenLine";
 
+const parseStoredDate = (entry) => ({
+  date: entry?.date ? new Date(entry.date + "T00:00:00") : null,
+  allDay: Boolean(entry?.allDay),
+  startTime: entry?.allDay ? "09:00" : (entry?.startTime || "09:00"),
+  endTime: entry?.allDay ? "17:00" : (entry?.endTime || "17:00"),
+  open: false,
+});
+
 const EventDate = ({ formData, updateFormData }) => {
 
   /* -------------------- STATE -------------------- */
 
-  const [preferred, setPreferred] = useState({
-    date: new Date(),
-    allDay: false,
-    startTime: "09:00",
-    endTime: "17:00",
-    open: false,
-  });
+  const storedDates = formData?.selectedDates;
+  const hasStored = Array.isArray(storedDates) && storedDates.length > 0;
 
-  const [alternateDates, setAlternateDates] = useState([]);
+  const [preferred, setPreferred] = useState(() =>
+    hasStored
+      ? parseStoredDate(storedDates[0])
+      : { date: null, allDay: false, startTime: "09:00", endTime: "17:00", open: false }
+  );
+
+  const [alternateDates, setAlternateDates] = useState(() =>
+    hasStored && storedDates.length > 1
+      ? storedDates.slice(1).map(parseStoredDate)
+      : []
+  );
 
   /* -------------------- HELPERS -------------------- */
 
-  const formatDateForStore = (obj) => ({
-    date: obj.date.toISOString().split("T")[0],
-    allDay: obj.allDay,
-    startTime: obj.allDay ? "00:00" : obj.startTime,
-    endTime: obj.allDay ? "23:59" : obj.endTime,
-  });
+  const formatDateForStore = (obj) => {
+    if (!obj.date) return null;
+    const d = obj.date;
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return {
+      date: `${yyyy}-${mm}-${dd}`,
+      allDay: obj.allDay,
+      startTime: obj.allDay ? "00:00" : obj.startTime,
+      endTime: obj.allDay ? "23:59" : obj.endTime,
+    };
+  };
 
   const getAllSelectedDates = () => {
-    const preferredDate = preferred.date.toDateString();
-    const altDates = alternateDates
+    const dates = [];
+    if (preferred.date) dates.push(preferred.date.toDateString());
+    alternateDates
       .filter((d) => d.date)
-      .map((d) => d.date.toDateString());
-
-    return [preferredDate, ...altDates];
+      .forEach((d) => dates.push(d.date.toDateString()));
+    return dates;
   };
 
   const isDateDisabled = (date, currentDate = null) => {
@@ -50,11 +70,13 @@ const EventDate = ({ formData, updateFormData }) => {
   /* -------------------- STORE UPDATE -------------------- */
 
   useEffect(() => {
+    const preferredFormatted = formatDateForStore(preferred);
     const allDates = [
-      formatDateForStore(preferred),
+      ...(preferredFormatted ? [preferredFormatted] : []),
       ...alternateDates
         .filter((d) => d.date)
-        .map((d) => formatDateForStore(d)),
+        .map((d) => formatDateForStore(d))
+        .filter(Boolean),
     ];
     updateFormData("selectedDates", allDates);
   }, [preferred, alternateDates]);
@@ -158,58 +180,95 @@ const EventDate = ({ formData, updateFormData }) => {
           Preferred Date
         </h1>
 
-        <Card
-          variant="default"
-          padding="md"
-          className="relative flex items-center justify-around gap-5"
-        >
-          <div>{renderDateText(preferred.date)}</div>
-
-          <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580] rounded-xl px-3 py-1">
-            <GreenLine type={preferred.allDay ? "Fullday" : "Time"} />
-            {!preferred.allDay && (
-              <div className="flex flex-col">
-                <CustomTimePicker
-                  value={preferred.startTime}
-                  onChange={(val) =>
-                    handlePreferredTimeChange("startTime", val)
-                  }
-                />
-                <CustomTimePicker
-                  value={preferred.endTime}
-                  onChange={(val) =>
-                    handlePreferredTimeChange("endTime", val)
-                  }
-                />
-              </div>
-            )}
-          </div>
-
-          <button onClick={togglePreferredAllDay}>
-            <img src={preferred.allDay ? hoursgreen : hoursgray} alt="" />
-          </button>
-
-          <div className="relative">
-            <button onClick={() =>
-              setPreferred((p) => ({ ...p, open: !p.open }))
-            }>
-              <img src={imgcal} alt="" />
-            </button>
+        {!preferred.date ? (
+          <Card
+            className="w-full flex justify-center items-center cursor-pointer h-26 relative"
+            onClick={() => setPreferred((p) => ({ ...p, open: !p.open }))}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              className="text-orange-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
 
             {preferred.open && (
-              <div className="absolute top-full left-3/2 -translate-x-2/2 mt-2 rounded-xl shadow-lg z-50 bg-white">
+              <div
+                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 rounded-xl shadow-lg z-50 bg-white"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Calendar
-                  date={preferred.date}
+                  date={new Date()}
                   onChange={handlePreferredDate}
-                  disabledDay={(date) =>
-                    isDateDisabled(date, preferred.date)
-                  }
+                  disabledDay={(date) => isDateDisabled(date)}
                   minDate={new Date()}
                 />
               </div>
             )}
-          </div>
-        </Card>
+          </Card>
+        ) : (
+          <Card
+            variant="default"
+            padding="md"
+            className="relative flex items-center justify-around gap-5"
+          >
+            <div>{renderDateText(preferred.date)}</div>
+
+            <div className="flex items-center sm:w-[30%] w-[34%] justify-between bg-[#C6FBE580] rounded-xl px-3 py-1">
+              <GreenLine type={preferred.allDay ? "Fullday" : "Time"} />
+              {!preferred.allDay && (
+                <div className="flex flex-col">
+                  <CustomTimePicker
+                    value={preferred.startTime}
+                    onChange={(val) =>
+                      handlePreferredTimeChange("startTime", val)
+                    }
+                  />
+                  <CustomTimePicker
+                    value={preferred.endTime}
+                    onChange={(val) =>
+                      handlePreferredTimeChange("endTime", val)
+                    }
+                  />
+                </div>
+              )}
+            </div>
+
+            <button onClick={togglePreferredAllDay}>
+              <img src={preferred.allDay ? hoursgreen : hoursgray} alt="" />
+            </button>
+
+            <div className="relative">
+              <button onClick={() =>
+                setPreferred((p) => ({ ...p, open: !p.open }))
+              }>
+                <img src={imgcal} alt="" />
+              </button>
+
+              {preferred.open && (
+                <div className="absolute top-full left-3/2 -translate-x-2/2 mt-2 rounded-xl shadow-lg z-50 bg-white">
+                  <Calendar
+                    date={preferred.date}
+                    onChange={handlePreferredDate}
+                    disabledDay={(date) =>
+                      isDateDisabled(date, preferred.date)
+                    }
+                    minDate={new Date()}
+                  />
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
       </div>
 
       {/* Alternate Dates */}

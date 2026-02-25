@@ -6,7 +6,7 @@ import * as Steps from './steps';
  * Dynamically renders the step component based on stepKey
  * Passes formData and updateFormData props to step components
  */
-const StepRenderer = ({ stepKey, formData = {}, updateFormData, urlParams = {} }) => {
+const StepRenderer = ({ stepKey, formData = {}, updateFormData, urlParams = {}, onNext }) => {
     const StepComponent = Steps[stepKey];
 
     if (!StepComponent) {
@@ -18,6 +18,7 @@ const StepRenderer = ({ stepKey, formData = {}, updateFormData, urlParams = {} }
             formData={formData}
             updateFormData={updateFormData}
             urlParams={urlParams}
+            onNext={onNext}
         />
     );
 };

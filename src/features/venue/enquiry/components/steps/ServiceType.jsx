@@ -1,13 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { serviceOptions } from "@features/venue/enquiry/constants";
 import { decodeServiceTypeFromUrl } from "@features/venue/enquiry/utils";
 import useEnquiryStore from "../../context/useEnquiryStore";
 import OptionCard from "../ServiceTypeComponents/OptionCard";
 
-const ServiceTypePage = ({ urlParams = {} }) => {
+const ServiceTypePage = ({ urlParams = {}, onNext }) => {
   // Use global store
   const { formData, updateFormData } = useEnquiryStore();
+  const [autoNext, setAutoNext] = useState(false);
+
+  const handleSelect = (id) => {
+    updateFormData("serviceType", id);
+    setAutoNext(true);
+  };
+
+  useEffect(() => {
+    if (autoNext && formData.serviceType && onNext) {
+      onNext();
+      setAutoNext(false);
+    }
+  }, [autoNext, formData.serviceType, onNext]);
 
   return (
     <>
@@ -24,7 +37,7 @@ const ServiceTypePage = ({ urlParams = {} }) => {
             description={option.description}
             image={option.image}
             selected={formData.serviceType}
-            onClick={() => updateFormData("serviceType", option.id)}
+            onClick={() => handleSelect(option.id)}
           />
         ))}
       </div>

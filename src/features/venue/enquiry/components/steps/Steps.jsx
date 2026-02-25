@@ -1,6 +1,7 @@
 import React from "react";
 import StepIndicator from "../shared/StepIndicator";
 import StepContent from "../shared/StepContent";
+import StepShimmer from "../shared/StepShimmer";
 import { StepControlFooter } from "@/shared";
 
 const Steps = ({
@@ -16,7 +17,9 @@ const Steps = ({
   onBack,
   isFirstStep,
   isLastStep,
+  isDiscoverPackagesStep,
   footerMessage,
+  isResolving,
 }) => {
   return (
     <>
@@ -25,20 +28,29 @@ const Steps = ({
         totalSteps={totalSteps}
         title={title}
         subtitle={subtitle}
+        isDiscoverPackagesStep={isDiscoverPackagesStep}
       />
-      <StepContent
-        stepKey={stepKey}
-        formData={formData}
-        updateFormData={updateFormData}
-        urlParams={urlParams}
-      />
-      <StepControlFooter
-        onNext={onNext}
-        onBack={onBack}
-        isFirstStep={isFirstStep}
-        isLastStep={isLastStep}
-        message={footerMessage}
-      />
+      {isResolving ? (
+        <StepShimmer stepKey={stepKey} />
+      ) : (
+        <>
+          <StepContent
+            stepKey={stepKey}
+            formData={formData}
+            updateFormData={updateFormData}
+            urlParams={urlParams}
+            onNext={onNext}
+          />
+          <StepControlFooter
+            onNext={onNext}
+            onBack={onBack}
+            isFirstStep={isFirstStep}
+            isLastStep={isLastStep}
+            message={footerMessage}
+            isDiscoverPackagesStep={isDiscoverPackagesStep}
+          />
+        </>
+      )}
     </>
   );
 };

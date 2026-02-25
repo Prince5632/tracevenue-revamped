@@ -83,18 +83,19 @@ const GatheringBudget = ({ formData, updateFormData }) => {
   };
 
   const handleBudgetTypeSelect = (type) => {
+    if (type === budgetType) return; // no-op if same type
     setBudgetType(type);
     updateFormData('budgetType', type);
 
-    // Reset values or convert?
-    // Existing logic kept values but converted them.
-    // Let's stick to simple reset or re-calculation if needed.
+    const people = Number(maxPeople) || 0;
+
     if (type === 'lumpSum') {
-      // Auto-calculate if data exists
-      if (maxPeople && maxBudget && budgetType === 'perPerson') {
-        const total = String(Number(maxPeople) * Number(maxBudget));
+      // Switching perPerson → lumpSum
+      // Total = maxBudget (per person) × maxPeople
+      const perPersonMax = Number(maxBudget) || 0;
+      if (perPersonMax > 0 && people > 0) {
+        const total = String(Math.round(perPersonMax * people));
         setBudget(total);
-        handleBudgetChange('total', total); // triggers store update inside logic above? No, need to change logic.
         updateFormData('minBudgetValue', 0);
         updateFormData('maxBudgetValue', total);
       } else {
@@ -103,11 +104,17 @@ const GatheringBudget = ({ formData, updateFormData }) => {
         updateFormData('maxBudgetValue', "");
       }
     } else {
-      // Switching to perPerson
-      if (maxBudget && budgetType === 'lumpSum') {
-        // Approximate? 
-        // Logic: 80% of (Total / MaxPeople)? 
-        // Simple: Clear fields to avoid confusion.
+      // Switching lumpSum → perPerson
+      // max = total / maxPeople, min = 80% of max
+      const total = Number(budget) || 0;
+      if (total > 0 && people > 0) {
+        const perPersonMax = Math.round(total / people);
+        const perPersonMin = Math.round(perPersonMax * 0.8);
+        setMaxBudget(String(perPersonMax));
+        setMinBudget(String(perPersonMin));
+        updateFormData('minBudgetValue', String(perPersonMin));
+        updateFormData('maxBudgetValue', String(perPersonMax));
+      } else {
         setMinBudget("");
         setMaxBudget("");
         updateFormData('minBudgetValue', "");
@@ -178,6 +185,7 @@ const GatheringBudget = ({ formData, updateFormData }) => {
               <Button
                 variant="outline"
                 size="3xs"
+                tabIndex={-1}
                 onClick={() => handleBudgetTypeSelect('perPerson')}
                 className={`rounded-full px-2 ${budgetType === 'perPerson'
                   ? 'text-orange-600 border-[#ff4000]'
@@ -190,6 +198,7 @@ const GatheringBudget = ({ formData, updateFormData }) => {
               <Button
                 variant="outline"
                 size="3xs"
+                tabIndex={-1}
                 onClick={() => handleBudgetTypeSelect('lumpSum')}
                 className={`rounded-full px-2 ${budgetType === 'lumpSum'
                   ? 'text-orange-600 border-[#ff4000]'

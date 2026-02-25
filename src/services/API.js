@@ -61,6 +61,11 @@ API.interceptors.response.use(
                 error.response?.status === 403) &&
             !originalRequest?._retry
         ) {
+            // If the request is marked as silent, reject without triggering global UI
+            if (originalRequest.silent) {
+                return Promise.reject(error);
+            }
+
             originalRequest._retry = true;
             try {
                 // Try to refresh the token

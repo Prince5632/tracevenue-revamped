@@ -48,6 +48,14 @@ const STEP_DEFINITIONS = {
         description: 'Choose pure veg or a mix of veg and non‑veg, and alcohol preferences to match you with suitable caterers or venues',
         componentKey: 'FoodPreferences'
     },
+    discover_packages: {
+        id: 'discover_packages',
+        title: 'Discover Packages',
+        shortTitle: 'Discover Packages',
+        shortDescription: "Here are some packages we’ve curated for you",
+        description: 'Here are some packages we’ve curated for you',
+        componentKey: 'DiscoverPackages'
+    },
 };
 
 export const getEnquirySteps = () => {

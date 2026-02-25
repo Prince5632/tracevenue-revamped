@@ -11,4 +11,4 @@ export { default as Map } from './Map';
 export { default as Modal } from './Modal';
 export { default as Select } from './Select';
 export { default as Tabs } from './Tabs';
-export { default as PackageInfo } from '../../../features/package/components/PackageInfo';
+
