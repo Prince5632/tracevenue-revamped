@@ -16,9 +16,10 @@ import {
 import { fetchCuisineCombinations } from "@/features/venue/services/cuisineComboService";
 import { createJob, updateJob } from "@/features/venue/services/jobService";
 import { saveClubbedData } from "@/features/venue/services/clubbedPackageService";
-import { matchEventFromCatalog, isObjectId } from "@/features/venue/enquiry/utils/eventMatching";
+
 import { Button } from "@shared/components/ui";
 import { STEP_IDS } from "@/features/venue/enquiry/constants/steps";
+import useUrlEventTypeResolution from "@/features/venue/enquiry/hooks/useUrlEventTypeResolution";
 import {
   validateLocationStep,
   validateServiceTypeStep,
@@ -40,6 +41,7 @@ const EnquiryLayout = () => {
   const location = useLocation();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isResolvingEventSlug, setIsResolvingEventSlug] = useState(false);
 
   const steps = useMemo(() => getEnquirySteps(), []);
 
@@ -81,24 +83,8 @@ const EnquiryLayout = () => {
     }
   }, [eventOptions.length, eventOptionsLoading, loadEventOptions]);
 
-  useEffect(() => {
-    if (!Array.isArray(eventOptions) || !eventOptions.length) return;
-    const current = formData?.selectedEventType;
-    if (!current) return;
-    const currentId = current?.value;
-    if (isObjectId(currentId)) return;
-
-    const match = matchEventFromCatalog(eventOptions, current);
-    if (match?._id) {
-      updateFormData("selectedEventType", {
-        id: match._id,
-        value: match._id,
-        eventName: match.eventName || match.label,
-        label: match.eventName || match.label,
-        slug: match.slug,
-      });
-    }
-  }, [eventOptions, formData?.selectedEventType, updateFormData]);
+  // NOTE: Slug-to-ObjectId resolution + cuisine-analysis validation for direct URL navigation
+  // is handled by useUrlEventTypeResolution below (replaces the old bare useEffect here).
 
   const canonicalRedirect = useMemo(() => {
     const { location: locationSlug, serviceType: serviceSlug, eventType: eventSlug } =
@@ -193,7 +179,7 @@ const EnquiryLayout = () => {
     if (payload.issue) parts.push(payload.issue);
     if (payload.solution) parts.push(payload.solution);
     return parts.join(" • ");
-};
+  };
 
   const runCuisineGate = useCallback(
     async (stepKey) => {
@@ -489,6 +475,21 @@ const EnquiryLayout = () => {
     [boundedStepIndex, clearValidationFeedback, resolvedStepIndex, setActiveStepIndex],
   );
 
+  // Auto-resolve event-type slug from URL → ObjectId, validate availability, and advance
+  useUrlEventTypeResolution(
+    { currentStep, formData, eventOptions, eventOptionsLoading, steps },
+    {
+      updateFormData,
+      setIssueFactor,
+      setSuggestionMessage,
+      setIsApiLoading,
+      setActiveStepIndex,
+      commitAnswersThroughStep,
+      boundedStepIndex,
+      setIsResolvingEventSlug,
+    }
+  );
+
   if (!currentStep) {
     return <div>Loading configuration...</div>;
   }
@@ -554,6 +555,7 @@ const EnquiryLayout = () => {
           isLastStep={isLastStep}
           isDiscoverPackagesStep={isDiscoverPackagesStep}
           footerMessage={suggestionMessage}
+          isResolving={isResolvingEventSlug}
         />
       </div>
     </div>
