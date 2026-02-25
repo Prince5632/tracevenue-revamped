@@ -188,11 +188,12 @@ const EnquiryLayout = () => {
 
   const formatSuggestion = (payload) => {
     if (!payload) return null;
+    console.log(payload, "payloadpayloadpayload");
     const parts = [];
     if (payload.issue) parts.push(payload.issue);
     if (payload.solution) parts.push(payload.solution);
     return parts.join(" • ");
-  };
+};
 
   const runCuisineGate = useCallback(
     async (stepKey) => {
@@ -207,6 +208,7 @@ const EnquiryLayout = () => {
           formattedSuggestion ||
           "Please adjust your selection before continuing.",
         );
+        console.log("formattedSuggestion", formattedSuggestion);
         return false;
       }
       return true;
@@ -422,7 +424,6 @@ const EnquiryLayout = () => {
         const sortedCombinations = cuisineResponse?.data?.sorted_cuisine_combinations || [];
         if (sortedCombinations.length > 0) {
           const saveRes = await saveClubbedData(sortedCombinations);
-          console.log(saveRes, "saveRessaveRessaveRes");
           // Store the savedDocs from API response — these have _id and wrapped cuisine format
           const savedDocs = saveRes?.savedDocs || [];
           if (savedDocs.length > 0) {
