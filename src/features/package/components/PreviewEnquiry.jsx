@@ -2,49 +2,53 @@ import { Button, Modal } from "@shared/components/ui";
 import { useState, useEffect } from "react";
 import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail";
 import { ProgressBar } from '@/shared/components/feedback';
-import { Download, Pencil, Loader2 } from 'lucide-react';
+import { Download, Pencil, Loader2, X } from 'lucide-react';
 import { updateJob } from "@/features/venue/services/jobService";
-import { useNavigate } from "react-router-dom";
 import { useLogin } from "@/hooks/useLogin";
 import { useRaiseEnquiry } from "@/features/venue/enquiry/utils/raiseEnquiry";
 import { handleEnquiryDownloadPDF } from "@/features/venue/enquiry/utils/enquiryPdfGenerator";
 
-function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
-    console.log(job, "job")
+function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, isModalOpen, setIsModalOpen }) {
     const [isClick, setIsClick] = useState(false);
     const [isFocus, setIsFoucus] = useState(false);
     const [loading, setLoading] = useState(false);
     const [pdfLoading, setPdfLoading] = useState(false);
-    const navigate = useNavigate();
-    const { login, isLoggedIn } = useLogin();
+    const { login } = useLogin();
     const { raiseEnquiry } = useRaiseEnquiry();
 
-    const [value, setValue] = useState(job?.name || "");
-    const [editValue, setEditValue] = useState(job?.name || "");
+    const [value, setValue] = useState(enquiry?.name || "");
+    const [editValue, setEditValue] = useState(enquiry?.name || "");
 
     useEffect(() => {
-        if (job?.name) {
-            setValue(job.name);
-            setEditValue(job.name);
+        if (enquiry?.name) {
+            setValue(enquiry.name);
+            setEditValue(enquiry.name);
         }
-    }, [job]);
+    }, [enquiry]);
+
+    // Merge enquiry data with cuisine-package fallbacks
+    const mergedEnquiry = {
+        ...enquiry,
+        menuSections: enquiry?.menuSections?.length ? enquiry.menuSections : (cuisineMenu || []),
+        services: enquiry?.services?.length ? enquiry.services : (cuisineServices || []),
+        cuisines: enquiry?.cuisines?.length ? enquiry.cuisines : (cuisineNames || []),
+    };
 
     const handlePencilButtonClick = () => {
         setEditValue(value);
         setIsClick(true);
-    }
+    };
     const handleInputCancel = () => {
         setEditValue(value);
         setIsClick(false);
-    }
-    const handleInputChange = (e) => {
-        setEditValue(e.target.value);
-    }
+    };
+    const handleInputChange = (e) => setEditValue(e.target.value);
+
     const handleEditInput = async () => {
         if (!editValue.trim()) return;
         setLoading(true);
         try {
-            await updateJob(job._id, { name: editValue });
+            await updateJob(enquiry._id, { name: editValue });
             setValue(editValue);
             setIsClick(false);
         } catch (error) {
@@ -52,15 +56,13 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     const handleRaiseEnquiry = async () => {
         if (!login()) return;
-
         setLoading(true);
         try {
-            await raiseEnquiry(value, job, job._id);
-            // Hook handles navigation
+            await raiseEnquiry(value, enquiry, enquiry._id);
             setIsModalOpen(false);
         } catch (error) {
             console.error("Error raising enquiry:", error);
@@ -69,13 +71,12 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
         }
     };
 
-    // download pdf
     const downloadPdf = async () => {
         if (pdfLoading) return;
         setPdfLoading(true);
         try {
             await handleEnquiryDownloadPDF({
-                job,
+                job: mergedEnquiry,
                 logoUrl: "/logo.png",
                 userName: undefined,
             });
@@ -86,7 +87,7 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
         }
     };
 
-    return <>
+    return (
         <Modal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
@@ -95,49 +96,78 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
             className="w-[80%]!"
         >
             <Modal.Header>
-                <div className='mb-6 flex flex-col lg:flex-row! items-center justify-between gap-6'>
-                    <div className='flex-1 w-full flex gap-4 items-center'>
-                        {
-                            isClick ? <>
-                                <div
-                                    onFocus={() => setIsFoucus(true)}
-                                    onBlur={() => setIsFoucus(false)}
-                                    className={`h-[48px] w-full border-2 rounded-[10px] border-[#e0e0e0] flex items-center px-2 ${isFocus ? "border-[#ff4000]" : "border-[#e0e0e0]"}`}>
-                                    <input type="text"
-                                        value={editValue}
-                                        className='h-[48px] w-full pl-2 text-[18px]! text-[#060606]! font-bold!'
-                                        onChange={handleInputChange} />
-                                    <div className='flex gap-2'>
-                                        <Button onClick={handleEditInput} variant="primary" disabled={loading} className="rounded-[10px]! h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in ">
-                                            {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <i class="fa-solid fa-check"></i>}
-                                        </Button>
-                                        <Button onClick={handleInputCancel} variant="secondary" className="rounded-[10px]! h-[34px] w-[34px] hover:scale-110 transition-all duration-300 ease-in">
-                                            <i class="fa-solid fa-x"></i>
-                                        </Button>
-                                    </div>
-                                </div>
-                            </>
-                                :
-                                <>
-                                    <Button onClick={handlePencilButtonClick} variant="gradient" className="border-none rounded-[10px]! h-[40px] w-[40px] shadow-[4px_0_8px_#ff400033] transition-all duration-300 ease-in shrink-0 bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)] text-[#ffffff]! border border-[rgb(255,64,0)] cursor-pointer hover:translate-y-[-2px] flex justify-center items-center" leftIcon={<Pencil />}>
+                {/* Top row: title editor + close button */}
+                <div className="mb-4 flex items-center justify-between gap-3">
+                    <div className="flex-1 flex gap-3 items-center min-w-0">
+                        {isClick ? (
+                            <div
+                                onFocus={() => setIsFoucus(true)}
+                                onBlur={() => setIsFoucus(false)}
+                                className={`h-[48px] w-full border-2 rounded-[10px] flex items-center px-2 ${isFocus ? "border-[#ff4000]" : "border-[#e0e0e0]"}`}
+                            >
+                                <input
+                                    type="text"
+                                    value={editValue}
+                                    className="h-[48px] w-full pl-2 text-[18px]! text-[#060606]! font-bold!"
+                                    onChange={handleInputChange}
+                                />
+                                <div className="flex gap-2 shrink-0">
+                                    <Button onClick={handleEditInput} variant="primary" disabled={loading} className="rounded-[10px]! h-[34px] w-[34px] hover:scale-110 transition-all duration-300">
+                                        {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <i className="fa-solid fa-check" />}
                                     </Button>
-                                    <h3 className='text-[20px] text-[#060606] font-bold'>{value}</h3>
-                                </>
-                        }
+                                    <Button onClick={handleInputCancel} variant="secondary" className="rounded-[10px]! h-[34px] w-[34px] hover:scale-110 transition-all duration-300">
+                                        <i className="fa-solid fa-x" />
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <Button
+                                    onClick={handlePencilButtonClick}
+                                    variant="gradient"
+                                    className="border-none rounded-[10px]! h-[36px] w-[36px] shrink-0 bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)] text-[#ffffff]! cursor-pointer hover:translate-y-[-2px] flex justify-center items-center transition-all duration-300"
+                                    leftIcon={<Pencil className="w-4 h-4" />}
+                                />
+                                <h3 className="text-[18px] text-[#060606] font-bold truncate">{value}</h3>
+                            </>
+                        )}
                     </div>
-                    <Button
-                        variant="outline"
-                        onClick={downloadPdf}
-                        disabled={pdfLoading}
-                        className="w-full lg:w-auto text-[16px]! text-[#ff4000] border border-solid border-[#ff4000] font-bold! rounded-[30px] p-[9px] bg-white hover:bg-[#ffffff]! cursor-pointer"
-                    >
-                        {pdfLoading ? <Loader2 className="animate-spin w-4 h-4" /> : <><Download className="w-4 h-4" /> Download as PDF</>}
-                    </Button>
+
+                    {/* Download + Close buttons */}
+                    <div className="flex items-center gap-2 shrink-0">
+                        <Button
+                            variant="outline"
+                            onClick={downloadPdf}
+                            disabled={pdfLoading}
+                            className="hidden sm:flex text-[14px]! text-[#ff4000] border border-solid border-[#ff4000] font-bold! rounded-[30px] px-[14px] py-[8px] bg-white hover:bg-[#ffffff]! cursor-pointer items-center gap-2"
+                        >
+                            {pdfLoading ? <Loader2 className="animate-spin w-4 h-4" /> : <><Download className="w-4 h-4" /> Download PDF</>}
+                        </Button>
+                        <button
+                            onClick={() => setIsModalOpen(false)}
+                            className="flex items-center justify-center h-[36px] w-[36px] rounded-full bg-[#f5f5f5] hover:bg-[#ffe5de] text-[#666] hover:text-[#ff4000] transition-all duration-200 cursor-pointer"
+                            aria-label="Close"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
                 </div>
-                <ProgressBar variant="gradient" value={100} className="mb-6" />
+
+                {/* Mobile: Download button full-width */}
+                <Button
+                    variant="outline"
+                    onClick={downloadPdf}
+                    disabled={pdfLoading}
+                    className="sm:hidden w-full text-[14px]! text-[#ff4000] border border-solid border-[#ff4000] font-bold! rounded-[30px] py-[9px] bg-white hover:bg-[#ffffff]! cursor-pointer mb-4"
+                >
+                    {pdfLoading ? <Loader2 className="animate-spin w-4 h-4" /> : <><Download className="w-4 h-4" /> Download as PDF</>}
+                </Button>
+
+                <ProgressBar variant="gradient" value={100} className="mb-2" />
             </Modal.Header>
+
             <Modal.Body>
-                <EnquiriesDetail job={job} />
+                <EnquiriesDetail job={mergedEnquiry} />
             </Modal.Body>
 
             <Modal.Footer>
@@ -152,30 +182,13 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
                     variant="gradient"
                     onClick={handleRaiseEnquiry}
                     disabled={loading}
-                    className="
-                  flex items-center justify-center
-                  w-full
-                  px-[20px] py-[12px]
-                  text-[#ffffff] text-[16px]
-                  bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)]
-                  rounded-[30px] border border-[rgb(255,64,0)]
-                  cursor-pointer transition-all shadow-[0_6px_28px_#ff400073]
-                  font-bold!  
-                  sm:px-[32px] sm:py-[16px]
-                  md:w-auto
-                "
+                    className="flex items-center justify-center w-full px-[20px] py-[12px] text-[#ffffff] text-[16px] bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)] rounded-[30px] border border-[rgb(255,64,0)] cursor-pointer transition-all shadow-[0_6px_28px_#ff400073] font-bold! sm:px-[32px] sm:py-[16px] md:w-auto"
                 >
                     {loading ? "Processing..." : "Get Best Quotes"}
-                    {!loading && <i
-                        class="
-                    ml-1
-                    text-[14px] text-[#ffffff]
-                    fa-solid fa-arrow-right group-hover:translate-x-1 duration-300 ease-in font-extrabold!
-                  "
-                    ></i>}
+                    {!loading && <i className="ml-1 text-[14px] text-[#ffffff] fa-solid fa-arrow-right group-hover:translate-x-1 duration-300 ease-in font-extrabold!" />}
                 </Button>
             </Modal.Footer>
         </Modal>
-    </>
+    );
 }
 export default PreviewEnquiry;

@@ -5,7 +5,7 @@ import { useLogin } from "@/hooks/useLogin";
 import { useRaiseEnquiry } from "@/features/venue/enquiry/utils/raiseEnquiry";
 import { useNavigate } from "react-router-dom";
 
-function PackageFooter({ job }) {
+function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { login, isLoggedIn } = useLogin();
   const { raiseEnquiry } = useRaiseEnquiry();
@@ -160,7 +160,7 @@ function PackageFooter({ job }) {
                 >
                   Preview Enquiry
                 </Button>
-                <PreviewEnquiry job={job} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                <PreviewEnquiry enquiry={job} cuisineMenu={cuisineMenu} cuisineServices={cuisineServices} cuisineNames={cuisineNames} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
                 <Button
                   variant="gradient"
                   onClick={handleRaiseEnquiry}

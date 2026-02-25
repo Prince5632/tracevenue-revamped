@@ -167,7 +167,12 @@ function PackageDetails() {
 
         <PackageCuisines cuisines={packageData?.cuisineNames} />
 
-        <PackageFooter job={job} />
+        <PackageFooter
+          job={job}
+          cuisineMenu={packageData?.menuTree}
+          cuisineServices={packageData?.services}
+          cuisineNames={packageData?.cuisineNames}
+        />
 
         <div className="flex flex-col md:flex-row! items-start sticky top-24">
           {/* Menu Categories */}

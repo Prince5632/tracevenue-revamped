@@ -10,6 +10,8 @@ import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
 import { newFormatDate } from "@/utils/date-item";
 import FoodItems from "@/features/package/components/FoodItems";
+import PackageServices from "@/features/package/components/PackageServices";
+import PackageCuisines from "@/features/package/components/PackageCuisines";
 
 const EnquiriesDetail = ({ job }) => {
   const [center, setCenter] = useState(null);
@@ -252,107 +254,15 @@ const EnquiriesDetail = ({ job }) => {
       </div>
 
       {/* CUISINES */}
-      <div className='p-2'>
-        <Card variant="borderless" className="p-5 mb-3 bg-[#F8F9FA]" hoverable={false}>
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 className="font-sans text-lg mr-3 mb-2 text-[#1A1A1A]">Cuisines</h2>
-            <div className="flex flex-wrap items-center gap-2">
-              {job?.cuisines?.map((cuisine, index) => (
-                <Card key={index} hoverable={false} className="w-fit py-2 px-4 bg-white lg:w-fit">
-                  <span className="text-sm font-sans text-[#333333]">{cuisine}</span>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </Card>
-      </div>
+      <PackageCuisines cuisines={job?.cuisines} />
 
-      {/* MENU + FOOD */}
-      <div className="flex gap-8 2xl:gap-0">
-        {/* LEFT MENU */}
-        <div className="hidden lg:block">
-          <div className="sticky top-4">
-            <Card className="h-105.25 w-70">
-              <h2 className="font-sans text-lg mb-4 h-5.25">Menu</h2>
-              <ul className="space-y-1 mb-6">
-                {menuData.map((section, index) => {
-                  const catId = section.section || `cat-${index}`;
-                  return (
-                    <li key={index}>
-                      <button type="button" onClick={() => scrollToSection(catId)}
-                        className={`w-full flex items-center justify-between px-2 py-3 rounded transition cursor-pointer text-left ${activeSection === catId ? "bg-[#FFF8F0] text-[#E29F55] border-l-4 border-[#e0a057]" : "text-gray-600 hover:bg-gray-50"}`}>
-                        <span className="text-base font-sans">{section.section}</span>
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded">{section.count || section.groups?.reduce((acc, g) => acc + (g.items?.length || 0), 0)}</span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-              {/* Services in side menu */}
-              {servicesList.length > 0 && (
-                <>
-                  <h3 className="font-sans text-lg mb-4 mt-4 w-59.5 text-[#1A1A1A] h-5.25">Amenities & Services</h3>
-                  <ul className="space-y-1">
-                    {servicesList.slice(0, 5).map((s, i) => (
-                      <li key={i} className="text-sm text-gray-600 px-2">{s.serviceName}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </Card>
-          </div>
+      {/* MENU + SERVICES — same layout as PackageDetails */}
+      <div className="flex flex-col md:flex-row! items-start">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-[18px] text-[#060606] font-bold px-4 mb-2">Food Items</h2>
+          <FoodItems packageMenu={job?.menuSections} sectionRefs={sectionRefs} />
         </div>
-
-        {/* RIGHT FOOD */}
-        <div id="food-scroll" className="flex-1 w-full lg:w-[65%] space-y-6 grid grid-cols-1">
-          <div className="hidden lg:block w-full">
-            <h1 className="font-sans text-lg mb-4 h-5.25">Food Items</h1>
-            <FoodItems packageMenu={transformedMenu} sectionRefs={sectionRefs} />
-          </div>
-
-          {/* Services bottom card */}
-          <Card className="hidden lg:block">
-            <div className="mt-5">
-              <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">Amenities & Services</h2>
-            </div>
-            {servicesList.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
-                {servicesList.map((s, i) => (
-                  <div key={i} className="flex gap-2 items-center">
-                    <span className="text-sm font-semibold text-gray-700">{s.serviceName}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm font-semibold text-gray-400">No Amenities & Services</p>
-            )}
-          </Card>
-
-          {/* Mobile View - simplified loop reuse */}
-          <div className="lg:hidden">
-            <h1 className="font-bold text-xl mb-6">Food Items</h1>
-            {menuData.map((section, index) => (
-              <div key={index} data-index={index} className="mb-10">
-                <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">{section.section}</h2>
-                {section.groups?.map((group, gIndex) => (
-                  <Card key={gIndex} className="mb-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <h3 className="font-semibold text-lg">{group.title}</h3>
-                    </div>
-                    <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-                      {group.items?.map((item, i) => (
-                        <li key={i} className="flex items-start gap-1">
-                          <img src={Icon} className="w-4 h-4 mt-1" />
-                          <span className="font-semibold text-sm">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </Card>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
+        <PackageServices services={job?.services} />
       </div>
     </div>
   );
