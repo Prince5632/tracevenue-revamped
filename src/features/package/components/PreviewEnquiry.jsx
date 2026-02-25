@@ -3,17 +3,18 @@ import { useState, useEffect } from "react";
 import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail";
 import { ProgressBar } from '@/shared/components/feedback';
 import { Download, Pencil, Loader2 } from 'lucide-react';
-import jsPDF from "jspdf";
 import { updateJob } from "@/features/venue/services/jobService";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "@/hooks/useLogin";
 import { useRaiseEnquiry } from "@/features/venue/enquiry/utils/raiseEnquiry";
+import { handleEnquiryDownloadPDF } from "@/features/venue/enquiry/utils/enquiryPdfGenerator";
 
 function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
     console.log(job, "job")
     const [isClick, setIsClick] = useState(false);
     const [isFocus, setIsFoucus] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [pdfLoading, setPdfLoading] = useState(false);
     const navigate = useNavigate();
     const { login, isLoggedIn } = useLogin();
     const { raiseEnquiry } = useRaiseEnquiry();
@@ -69,11 +70,20 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
     };
 
     // download pdf
-    const downloadPdf = () => {
-        const doc = new jsPDF();
-        doc.text(value || "Enquiry Details", 10, 10);
-        // TODO: Implement full PDF generation similar to customer side if needed
-        doc.save(`${value || "enquiry"}.pdf`);
+    const downloadPdf = async () => {
+        if (pdfLoading) return;
+        setPdfLoading(true);
+        try {
+            await handleEnquiryDownloadPDF({
+                job,
+                logoUrl: "/logo.png",
+                userName: undefined,
+            });
+        } catch (err) {
+            console.error("PDF generation failed:", err);
+        } finally {
+            setPdfLoading(false);
+        }
     };
 
     return <>
@@ -115,7 +125,14 @@ function PreviewEnquiry({ job, isModalOpen, setIsModalOpen }) {
                                 </>
                         }
                     </div>
-                    <Button variant="outline" onClick={downloadPdf} className="w-full lg:w-auto text-[16px]! text-[#ff4000] border border-solid border-[#ff4000] font-bold! rounded-[30px] p-[9px]  bg-white hover:bg-[#ffffff]! cursor-pointer">Download as PDF<Download /></Button>
+                    <Button
+                        variant="outline"
+                        onClick={downloadPdf}
+                        disabled={pdfLoading}
+                        className="w-full lg:w-auto text-[16px]! text-[#ff4000] border border-solid border-[#ff4000] font-bold! rounded-[30px] p-[9px] bg-white hover:bg-[#ffffff]! cursor-pointer"
+                    >
+                        {pdfLoading ? <Loader2 className="animate-spin w-4 h-4" /> : <><Download className="w-4 h-4" /> Download as PDF</>}
+                    </Button>
                 </div>
                 <ProgressBar variant="gradient" value={100} className="mb-6" />
             </Modal.Header>

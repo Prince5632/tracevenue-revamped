@@ -40,11 +40,11 @@ const ItemTypeDot = ({ itemTypeName }) => {
 /* ── Human-readable item-type label ── */
 const foodTypeLabel = (itemTypeName) => {
     const map = {
-        Vegetarian: "Veg items",
-        "Non-Vegetarian": "Non Veg items",
-        Paneer: "Paneer items",
-        Cold: "Cold Drink(s)",
-        Soft: "Soft Drink(s)",
+        Vegetarian: "Vegetarian",
+        "Non-Vegetarian": "Non Vegetarian",
+        Paneer: "Paneer",
+        Cold: "Cold",
+        Soft: "Soft",
         Alcoholic: "Alcoholic",
         "Non-Alcoholic": "Non Alcoholic",
     };
