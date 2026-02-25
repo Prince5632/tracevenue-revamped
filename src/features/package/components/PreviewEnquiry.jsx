@@ -8,6 +8,22 @@ import { useLogin } from "@/hooks/useLogin";
 import { useRaiseEnquiry } from "@/features/venue/enquiry/utils/raiseEnquiry";
 import { handleEnquiryDownloadPDF } from "@/features/venue/enquiry/utils/enquiryPdfGenerator";
 
+/** Auto-generate a title like "Looking for Wedding for 50 people on 28 Feb." */
+const generateEnquiryTitle = (enquiry) => {
+    const eventName =
+        enquiry?.eventType?.eventName ||
+        enquiry?.eventType?.label ||
+        (typeof enquiry?.eventType === "string" ? enquiry.eventType : null);
+    const maxPeople = enquiry?.peopleRange?.maxPeople;
+    const firstDate = enquiry?.eventDateOptions?.preferredDates?.[0]?.date;
+    const dateStr = firstDate
+        ? new Date(firstDate).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+        : null;
+
+    if (!eventName) return enquiry?.name || "My Enquiry";
+    return `Looking for ${eventName}${maxPeople ? ` for ${maxPeople} people` : ""}${dateStr ? ` on ${dateStr}` : ""}.`;
+};
+
 function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, isModalOpen, setIsModalOpen }) {
     const [isClick, setIsClick] = useState(false);
     const [isFocus, setIsFoucus] = useState(false);
@@ -16,19 +32,23 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
     const { login } = useLogin();
     const { raiseEnquiry } = useRaiseEnquiry();
 
-    const [value, setValue] = useState(enquiry?.name || "");
-    const [editValue, setEditValue] = useState(enquiry?.name || "");
+    // Use saved name if set and not the default, otherwise auto-generate
+    const getTitle = (e) =>
+        e?.name && e.name !== "Untitled Enquiry" ? e.name : generateEnquiryTitle(e);
+
+    const [value, setValue] = useState(() => getTitle(enquiry));
+    const [editValue, setEditValue] = useState(() => getTitle(enquiry));
 
     useEffect(() => {
-        if (enquiry?.name) {
-            setValue(enquiry.name);
-            setEditValue(enquiry.name);
-        }
+        const t = getTitle(enquiry);
+        setValue(t);
+        setEditValue(t);
     }, [enquiry]);
 
     // Merge enquiry data with cuisine-package fallbacks
     const mergedEnquiry = {
         ...enquiry,
+        name: value,
         menuSections: enquiry?.menuSections?.length ? enquiry.menuSections : (cuisineMenu || []),
         services: enquiry?.services?.length ? enquiry.services : (cuisineServices || []),
         cuisines: enquiry?.cuisines?.length ? enquiry.cuisines : (cuisineNames || []),
@@ -108,8 +128,10 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
                                 <input
                                     type="text"
                                     value={editValue}
+                                    autoFocus
                                     className="h-[48px] w-full pl-2 text-[18px]! text-[#060606]! font-bold!"
                                     onChange={handleInputChange}
+                                    onKeyDown={(e) => e.key === "Enter" && handleEditInput()}
                                 />
                                 <div className="flex gap-2 shrink-0">
                                     <Button onClick={handleEditInput} variant="primary" disabled={loading} className="rounded-[10px]! h-[34px] w-[34px] hover:scale-110 transition-all duration-300">
