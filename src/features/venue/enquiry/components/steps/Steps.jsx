@@ -28,6 +28,7 @@ const Steps = ({
         totalSteps={totalSteps}
         title={title}
         subtitle={subtitle}
+        isDiscoverPackagesStep={isDiscoverPackagesStep}
       />
       {isResolving ? (
         <StepShimmer stepKey={stepKey} />
