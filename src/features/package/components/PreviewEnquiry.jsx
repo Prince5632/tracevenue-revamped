@@ -111,11 +111,12 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
         <Modal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
+            // closeOnBackdrop = {true}
             title="Preview Enquiry"
             size="md"
-            className="w-[80%]!"
+            className="sm:!w-[80%] md:!w-[100%] lg:!w-[85%]"
         >
-            <Modal.Header>
+            <Modal.Header className="sticky top-0 bg-[#ffffff] z-50">
                 {/* Top row: title editor + close button */}
                 <div className="mb-4 flex items-center justify-between gap-3">
                     <div className="flex-1 flex gap-3 items-center min-w-0">
@@ -197,7 +198,7 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
                 />
             </Modal.Body>
 
-            <Modal.Footer>
+            <Modal.Footer className="sticky bottom-0 bg-[#ffffff] z-50">
                 <Button
                     variant="outline"
                     onClick={() => setIsModalOpen(false)}

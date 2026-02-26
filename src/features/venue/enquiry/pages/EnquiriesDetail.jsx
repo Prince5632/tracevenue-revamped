@@ -400,7 +400,7 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
 
               {/* Preferred Date */}
               {primaryDateInfo && (
-                <Card variant="default" padding="md" className="flex items-center justify-between gap-5">
+                <Card variant="default" padding="md" className="flex items-center justify-center gap-10 !p-3">
                   <div className="text-left">
                     <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
                       {primaryDateInfo.dayName}
@@ -413,11 +413,15 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
                   {primaryDateInfo.timeRange && (() => {
                     const times = formatTimeRange(primaryDateInfo.timeRange);
                     return (
-                      <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
-                        <img src={Icon} alt="connector icon" className='pr-2' />
-                        <div className="flex flex-col leading-tight text-center">
-                          <span>{times.start}</span>
-                          <span>{times.end}</span>
+                      <div className="h-full bg-[#C6FBE580] px-4 py-2 rounded-xl flex gap-4 justify-center items-center text-[#85878C] text-sm font-bold">
+                        <div className='h-full flex flex-col items-center justify-center '>
+                          <div className='h-[10px] w-[10px] bg-[#15B076] rounded-[30px]'></div>
+                          <div className='h-[40%] !bg-[#B1F4D8] w-[4px]'></div>
+                          <div className='h-[10px] w-[10px] bg-[#15B076] rounded-[30px]'></div>
+                        </div>
+                        <div className='h-full flex flex-col justify-between items-center'>
+                          <div className='text-[16px] font-medium text-[#85878C] mb-4 '>{times.start}</div>
+                          <div className='text-[16px] font-medium text-[#85878C] '>{times.end}</div>
                         </div>
                       </div>
                     );
@@ -465,7 +469,7 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
           {/*FOOD PREFERENCE  */}
           <div className="p-2">
             <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Food Preferences</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
               <Card className="py-2.5 px-3.75">
                 <Card.Header className="text-lg font-bold">
                   Eating
@@ -520,8 +524,8 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
               {/* Food Items */}
               <div className="w-full md:max-w-[600px]">
                 <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
-                <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
-                  <FoodItems packageMenu={packageMenu} sectionRefs={pkgSectionRefs} />
+                <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto pt-2 overflow-hidden scrollbar-hide md:pb-[200px]">
+                  <FoodItems packageMenu={packageMenu} sectionRefs={pkgSectionRefs} className=""/>
                 </div>
               </div>
               {/* Amenities & Services */}

@@ -5,7 +5,7 @@ function PackageHeader() {
     const navigate = useNavigate();
 
     return (
-        <div className="lg:flex lg:justify-between">
+        <div className="lg:flex lg:justify-between pt-12 md:pt-0">
             <div>
                 <h1 className="mb-2 text-[18px] text-[#000000] font-bold md:text-[32px]">
                     Package Details

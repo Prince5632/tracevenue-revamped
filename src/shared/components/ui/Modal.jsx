@@ -55,6 +55,7 @@ const Modal = ({
   };
 
   const handleBackdropClick = (e) => {
+    console.log(e.target , "and this is a ", e.currentTarget);
     if (closeOnBackdrop && e.target === e.currentTarget) {
       onClose?.();
     }
@@ -63,10 +64,12 @@ const Modal = ({
   const modalContent = (
     <div
       className="fixed inset-0 z-1050 flex items-center justify-center p-4 md:p-6"
-      onClick={handleBackdropClick}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 animate-fade-in" />
+      <div 
+      className="absolute inset-0 bg-black/50 animate-fade-in"
+      onClick={handleBackdropClick}
+       />
 
       {/* Modal */}
       <div

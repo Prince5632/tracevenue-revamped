@@ -112,7 +112,7 @@ function PackageCard(props) {
               <lucide.MapPin className="h-6 w-6 text-[#2db9e4]" />
             </div>
           </div>
-          <div className="flex flex-wrap z-20 absolute bottom-2 left-2 gap-2">
+          <div className="flex flex-wrap z-2 absolute bottom-2 left-2 gap-2">
             {props?.cuisines?.map((item, index) => (
               <Badge
                 variant="outline"
