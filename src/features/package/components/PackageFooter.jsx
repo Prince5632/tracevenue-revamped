@@ -92,7 +92,7 @@ function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames, cuisin
     <>
       <div
         className="
-            flex z-50
+            flex z-10
             px-2
             fixed bottom-0 right-0 left-0 justify-center
             md:bottom-8
@@ -258,7 +258,7 @@ function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames, cuisin
       {/* Inline login modal — no page reload, state preserved after auth */}
       {showLoginModal && (
         <div
-          className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/10 backdrop-blur-sm p-4"
           onClick={() => setShowLoginModal(false)}
         >
           <Login

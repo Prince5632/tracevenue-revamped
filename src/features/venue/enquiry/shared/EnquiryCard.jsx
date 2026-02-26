@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, GradientText } from '@/shared';
 import { useNavigate } from 'react-router-dom';
 import LocationPin from "../../../../assets/images/LocationPin.png";
-import { IconRenderer } from '../pages/Icons';
+import { IconRenderer } from '../components/shared/Icons';
 
 
 

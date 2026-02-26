@@ -19,36 +19,36 @@ import FoodItems from '@/features/package/components/FoodItems';
 import PackageServices from '@/features/package/components/PackageServices';
 import PackageCuisines from '@/features/package/components/PackageCuisines';
 
-const EnquiriesDetail = ({ jobData }) => {
+const EnquiriesDetail = ({ enquiryData }) => {
   const [location, setLocation] = useState('');
   const [center, setCenter] = useState(null);
   const navigate = useNavigate();
 
-  // ─── Extract data from jobData (with safe defaults) ───
-  const eventName = jobData?.eventType?.eventName || 'N/A';
-  const budgetType = jobData?.budgetType || 'perPerson';
+  // ─── Extract data from enquiryData (with safe defaults) ───
+  const eventName = enquiryData?.eventType?.eventName || 'N/A';
+  const budgetType = enquiryData?.budgetType || 'perPerson';
   // API returns budget.min/max regardless of budgetType; perPersonBudget is a fallback
-  const budgetMin = jobData?.budget?.min ?? jobData?.perPersonBudget?.min;
-  const budgetMax = jobData?.budget?.max ?? jobData?.perPersonBudget?.max;
+  const budgetMin = enquiryData?.budget?.min ?? enquiryData?.perPersonBudget?.min;
+  const budgetMax = enquiryData?.budget?.max ?? enquiryData?.perPersonBudget?.max;
   const budgetLabel = budgetType === 'perPerson' ? 'Per Person' : 'Lump Sum';
 
-  const gatheringMin = jobData?.peopleRange?.minPeople || '';
-  const gatheringMax = jobData?.peopleRange?.maxPeople || '';
+  const gatheringMin = enquiryData?.peopleRange?.minPeople || '';
+  const gatheringMax = enquiryData?.peopleRange?.maxPeople || '';
   const gatheringDisplay = gatheringMin && gatheringMax
     ? `${gatheringMin}–${gatheringMax}`
     : gatheringMin || gatheringMax || 'N/A';
 
-  const serviceType = jobData?.serviceType || '';
+  const serviceType = enquiryData?.serviceType || '';
 
   // Location
-  const locationRadius = jobData?.radius || 10;
-  const locationName = jobData?.selectedCities?.[0]?.locality?.short_name
-    || jobData?.selectedCities?.[0]?.name
+  const locationRadius = enquiryData?.radius || 10;
+  const locationName = enquiryData?.selectedCities?.[0]?.locality?.short_name
+    || enquiryData?.selectedCities?.[0]?.name
     || 'N/A';
 
   // Event dates — uses eventDateOptions structure
-  const preferredDates = jobData?.eventDateOptions?.preferredDates || jobData?.eventDate || [];
-  const alternateDates = jobData?.eventDateOptions?.alternateDates || [];
+  const preferredDates = enquiryData?.eventDateOptions?.preferredDates || enquiryData?.eventDate || [];
+  const alternateDates = enquiryData?.eventDateOptions?.alternateDates || [];
 
   const formatDateObj = (dateObj) => {
     if (!dateObj) return null;
@@ -90,32 +90,32 @@ const EnquiriesDetail = ({ jobData }) => {
   const primaryDateInfo = preferredDates.length > 0 ? formatDateObj(preferredDates[0]) : null;
 
   // Food preferences — uses vegOnly & nonAlcoholicOnly
-  const eating = jobData?.vegOnly === true
+  const eating = enquiryData?.vegOnly === true
     ? 'Veg Only'
-    : jobData?.vegOnly === false
+    : enquiryData?.vegOnly === false
       ? 'Veg & Non Veg'
       : 'N/A';
 
-  const alcohol = jobData?.nonAlcoholicOnly === true
+  const alcohol = enquiryData?.nonAlcoholicOnly === true
     ? 'Non Alcohol'
-    : jobData?.nonAlcoholicOnly === false
+    : enquiryData?.nonAlcoholicOnly === false
       ? 'Alcohol'
       : 'N/A';
 
   // ─── Determine what data to use for cuisines, menu, services ───
-  // If jobData?.menuSections/jobData?.services/jobData?.cuisines are provided (from PreviewEnquiry),
+  // If enquiryData?.menuSections/enquiryData?.services/enquiryData?.cuisines are provided (from PreviewEnquiry),
   // use them directly with the package components.
-  // Otherwise fall back to transforming jobData's menuSections / services / cuisines.
-  const usePackageComponents = !!(jobData?.menuSections?.length || jobData?.services?.length || jobData?.cuisines?.length);
+  // Otherwise fall back to transforming enquiryData's menuSections / services / cuisines.
+  const usePackageComponents = !!(enquiryData?.menuSections?.length || enquiryData?.services?.length || enquiryData?.cuisines?.length);
 
-  // Fallback: Cuisines from jobData
-  const cuisinesData = (jobData?.cuisines || []).map((c, i) => ({
+  // Fallback: Cuisines from enquiryData
+  const cuisinesData = (enquiryData?.cuisines || []).map((c, i) => ({
     id: i + 1,
     label: typeof c === 'string' ? c : c?.name || c?.label || '',
   }));
 
-  // Fallback: Menu data from jobData.menuSections
-  const menuData = (jobData?.menuSections || []).map((section) => {
+  // Fallback: Menu data from enquiryData.menuSections
+  const menuData = (enquiryData?.menuSections || []).map((section) => {
     const categoryName = section?.categoryName || 'Section';
     const groups = (section?.offerings || []).map((offering) => {
       const itemTypeName = offering?.itemTypeName || 'Items';
@@ -133,8 +133,8 @@ const EnquiriesDetail = ({ jobData }) => {
     return { section: categoryName, count, groups };
   });
 
-  // Fallback: Services data from jobData.services
-  const servicesGrouped = (jobData?.services || []).reduce((acc, svc) => {
+  // Fallback: Services data from enquiryData.services
+  const servicesGrouped = (enquiryData?.services || []).reduce((acc, svc) => {
     const cat = svc?.serviceCategory || 'Other';
     if (!acc[cat]) acc[cat] = [];
     const matchedOption = svc?.options?.find(opt => opt._id === svc?.variantOptionId);
@@ -193,7 +193,7 @@ const EnquiriesDetail = ({ jobData }) => {
   const [pkgActive, setPkgActive] = useState(null);
 
   useEffect(() => {
-    if (!jobData?.menuSections?.length) return;
+    if (!enquiryData?.menuSections?.length) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -217,7 +217,7 @@ const EnquiriesDetail = ({ jobData }) => {
     }, 100);
 
     return () => observer.disconnect();
-  }, [jobData?.menuSections]);
+  }, [enquiryData?.menuSections]);
 
   const handlePkgMenuClick = (id) => {
     setPkgActive(id);
@@ -252,20 +252,20 @@ const EnquiriesDetail = ({ jobData }) => {
     setCenter({ lat, lng });
   };
 
-  // Set initial map center from jobData location
+  // Set initial map center from enquiryData location
   useEffect(() => {
-    if (jobData?.location?.latitude && jobData?.location?.longitude) {
+    if (enquiryData?.location?.latitude && enquiryData?.location?.longitude) {
       setCenter({
-        lat: Number(jobData.location.latitude),
-        lng: Number(jobData.location.longitude),
+        lat: Number(enquiryData.location.latitude),
+        lng: Number(enquiryData.location.longitude),
       });
-    } else if (jobData?.selectedCities?.[0]?.latitude && jobData?.selectedCities?.[0]?.longitude) {
+    } else if (enquiryData?.selectedCities?.[0]?.latitude && enquiryData?.selectedCities?.[0]?.longitude) {
       setCenter({
-        lat: Number(jobData.selectedCities[0].latitude),
-        lng: Number(jobData.selectedCities[0].longitude),
+        lat: Number(enquiryData.selectedCities[0].latitude),
+        lng: Number(enquiryData.selectedCities[0].longitude),
       });
     }
-  }, [jobData]);
+  }, [enquiryData]);
 
   return (
     <>
@@ -501,9 +501,9 @@ const EnquiriesDetail = ({ jobData }) => {
         {usePackageComponents ? (
           <>
             {/* Cuisines */}
-            {jobData?.cuisines?.length > 0 && (
+            {enquiryData?.cuisines?.length > 0 && (
               <div className="px-2 mt-2">
-                <PackageCuisines cuisines={jobData?.cuisines} />
+                <PackageCuisines cuisines={enquiryData?.cuisines} />
               </div>
             )}
 
@@ -512,7 +512,7 @@ const EnquiriesDetail = ({ jobData }) => {
               {/* Menu Categories */}
               <div className="hidden lg:block">
                 <MenuCategories
-                  packageMenu={jobData?.menuSections}
+                  packageMenu={enquiryData?.menuSections}
                   isActive={pkgActive}
                   handleMenuClick={() => handlePkgMenuClick}
                 />
@@ -521,12 +521,12 @@ const EnquiriesDetail = ({ jobData }) => {
               <div className="w-full md:max-w-[600px]">
                 <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
                 <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
-                  <FoodItems packageMenu={jobData?.menuSections} sectionRefs={pkgSectionRefs} />
+                  <FoodItems packageMenu={enquiryData?.menuSections} sectionRefs={pkgSectionRefs} />
                 </div>
               </div>
               {/* Amenities & Services */}
               <PackageServices
-                services={jobData?.services}
+                services={enquiryData?.services}
                 handleMenuClick={() => handlePkgMenuClick}
                 sectionRefs={pkgSectionRefs}
               />
@@ -534,7 +534,7 @@ const EnquiriesDetail = ({ jobData }) => {
           </>
         ) : (
           <>
-            {/* FALLBACK: Inline cuisines from jobData */}
+            {/* FALLBACK: Inline cuisines from enquiryData */}
             {cuisinesData.length > 0 && (
               <div className='p-2'>
                 <Card variant="borderless" className="p-5 mb-3 bg-[#F8F9FA]" hoverable={false}>

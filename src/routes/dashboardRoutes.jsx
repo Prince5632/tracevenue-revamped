@@ -70,7 +70,7 @@ export const dashboardRoutes = [
           { path: "quotation-pages", element: <Quotationpage /> },
           { path: "compare-packages", element: <ComparePackages /> },
           { path: "offer-booking", element: <Offer_booking /> },
-          { path: "details", element: <EnquiriesDetail /> }
+          { path: "", element: <EnquiriesDetail /> }
         ],
       },
     ],
