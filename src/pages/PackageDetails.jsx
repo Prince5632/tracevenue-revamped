@@ -1,7 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { Navbar } from "@shared/components/layout";
-import { packageInformation } from "@shared/services";
 import { getClubbedCuisineById } from "@/features/venue/services/clubbedPackageService";
 import { checkJobStatus } from "@/features/venue/services/jobService";
 import { fetchSelectedCuisineComboDetails } from "@/utils/helperCuisineApi";

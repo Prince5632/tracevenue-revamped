@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, GradientText } from '@/shared';
 import { useNavigate } from 'react-router-dom';
 import LocationPin from "../../../../assets/images/LocationPin.png";
-import { IconRenderer } from '../../enquiry/pages/Icons';
+import { IconRenderer } from '../../enquiry/components/shared/Icons';
 
 const ContractCard = ({ data }) => {
 
@@ -38,7 +38,7 @@ const ContractCard = ({ data }) => {
         return `${years} year${years > 1 ? "s" : ""} ago`;
     }
     )
-    
+
     console.log("In Contract Card..", data);
     const navigate = useNavigate();
 
@@ -82,17 +82,17 @@ const ContractCard = ({ data }) => {
             hour12: true,
         });
     }
-    
+
     function formatTimeRange(range) {
         if (!range) return "";
         const [start, end] = range.split(" - ");
         if (!start || !end) return "";
         return range && `${formatTo12Hour(start)} ${formatTo12Hour(end)}`;
     }
-    
+
     // Get contract status styling
     const getStatusStyle = (status) => {
-        switch(status?.toLowerCase()) {
+        switch (status?.toLowerCase()) {
             case 'approved':
                 return 'text-[#15B076]';
             case 'pending':
@@ -105,7 +105,7 @@ const ContractCard = ({ data }) => {
     };
 
     const getStatusText = (status) => {
-        switch(status?.toLowerCase()) {
+        switch (status?.toLowerCase()) {
             case 'approved':
                 return 'Active Contract';
             case 'pending':
