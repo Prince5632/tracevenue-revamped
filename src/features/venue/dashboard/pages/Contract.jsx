@@ -23,17 +23,29 @@ const Contract = () => {
   }, [apiStatus, fetchJobsByStatus]);
 
   useEffect(() => {
-     if(jobs) {
-        console.log(`Contract Data (${apiStatus}) (Context):`, jobs);
-     }
+    if (jobs) {
+      console.log(`Contract Data (${apiStatus}) (Context):`, jobs);
+    }
   }, [jobs, apiStatus]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading contracts</div>;
 
   return (
-    <div className='h-screen grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4'>
-      <ContractsCard/>
+    <div className='h-screen grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 px-2'>
+      {/* {isLoading && <div>Loading...</div>}
+      {error && <div>Error loading contracts</div>}
+
+      {!isLoading && !error && jobs?.length > 0 &&
+        jobs.map((job) => (
+          <ContractsCard key={job._id} job={job} />
+        ))
+      }
+
+      {!isLoading && jobs?.length === 0 && (
+        <div>No contracts found</div>
+      )} */}
+
       <ContractsCard/>
       <ContractsCard/>
       <ContractsCard/>

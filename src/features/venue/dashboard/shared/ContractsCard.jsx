@@ -2,9 +2,9 @@ import React from 'react'
 import { Package, Clock, Eye } from 'lucide-react';
 import { Card, Badge, Button } from '@/shared/components/ui';
 
-function ContractsCard() {
+function ContractsCard({job}) {
     return <>
-        <Card variant="default" padding="md" className="rounded-xl flex flex-col">
+        <Card variant="default" padding="md" className="rounded-xl flex flex-col border-l-4 border-l-[#ff4000] hover:border-[#ff4000] transition-all duration-300 ease-in">
             <Card.Header className='flex gap-4'>
                 <div className='flex flex-col gap-2'>
                     <h4 className='text-[16px] text-[#060606] font-bold'>Looking venue for Birthday Party for 40 people on 2026-02-28</h4>

@@ -52,6 +52,12 @@ const DashboardSidebar = ({ setIsSidebarOpen }) => {
       completed
     } = contractStats;
 
+  const contractMenu = [
+    { label: "Active Contracts", value: "active", count: active },
+    { label: "Proposed Contracts", value: "pending", count: pending },
+    { label: "Completed Contracts", value: "completed", count: completed },
+  ];
+
   return (
     <div className=" sticky top-25 w-[300px] h-[100vh] lg:h-[540px] lg:rounded-[30px] border bg-[#ffffff] border-[#D7D9DA] overflow-y-auto dashboard-scrollbar">
       <div className=" sticky top-0 h-20 flex items-center px-7.5 bg-[#ffffff] z-50">
@@ -116,27 +122,40 @@ const DashboardSidebar = ({ setIsSidebarOpen }) => {
       />
       {openMenu.contracts && (
         <div className="w-full">
-          {[
-            `Active Contracts (${active})`,
-            `Proposed Contracts (${pending})`,
-            `Completed Contracts (${completed})`,
-          ].map((item) => (
+          {contractMenu.map((item) => (
+
             <div
-              key={item}
+              key={item.value}
               onClick={() => {
-                setActiveTab(item)
-                setIsSidebarOpen(false)
-                navigate(`/service/venues/contracts/:${item.toLowerCase().split(" ")[0]}`)
+                setActiveTab(item.value);
+                setIsSidebarOpen(false);
+                navigate(`/service/venues/contracts/${item.value}`);
               }}
               className={`w-full flex items-center text-[14px]  pl-18 py-2 text-[#060606] cursor-pointer transition-all duration-300 ease-in cursor-pointer
-                  ${activeTab === item
+                  ${activeTab === item.value
                   ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
                   : "text-black"
                 }
                   `}
             >
-              {item}
+              {item.label} ({item.count})
             </div>
+            // <div
+            //   key={item}
+            //   onClick={() => {
+            //     setActiveTab(item)
+            //     setIsSidebarOpen(false)
+            //     navigate(`/service/venues/contracts/${item.toLowerCase().split(" ")[0]}`)
+            //   }}
+            //   className={`w-full flex items-center text-[14px]  pl-18 py-2 text-[#060606] cursor-pointer transition-all duration-300 ease-in cursor-pointer
+            //       ${activeTab === item
+            //       ? "bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] text-[#FF4000]"
+            //       : "text-black"
+            //     }
+            //       `}
+            // >
+            //   {item}
+            // </div>
           ))}
         </div>
       )}
