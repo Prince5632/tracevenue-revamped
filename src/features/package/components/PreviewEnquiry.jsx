@@ -189,7 +189,12 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
             </Modal.Header>
 
             <Modal.Body>
-                <EnquiriesDetail job={mergedEnquiry} />
+                <EnquiriesDetail
+                    jobData={mergedEnquiry}
+                    packageMenu={cuisineMenu}
+                    packageServices={cuisineServices}
+                    packageCuisines={cuisineNames}
+                />
             </Modal.Body>
 
             <Modal.Footer>

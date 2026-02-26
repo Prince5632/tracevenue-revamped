@@ -2,269 +2,784 @@ import React, { useState, useRef, useEffect } from 'react';
 import Map from '@/components/common/Map';
 import { LoadScript } from '@react-google-maps/api';
 import { Card } from '@shared/components/ui';
-import LocationIcon from '@assets/images/locationPin.svg'
+import Veg from '@assets/images/veg.svg';
+import Location from '@assets/images/locationPin.svg'
 import NonVeg from '@assets/images/non-veg.svg';
 import ColdDrink from '@assets/images/colddrink.svg';
 import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
-import { newFormatDate } from "@/utils/date-item";
-import FoodItems from "@/features/package/components/FoodItems";
-import PackageServices from "@/features/package/components/PackageServices";
-import PackageCuisines from "@/features/package/components/PackageCuisines";
 
-const EnquiriesDetail = ({ job }) => {
+import { CircleArrowLeft } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+
+// Package components (same as used in PackageDetails.jsx)
+import MenuCategories from '@/features/package/components/MenuCategories';
+import FoodItems from '@/features/package/components/FoodItems';
+import PackageServices from '@/features/package/components/PackageServices';
+import PackageCuisines from '@/features/package/components/PackageCuisines';
+
+const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisines }) => {
+  const [location, setLocation] = useState('');
   const [center, setCenter] = useState(null);
+  const navigate = useNavigate();
 
-  // Formatters
-  const formatRupees = (value) => new Intl.NumberFormat('en-IN').format(value);
+  // ─── Extract data from jobData (with safe defaults) ───
+  const eventName = jobData?.eventType?.eventName || 'N/A';
+  const budgetType = jobData?.budgetType || 'perPerson';
+  // API returns budget.min/max regardless of budgetType; perPersonBudget is a fallback
+  const budgetMin = jobData?.budget?.min ?? jobData?.perPersonBudget?.min;
+  const budgetMax = jobData?.budget?.max ?? jobData?.perPersonBudget?.max;
+  const budgetLabel = budgetType === 'perPerson' ? 'Per Person' : 'Lump Sum';
 
-  const formatTo12Hour = (time) => {
-    if (!time) return "";
-    const [h, m] = time.split(":").map(Number);
-    const period = h >= 12 ? "PM" : "AM";
-    const hour12 = h % 12 || 12;
-    return `${hour12}:${m.toString().padStart(2, "0")} ${period}`;
+  const gatheringMin = jobData?.peopleRange?.minPeople || '';
+  const gatheringMax = jobData?.peopleRange?.maxPeople || '';
+  const gatheringDisplay = gatheringMin && gatheringMax
+    ? `${gatheringMin}–${gatheringMax}`
+    : gatheringMin || gatheringMax || 'N/A';
+
+  const serviceType = jobData?.serviceType || '';
+
+  // Location
+  const locationRadius = jobData?.radius || 10;
+  const locationName = jobData?.selectedCities?.[0]?.locality?.short_name
+    || jobData?.selectedCities?.[0]?.name
+    || 'N/A';
+
+  // Event dates — uses eventDateOptions structure
+  const preferredDates = jobData?.eventDateOptions?.preferredDates || jobData?.eventDate || [];
+  const alternateDates = jobData?.eventDateOptions?.alternateDates || [];
+
+  const formatDateObj = (dateObj) => {
+    if (!dateObj) return null;
+
+    let dateKey, timeRange;
+
+    // New format: { date: "2026-02-28", startTime: "09:00", endTime: "17:00" }
+    if (dateObj.date) {
+      dateKey = dateObj.date;
+      timeRange = dateObj.startTime && dateObj.endTime
+        ? `${dateObj.startTime} - ${dateObj.endTime}`
+        : '';
+    } else {
+      // Old format: { "2026-02-28": "09:00 - 17:00" }
+      dateKey = Object.keys(dateObj)[0];
+      timeRange = dateObj[dateKey] || '';
+    }
+
+    if (!dateKey) return null;
+    const d = new Date(dateKey);
+    if (isNaN(d.getTime())) return null;
+    const dayName = d.toLocaleDateString('en-IN', { weekday: 'long' });
+    const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+    return { dayName, dateStr, timeRange };
   };
 
-  // Derived Data
-  const budgetMin = job?.budget?.min || 0;
-  const budgetMax = job?.budget?.max || 0;
-  const budgetType = job?.budgetType === 'perPerson' ? 'Per Person' : 'Lump Sum';
+  const formatTimeRange = (range) => {
+    if (!range) return { start: '', end: '' };
+    const parts = range.split(' - ');
+    if (parts.length !== 2) return { start: range, end: '' };
+    const format12 = (t) => {
+      const [h, m] = t.trim().split(':');
+      if (!h || !m) return t;
+      return `${h}:${m}`;
+    };
+    return { start: format12(parts[0]), end: format12(parts[1]) };
+  };
 
-  const minPeople = job?.peopleRange?.minPeople || 0;
-  const maxPeople = job?.peopleRange?.maxPeople || 0;
+  const primaryDateInfo = preferredDates.length > 0 ? formatDateObj(preferredDates[0]) : null;
 
-  const city = job?.selectedCities?.[0];
-  const locationLabel = city
-    ? (city.subLocality?.long_name && city.locality?.long_name
-      ? `${city.subLocality.long_name}, ${city.locality.long_name}`
-      : city.name || city.city || 'Location')
-    : 'Location';
+  // Food preferences — uses vegOnly & nonAlcoholicOnly
+  const eating = jobData?.vegOnly === true
+    ? 'Veg Only'
+    : jobData?.vegOnly === false
+      ? 'Veg & Non Veg'
+      : 'N/A';
+
+  const alcohol = jobData?.nonAlcoholicOnly === true
+    ? 'Non Alcohol'
+    : jobData?.nonAlcoholicOnly === false
+      ? 'Alcohol'
+      : 'N/A';
+
+  // ─── Determine what data to use for cuisines, menu, services ───
+  // If packageMenu/packageServices/packageCuisines are provided (from PreviewEnquiry),
+  // use them directly with the package components.
+  // Otherwise fall back to transforming jobData's menuSections / services / cuisines.
+  const usePackageComponents = !!(packageMenu?.length || packageServices?.length || packageCuisines?.length);
+
+  // Fallback: Cuisines from jobData
+  const cuisinesData = (jobData?.cuisines || []).map((c, i) => ({
+    id: i + 1,
+    label: typeof c === 'string' ? c : c?.name || c?.label || '',
+  }));
+
+  // Fallback: Menu data from jobData.menuSections
+  const menuData = (jobData?.menuSections || []).map((section) => {
+    const categoryName = section?.categoryName || 'Section';
+    const groups = (section?.offerings || []).map((offering) => {
+      const itemTypeName = offering?.itemTypeName || 'Items';
+      const selectionLimit = offering?.selectionLimit;
+      const limitLabel = selectionLimit
+        ? `Any ${selectionLimit.min}${selectionLimit.max !== selectionLimit.min ? `-${selectionLimit.max}` : ''}`
+        : '';
+      const items = (offering?.selectedItems || []).map((item) => ({
+        name: item?.name || '',
+        isVeg: item?.itemTypeDetails?.[0]?.name === 'Vegetarian',
+      }));
+      return { title: itemTypeName, items, limitLabel };
+    });
+    const count = groups.reduce((sum, g) => sum + g.items.length, 0);
+    return { section: categoryName, count, groups };
+  });
+
+  // Fallback: Services data from jobData.services
+  const servicesGrouped = (jobData?.services || []).reduce((acc, svc) => {
+    const cat = svc?.serviceCategory || 'Other';
+    if (!acc[cat]) acc[cat] = [];
+    const matchedOption = svc?.options?.find(opt => opt._id === svc?.variantOptionId);
+    const matchedType = matchedOption?.types?.find(t => t._id === svc?.variantTypeId);
+    acc[cat].push({
+      serviceName: svc?.serviceName || '',
+      serviceIcon: svc?.serviceIcon || '',
+      optionName: matchedOption?.name || '',
+      typeName: matchedType?.value || '',
+      price: svc?.price || 0,
+      priceRange: svc?.priceRange || '',
+    });
+    return acc;
+  }, {});
+  const servicesCategories = Object.entries(servicesGrouped);
+  const hasServices = servicesCategories.length > 0;
+
+  /* SCROLL SPY LOGIC (only used for fallback inline menu) */
+  const sectionRefs = useRef([]);
+  const [activeSection, setActiveSection] = useState(0);
 
   useEffect(() => {
-    if (city?.latitude && city?.longitude) {
-      setCenter({ lat: parseFloat(city.latitude), lng: parseFloat(city.longitude) });
-    }
-  }, [city]);
-
-  const dates = job?.eventDateOptions?.preferredDates || [];
-  const alternateDates = job?.eventDateOptions?.alternateDates || [];
-
-  const foodPrefs = job?.dietaryRequirements || [];
-  const isVegOnly = foodPrefs.includes('vegOnly');
-  const isAlcoholic = foodPrefs.includes('alcoholic');
-
-  const menuData = job?.menuSections || [];
-  const servicesList = job?.services || [];
-
-  // Transform menuData for FoodItems component
-  const transformedMenu = React.useMemo(() => {
-    return menuData.map((section, index) => ({
-      categoryId: section.section || `cat-${index}`,
-      categoryName: section.section,
-      offerings: section.groups?.map(group => ({
-        itemTypeId: group.title,
-        itemTypeName: group.title,
-        items: group.items?.map(item => ({ name: item })) || [],
-        selectionLimit: null
-      })) || [],
-      subcategories: []
-    }));
-  }, [menuData]);
-
-  /* SCROLL SPY LOGIC  */
-  const sectionRefs = useRef({});
-  const [activeSection, setActiveSection] = useState(null);
-
-  useEffect(() => {
+    if (menuData.length === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const id = entry.target.getAttribute("data-id");
-            setActiveSection(id);
+            setActiveSection(Number(entry.target.dataset.index));
           }
         });
       },
-      { root: null, threshold: 0.2, rootMargin: "-10% 0px -70% 0px" }
+      {
+        root: null,
+        threshold: 0.4,
+      }
     );
 
-    // Slight delay to ensure refs are set
+    sectionRefs.current.forEach((el) => el && observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [menuData.length]);
+
+
+  const scrollToSection = (index) => {
+    const section = sectionRefs.current[index];
+    if (!section) return;
+
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  // Package menu scroll spy
+  const pkgSectionRefs = useRef({});
+  const [pkgActive, setPkgActive] = useState(null);
+
+  useEffect(() => {
+    if (!packageMenu?.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('data-id');
+            setPkgActive(id);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '-15% 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
     setTimeout(() => {
-      Object.values(sectionRefs.current).forEach((el) => el && observer.observe(el));
+      Object.values(pkgSectionRefs.current).forEach((section) => {
+        if (section) observer.observe(section);
+      });
     }, 100);
 
     return () => observer.disconnect();
-  }, [transformedMenu]);
+  }, [packageMenu]);
 
-  const scrollToSection = (categoryId) => {
-    const section = sectionRefs.current[categoryId];
-    if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
-    setActiveSection(categoryId);
+  const handlePkgMenuClick = (id) => {
+    setPkgActive(id);
+    pkgSectionRefs.current[id]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
   };
 
-  const selectedServiceType = job?.serviceType || 'both'; // 'venue', 'catering', 'both'
+  const [selectedService, setSelectedService] = useState(() => {
+    const saved = localStorage.getItem('selectedService');
+    return saved ? Number(saved) : null;
+  });
+
+  const services = [
+    { id: 1, label: 'Venue', image: Venue },
+    { id: 2, label: 'Catering', image: Catering },
+  ];
+
+  // Auto-select service based on API serviceType
+  useEffect(() => {
+    if (serviceType && !selectedService) {
+      if (serviceType.toLowerCase() === 'venue') {
+        setSelectedService(1);
+      } else if (serviceType.toLowerCase() === 'catering') {
+        setSelectedService(2);
+      }
+    }
+  }, [serviceType, selectedService]);
+
+  const handleLocation = (lat, lng) => {
+    setCenter({ lat, lng });
+  };
+
+  // Set initial map center from jobData location
+  useEffect(() => {
+    if (jobData?.location?.latitude && jobData?.location?.longitude) {
+      setCenter({
+        lat: Number(jobData.location.latitude),
+        lng: Number(jobData.location.longitude),
+      });
+    } else if (jobData?.selectedCities?.[0]?.latitude && jobData?.selectedCities?.[0]?.longitude) {
+      setCenter({
+        lat: Number(jobData.selectedCities[0].latitude),
+        lng: Number(jobData.selectedCities[0].longitude),
+      });
+    }
+  }, [jobData]);
 
   return (
-    <div className="w-full lg:w-full">
-      {/* BASIC INFORMATION + LOCATION */}
-      <div className="p-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* LEFT - Basic Info */}
-          <div className="w-full space-y-6">
-            <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Basic Information</h2>
+    <>
+      {/**Main Content */}
+      <div className="w-full lg:w-full">
+        {/* BASIC INFORMATION + LOCATION */}
+        <div className=" p-2 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* LEFT */}
+            <div className="w-full  space-y-6">
+              <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Basic Information</h2>
 
-            {/* Venue & Catering Service Types */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {(selectedServiceType === 'venue' || selectedServiceType === 'both') && (
-                <Card variant="bordered" padding="sm" className="cursor-pointer border-[#ff8359] relative h-full min-h-39">
-                  <span className="absolute top-4 left-4 text-[25px] font-bold bg-[linear-gradient(93.96deg,#F08E45_0%,#EE5763_98.12%)] bg-clip-text text-transparent">Venue</span>
-                  <img src={Venue} alt="Venue" className="absolute bottom-4 right-2 w-23 object-contain" />
+              {/* Venue & Catering */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {services.map(service => (
+                  <Card
+                    key={service.id}
+                    variant="bordered"
+                    padding="sm"
+                    onClick={() => {
+                      setSelectedService(service.id);
+                      localStorage.setItem('selectedService', service.id);
+                    }}
+                    className={`cursor-pointer transition-all duration-200 relative h-full min-h-39
+                      ${selectedService === service.id
+                        ? 'border-[#ff8359]' : ''}
+                    `}
+                  >
+                    <span className="absolute top-4 left-4 text-[25px] font-bold
+                      bg-[linear-gradient(93.96deg,#F08E45_0%,#EE5763_98.12%)]
+                      bg-clip-text text-transparent"
+                    >
+                      {service.label}
+                    </span>
+
+                    <img
+                      src={service.image}
+                      alt={service.label}
+                      className="absolute bottom-4 right-2 w-23 object-contain"
+                    />
+                  </Card>
+                ))}
+              </div>
+
+              {/* Budget & Gathering Size */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                {/* Budget */}
+                <Card variant="flat" padding="sm" className="h-full bg-white min-h-39">
+                  <h1 className="font-sans text-lg">Budget</h1>
+
+                  <div className="flex flex-col gap-9  ">
+                    <Card className="border-orange-600 text-xs py-0.5 px-3 w-fit text-[#FF4000]">
+                      {budgetLabel}
+                    </Card>
+
+                    <Card
+                      padding="sm"
+                      className="font-semibold py-1 px-1 text-lg flex items-center whitespace-nowrap w-fit text-[#333333]"
+                    >
+                      <span className="text-gray-500 mx-1 ">₹</span>
+                      {budgetMin ? budgetMin.toLocaleString('en-IN') : '–'}
+                      <span className="text-gray-500 mx-1">-</span>
+                      <span className="text-gray-500 mx-1 ">₹</span>
+                      {budgetMax ? budgetMax.toLocaleString('en-IN') : '–'}
+                    </Card>
+                  </div>
                 </Card>
-              )}
-              {(selectedServiceType === 'catering' || selectedServiceType === 'both') && (
-                <Card variant="bordered" padding="sm" className="cursor-pointer border-[#ff8359] relative h-full min-h-39">
-                  <span className="absolute top-4 left-4 text-[25px] font-bold bg-[linear-gradient(93.96deg,#F08E45_0%,#EE5763_98.12%)] bg-clip-text text-transparent">Catering</span>
-                  <img src={Catering} alt="Catering" className="absolute bottom-4 right-2 w-23 object-contain" />
+
+                {/* Gathering Size */}
+                <Card variant="flat" padding="sm" className="flex flex-col h-full bg-white min-h-39">
+                  <h1 className="font-sans text-lg whitespace-nowrap">
+                    Gathering Size
+                  </h1>
+
+                  <div className="mt-auto self-end text-right">
+                    <h1 className="font-bold text-3xl font-gilroy
+                        bg-[linear-gradient(95.9deg,#F08E45_0%,#EE5763_97.38%)]
+                        bg-clip-text text-transparent"
+                    >{gatheringDisplay}</h1>
+
+                    <h6 className="font-semibold text-gray-500 whitespace-nowrap">
+                      Number of Guests
+                    </h6>
+                  </div>
                 </Card>
-              )}
+
+              </div>
             </div>
 
-            {/* Budget & Gathering */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Card variant="flat" padding="sm" className="h-full bg-white min-h-39">
-                <h1 className="font-sans text-lg">Budget</h1>
-                <div className="flex flex-col gap-9">
-                  <Card className="border-orange-600 text-xs py-0.5 px-3 w-fit text-[#FF4000]">
-                    {budgetType}
-                  </Card>
-                  <Card padding="sm" className="font-semibold py-1 px-1 text-lg flex items-center whitespace-nowrap w-fit text-[#333333]">
-                    <span className="text-gray-500 mx-1">₹</span>{formatRupees(budgetMin)}
-                    <span className="text-gray-500 mx-1">-</span>
-                    <span className="text-gray-500 mx-1">₹</span>{formatRupees(budgetMax)}
-                  </Card>
+            {/* RIGHT : LOCATION */}
+            <div className="w-full">
+              <h3 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">
+                Location ({locationRadius} km)
+              </h3>
+              {/* Map Wrapper */}
+              <div className="relative h-83.5 rounded-2xl overflow-hidden">
+                {/* Search Bar on Map */}
+                <div className="absolute top-5 left-3 right-3 z-1">
+                  <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+                    <span className="text-orange-500">
+                      <img src={Location} />
+                    </span>
+                    <input
+                      type="text"
+                      placeholder={locationName}
+                      className="w-full outline-none text-xl font-medium text-gray-950!"
+                      readOnly
+                    />
+                  </div>
                 </div>
-              </Card>
+                {/* Map */}
+                <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+                  <Map
+                    center={center}
+                    radius={center ? Number(locationRadius) * 1000 : 0}
+                    handleLocation={handleLocation}
+                  />
+                </LoadScript>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              <Card variant="flat" padding="sm" className="flex flex-col h-full bg-white min-h-39">
-                <h1 className="font-sans text-lg whitespace-nowrap">Gathering Size</h1>
-                <div className="mt-auto self-end text-right">
-                  <h1 className="font-bold text-3xl font-gilroy bg-[linear-gradient(95.9deg,#F08E45_0%,#EE5763_97.38%)] bg-clip-text text-transparent">
-                    {minPeople}–{maxPeople}
-                  </h1>
-                  <h6 className="font-semibold text-gray-500 whitespace-nowrap">Number of Guests</h6>
-                </div>
-              </Card>
+        {/* DATE & TIME + FOOD PREFERENCE  */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+
+          {/* DATE & TIME  */}
+          <div className="p-2 text-white rounded-xl">
+            <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Date & Time</h2>
+            <div className="grid grid-row-2 sm:grid-row-2 gap-1">
+
+              {/* Preferred Date */}
+              {primaryDateInfo && (
+                <Card variant="default" padding="md" className="flex items-center justify-between gap-5">
+                  <div className="text-left">
+                    <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+                      {primaryDateInfo.dayName}
+                    </div>
+                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+                      {primaryDateInfo.dateStr}
+                    </div>
+                  </div>
+
+                  {primaryDateInfo.timeRange && (() => {
+                    const times = formatTimeRange(primaryDateInfo.timeRange);
+                    return (
+                      <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
+                        <img src={Icon} alt="connector icon" className='pr-2' />
+                        <div className="flex flex-col leading-tight text-center">
+                          <span>{times.start}</span>
+                          <span>{times.end}</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </Card>
+              )}
+
+              {/* Alternate Dates */}
+              {alternateDates.length > 0 && (
+                <>
+                  <h2 className="font-gilroy font-bold text-lg mb-2 text-[#6c757d]">Alternate Dates</h2>
+                  {alternateDates.map((altDateObj, idx) => {
+                    const altInfo = formatDateObj(altDateObj);
+                    if (!altInfo) return null;
+                    const altTimes = formatTimeRange(altInfo.timeRange);
+                    return (
+                      <Card key={idx} variant="default" padding="md" className="flex items-center justify-between gap-5">
+                        <div className="text-left">
+                          <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+                            {altInfo.dayName}
+                          </div>
+                          <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+                            {altInfo.dateStr}
+                          </div>
+                        </div>
+
+                        {altInfo.timeRange && (
+                          <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
+                            <img src={Icon} alt="connector icon" className='pr-2' />
+                            <div className="flex flex-col leading-tight text-center">
+                              <span>{altTimes.start}</span>
+                              <span>{altTimes.end}</span>
+                            </div>
+                          </div>
+                        )}
+                      </Card>
+                    );
+                  })}
+                </>
+              )}
+
             </div>
           </div>
 
-          {/* RIGHT - Location */}
-          <div className="w-full">
-            <h3 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Location</h3>
-            <div className="relative h-83.5 rounded-2xl overflow-hidden">
-              <div className="absolute top-5 left-3 right-3 z-1">
-                <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
-                  <span className="text-orange-500"><img src={LocationIcon} /></span>
-                  <input type="text" readOnly value={locationLabel} className="w-full outline-none text-xl font-medium text-gray-950!" />
+          {/*FOOD PREFERENCE  */}
+          <div className="p-2">
+            <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Food Preferences</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="py-2.5 px-3.75">
+                <Card.Header className="text-lg font-bold">
+                  Eating
+                </Card.Header>
+                <Card.Body className="flex items-center text-lg font-bold whitespace-nowrap">
+                  <img
+                    src={eating === 'Veg Only' ? Veg : NonVeg}
+                    alt={eating}
+                    className="w-9 h-9"
+                  />
+                  <span className='text-sm lg:text-base'>{eating}</span>
+                </Card.Body>
+              </Card>
+
+              <Card className="py-2.5 px-3.75">
+                <Card.Header className="text-lg font-bold">
+                  Alcohol
+                </Card.Header>
+                <Card.Body className="flex items-center  text-lg font-bold whitespace-nowrap">
+                  <img
+                    src={ColdDrink}
+                    alt={alcohol}
+                    className="w-9 h-9"
+                  />
+                  <span className=' text-sm lg:text-base '>{alcohol}</span>
+                </Card.Body>
+              </Card>
+            </div>
+          </div>
+        </div>
+
+        {/* ── PACKAGE COMPONENTS (Cuisines / Menu / Services) ── */}
+        {usePackageComponents ? (
+          <>
+            {/* Cuisines */}
+            {packageCuisines?.length > 0 && (
+              <div className="px-2 mt-2">
+                <PackageCuisines cuisines={packageCuisines} />
+              </div>
+            )}
+
+            {/* Menu Categories + Food Items + Services (same layout as PackageDetails) */}
+            <div className="flex flex-col md:flex-row! items-start sticky top-24 mt-4">
+              {/* Menu Categories */}
+              <div className="hidden lg:block">
+                <MenuCategories
+                  packageMenu={packageMenu}
+                  isActive={pkgActive}
+                  handleMenuClick={() => handlePkgMenuClick}
+                />
+              </div>
+              {/* Food Items */}
+              <div className="w-full md:max-w-[600px]">
+                <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
+                <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
+                  <FoodItems packageMenu={packageMenu} sectionRefs={pkgSectionRefs} />
                 </div>
               </div>
-              <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-                <Map center={center} radius={center && job?.radius ? (parseInt(job.radius) || 10000) : 0} handleLocation={() => { }} />
-              </LoadScript>
+              {/* Amenities & Services */}
+              <PackageServices
+                services={packageServices}
+                handleMenuClick={() => handlePkgMenuClick}
+                sectionRefs={pkgSectionRefs}
+              />
             </div>
-          </div>
-        </div>
-      </div>
+          </>
+        ) : (
+          <>
+            {/* FALLBACK: Inline cuisines from jobData */}
+            {cuisinesData.length > 0 && (
+              <div className='p-2'>
+                <Card variant="borderless" className="p-5 mb-3 bg-[#F8F9FA]" hoverable={false}>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-sans text-lg mr-3 mb-2 text-[#1A1A1A]">
+                      Cuisines
+                    </h2>
 
-      {/* DATE & TIME + FOOD PREFERENCE */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
-        <div className="p-2 text-white rounded-xl">
-          <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Date & Time</h2>
-          <div className="grid grid-row-2 gap-1">
-            {dates.map((dateObj, idx) => {
-              const formatted = newFormatDate(dateObj.date || dateObj);
-              const dayName = formatted.date;
-              const dayNum = formatted.year;
-
-              const isAllDay = dateObj.allDay;
-              const timeDisplay = isAllDay ? "Full Day" : `${formatTo12Hour(dateObj.startTime)} - ${formatTo12Hour(dateObj.endTime)}`;
-
-              return (
-                <Card key={idx} variant="default" padding="md" className="flex items-center justify-between gap-5">
-                  <div className="text-left">
-                    <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayName}</div>
-                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayNum}</div>
-                  </div>
-                  <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
-                    <img src={Icon} alt="connector" className='pr-2' />
-                    <div className="flex flex-col leading-tight text-center">
-                      <span>{timeDisplay}</span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {cuisinesData.map((cuisine) => (
+                        <Card
+                          key={cuisine.id}
+                          hoverable={false}
+                          className="w-fit py-2 px-4 bg-white lg:w-fit"
+                        >
+                          <span className="text-sm font-sans text-[#333333]">
+                            {cuisine.label}
+                          </span>
+                        </Card>
+                      ))}
                     </div>
                   </div>
                 </Card>
-              );
-            })}
-            {alternateDates.length > 0 && <h2 className="font-gilroy font-bold text-lg mb-2 text-[#6c757d]">Alternate Dates</h2>}
-            {alternateDates.map((dateObj, idx) => {
-              const formatted = newFormatDate(dateObj.date || dateObj);
-              const dayName = formatted.date;
-              const dayNum = formatted.year;
+              </div>
+            )}
 
-              const isAllDay = dateObj.allDay;
-              const timeDisplay = isAllDay ? "Full Day" : `${formatTo12Hour(dateObj.startTime)} - ${formatTo12Hour(dateObj.endTime)}`;
+            {/*  MENU + FOOD (fallback inline) */}
+            {menuData.length > 0 && (
+              <div className="flex gap-8 2xl:gap-0 ">
 
-              return (
-                <Card key={`alt-${idx}`} variant="default" padding="md" className="flex items-center justify-between gap-5">
-                  <div className="text-left">
-                    <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayName}</div>
-                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">{dayNum}</div>
+                {/* LEFT MENU */}
+                <div className=" hidden lg:block">
+                  <div className="sticky top-4">
+                    <Card className="h-105.25 w-70">
+                      <h2 className="font-sans text-lg mb-4 h-5.25">Menu</h2>
+
+                      <ul className="space-y-1 mb-6">
+                        {menuData.map((section, index) => (
+                          <li key={index}>
+                            <button
+                              type="button"
+                              onClick={() => scrollToSection(index)}
+                              className={`w-full flex items-center justify-between px-2 py-3 rounded transition cursor-pointer text-left 
+                        ${activeSection === index
+                                  ? "bg-[#FFF8F0] text-[#E29F55] border-l-4 border-[#e0a057]"
+                                  : "text-gray-600 hover:bg-gray-50"
+                                }
+                      `}
+                            >
+                              <span className="text-base font-sans">{section.section}</span>
+                              <span className="text-xs font-semibold px-2 py-0.5 rounded">
+                                {section.count}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <h3 className="font-sans text-lg mb-4 mt-4 w-59.5 text-[#1A1A1A] h-5.25">Amenities & Services</h3>
+                      {hasServices ? (
+                        <ul className="space-y-1">
+                          {servicesCategories.map(([cat, items], idx) => (
+                            <li key={idx} className="flex items-center justify-between px-2 py-2 text-gray-600">
+                              <span className="text-base font-sans">{cat}</span>
+                              <span className="text-xs font-semibold px-2 py-0.5 rounded">({items.length})</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <h2 className="text-base h-6 w-59.5 text-[#212528] font-sans">No Amenities & Services</h2>
+                      )}
+                    </Card>
                   </div>
-                  <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
-                    <img src={Icon} alt="connector" className='pr-2' />
-                    <div className="flex flex-col leading-tight text-center">
-                      <span>{timeDisplay}</span>
-                    </div>
+                </div>
+
+                {/* RIGHT FOOD */}
+                <div id="food-scroll" className="flex-1 w-full lg:w-[65%] space-y-6 grid grid-cols-1  ">
+                  <Card className="hidden lg:block ">
+                    <h1 className="font-sans text-lg mb-4 h-5.25 ">Food Items</h1>
+
+                    {menuData.map((section, index) => (
+                      <div
+                        key={index}
+                        ref={(el) => (sectionRefs.current[index] = el)}
+                        data-index={index}
+                        className="mb-10"
+                      >
+                        <h2 className="font-sans text-[18.4px] h-11 border-b-2 border-[#e29f55] mb-4 pb-2.5 text-[#1A1A1A]">
+                          {section.section}
+                        </h2>
+
+                        {section.groups.map((group, gIndex) => (
+                          <Card key={gIndex} className="mb-5">
+                            <div className="flex items-center gap-3 mb-3">
+                              <h3 className="font-sans text-lg h-5.5 text-[#060606] mb-2.5">{group.title}</h3>
+                              {group.limitLabel && (
+                                <span className="bg-[#fce1cb] text-[#FF4000] rounded-full text-xs font-sans px-1.5">
+                                  {group.limitLabel}
+                                </span>
+                              )}
+                            </div>
+                            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                              {group.items.map((item, i) => (
+                                <li key={i} className="flex items-start gap-1">
+                                  <img src={item.isVeg ? Veg : NonVeg} className="w-8 h-8" />
+                                  <span className="font-sans pr-2.5 text-sm">{item.name}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </Card>
+                        ))}
+                      </div>
+                    ))}
+                  </Card>
+
+                  <div>
+                    <Card className="hidden lg:block ">
+                      <div className="mt-5">
+                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+                          Amenities & Services
+                        </h2>
+                      </div>
+                      {hasServices ? (
+                        servicesCategories.map(([cat, items], catIdx) => (
+                          <div key={catIdx} className="mb-5">
+                            <h3 className="text-base font-semibold text-[#FF6A3D] mb-3">{cat}</h3>
+                            {items.map((svc, svcIdx) => (
+                              <Card key={svcIdx} variant="bordered" className="flex items-center justify-between px-4 py-3 mb-2">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-2xl">🎂</span>
+                                  <div>
+                                    <span className="font-semibold text-[#060606]">{svc.serviceName}</span>
+                                    <div className="text-sm text-[#85878C]">
+                                      {svc.optionName}{svc.typeName ? `: ${svc.typeName}` : ''}
+                                    </div>
+                                  </div>
+                                </div>
+                                {svc.price === 0 && (
+                                  <span className="text-sm font-semibold text-[#15B076] bg-[#E8F8F0] px-3 py-1 rounded-full">FREE</span>
+                                )}
+                                {svc.price > 0 && (
+                                  <span className="text-sm font-semibold text-[#060606]">₹{svc.price.toLocaleString('en-IN')}</span>
+                                )}
+                              </Card>
+                            ))}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm font-semibold text-gray-400">
+                          No Amenities & Services
+                        </p>
+                      )}
+                    </Card>
                   </div>
-                </Card>
-              )
-            })}
-          </div>
-        </div>
 
-        <div className="p-2">
-          <h2 className="font-gilroy font-bold text-lg mb-3 text-[#6c757d]">Food Preferences</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <Card className="py-2.5 px-3.75">
-              <Card.Header className="text-lg font-bold">Eating</Card.Header>
-              <Card.Body className="flex items-center text-lg font-bold whitespace-nowrap">
-                <img src={NonVeg} alt="Veg Non Veg" className="w-9 h-9" />
-                <span className='text-sm lg:text-base'>{isVegOnly ? 'Veg Only' : 'Veg & Non Veg'}</span>
-              </Card.Body>
-            </Card>
-            <Card className="py-2.5 px-3.75">
-              <Card.Header className="text-lg font-bold">Alcohol</Card.Header>
-              <Card.Body className="flex items-center text-lg font-bold whitespace-nowrap">
-                <img src={ColdDrink} alt="Alcohol" className="w-9 h-9" />
-                <span className='text-sm lg:text-base'>{isAlcoholic ? 'Serves Alcohol' : 'Non Alcohol'}</span>
-              </Card.Body>
-            </Card>
-          </div>
-        </div>
+                  {/**Mobile view */}
+                  <div className="lg:hidden">
+                    <h1 className="font-bold text-xl mb-6">Food Items</h1>
+
+                    {menuData.map((section, index) => (
+                      <div
+                        key={index}
+                        data-index={index}
+                        className="mb-10"
+                      >
+                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+                          {section.section}
+                        </h2>
+
+                        {section.groups.map((group, gIndex) => (
+                          <Card key={gIndex} className="mb-4">
+                            <div className="flex items-center gap-3 mb-3">
+                              <h3 className="font-semibold text-lg">{group.title}</h3>
+                              {group.limitLabel && (
+                                <span className="bg-[#f3e2dd] text-[#FF6A3D] px-1.5 rounded-full text-xs font-semibold">
+                                  {group.limitLabel}
+                                </span>
+                              )}
+                            </div>
+
+                            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                              {group.items.map((item, i) => (
+                                <li key={i} className="flex items-start gap-1">
+                                  <img src={item.isVeg ? Veg : NonVeg} className="w-8 h-8" />
+                                  <span className="font-semibold text-sm">{item.name}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </Card>
+                        ))}
+                      </div>
+                    ))}
+                    <Card>
+                      <div className="mt-5">
+                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
+                          Amenities & Services
+                        </h2>
+                      </div>
+                      {hasServices ? (
+                        servicesCategories.map(([cat, items], catIdx) => (
+                          <div key={catIdx} className="mb-5">
+                            <h3 className="text-base font-semibold text-[#FF6A3D] mb-3">{cat}</h3>
+                            {items.map((svc, svcIdx) => (
+                              <Card key={svcIdx} variant="bordered" className="flex items-center justify-between px-4 py-3 mb-2">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-2xl">🎂</span>
+                                  <div>
+                                    <span className="font-semibold text-[#060606]">{svc.serviceName}</span>
+                                    <div className="text-sm text-[#85878C]">
+                                      {svc.optionName}{svc.typeName ? `: ${svc.typeName}` : ''}
+                                    </div>
+                                  </div>
+                                </div>
+                                {svc.price === 0 && (
+                                  <span className="text-sm font-semibold text-[#15B076] bg-[#E8F8F0] px-3 py-1 rounded-full">FREE</span>
+                                )}
+                                {svc.price > 0 && (
+                                  <span className="text-sm font-semibold text-[#060606]">₹{svc.price.toLocaleString('en-IN')}</span>
+                                )}
+                              </Card>
+                            ))}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm font-semibold text-gray-400">
+                          No Amenities & Services
+                        </p>
+                      )}
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* If no menu data, show a placeholder */}
+            {menuData.length === 0 && (
+              <div className="p-4 text-center text-gray-400">
+                <p>No menu information available for this enquiry.</p>
+              </div>
+            )}
+          </>
+        )}
       </div>
-
-      {/* CUISINES */}
-      <PackageCuisines cuisines={job?.cuisines} />
-
-      {/* MENU + SERVICES — same layout as PackageDetails */}
-      <div className="flex flex-col md:flex-row! items-start">
-        <div className="flex-1 min-w-0">
-          <h2 className="text-[18px] text-[#060606] font-bold px-4 mb-2">Food Items</h2>
-          <FoodItems packageMenu={job?.menuSections} sectionRefs={sectionRefs} />
-        </div>
-        <PackageServices services={job?.services} />
-      </div>
-    </div>
+    </>
   );
 };
+
 export default EnquiriesDetail;
