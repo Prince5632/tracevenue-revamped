@@ -126,6 +126,7 @@ const DashboardSidebar = ({ setIsSidebarOpen }) => {
               onClick={() => {
                 setActiveTab(item)
                 setIsSidebarOpen(false)
+                navigate(`/service/venues/contracts/${item.toLowerCase().split(" ")[0]}`)
               }}
               className={`w-full flex items-center text-[14px]  pl-18 py-2 text-[#060606] cursor-pointer transition-all duration-300 ease-in cursor-pointer
                   ${activeTab === item
@@ -184,7 +185,6 @@ const DashboardSidebar = ({ setIsSidebarOpen }) => {
         Icon={logout}
         classname="text-[#ff4000]"
         onclick={() => toggleMenu("profile")} />
-
     </div>
   );
 };

@@ -9,15 +9,7 @@ import ColdDrink from '@assets/images/colddrink.svg';
 import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
-
-import { CircleArrowLeft } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-
-// Package components (same as used in PackageDetails.jsx)
-import MenuCategories from '@/features/package/components/MenuCategories';
-import FoodItems from '@/features/package/components/FoodItems';
-import PackageServices from '@/features/package/components/PackageServices';
-import PackageCuisines from '@/features/package/components/PackageCuisines';
 
 const EnquiriesDetail = ({ enquiryData }) => {
   const [location, setLocation] = useState('');
@@ -27,9 +19,12 @@ const EnquiriesDetail = ({ enquiryData }) => {
   // ─── Extract data from enquiryData (with safe defaults) ───
   const eventName = enquiryData?.eventType?.eventName || 'N/A';
   const budgetType = enquiryData?.budgetType || 'perPerson';
-  // API returns budget.min/max regardless of budgetType; perPersonBudget is a fallback
-  const budgetMin = enquiryData?.budget?.min ?? enquiryData?.perPersonBudget?.min;
-  const budgetMax = enquiryData?.budget?.max ?? enquiryData?.perPersonBudget?.max;
+  const budgetMin = budgetType === 'perPerson'
+    ? enquiryData?.perPersonBudget?.min
+    : enquiryData?.budget?.min;
+  const budgetMax = budgetType === 'perPerson'
+    ? enquiryData?.perPersonBudget?.max
+    : enquiryData?.budget?.max;
   const budgetLabel = budgetType === 'perPerson' ? 'Per Person' : 'Lump Sum';
 
   const gatheringMin = enquiryData?.peopleRange?.minPeople || '';
@@ -52,26 +47,13 @@ const EnquiriesDetail = ({ enquiryData }) => {
 
   const formatDateObj = (dateObj) => {
     if (!dateObj) return null;
-
-    let dateKey, timeRange;
-
-    // New format: { date: "2026-02-28", startTime: "09:00", endTime: "17:00" }
-    if (dateObj.date) {
-      dateKey = dateObj.date;
-      timeRange = dateObj.startTime && dateObj.endTime
-        ? `${dateObj.startTime} - ${dateObj.endTime}`
-        : '';
-    } else {
-      // Old format: { "2026-02-28": "09:00 - 17:00" }
-      dateKey = Object.keys(dateObj)[0];
-      timeRange = dateObj[dateKey] || '';
-    }
-
+    const dateKey = Object.keys(dateObj)[0];
     if (!dateKey) return null;
     const d = new Date(dateKey);
     if (isNaN(d.getTime())) return null;
     const dayName = d.toLocaleDateString('en-IN', { weekday: 'long' });
     const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+    const timeRange = dateObj[dateKey] || '';
     return { dayName, dateStr, timeRange };
   };
 
@@ -102,21 +84,16 @@ const EnquiriesDetail = ({ enquiryData }) => {
       ? 'Alcohol'
       : 'N/A';
 
-  // ─── Determine what data to use for cuisines, menu, services ───
-  // If enquiryData?.menuSections/enquiryData?.services/enquiryData?.cuisines are provided (from PreviewEnquiry),
-  // use them directly with the package components.
-  // Otherwise fall back to transforming enquiryData's menuSections / services / cuisines.
-  const usePackageComponents = !!(enquiryData?.menuSections?.length || enquiryData?.services?.length || enquiryData?.cuisines?.length);
-
-  // Fallback: Cuisines from enquiryData
+  // Cuisines — simple string array
   const cuisinesData = (enquiryData?.cuisines || []).map((c, i) => ({
     id: i + 1,
     label: typeof c === 'string' ? c : c?.name || c?.label || '',
   }));
 
-  // Fallback: Menu data from enquiryData.menuSections
+  // ─── Menu data — transform menuSections into display format ───
   const menuData = (enquiryData?.menuSections || []).map((section) => {
     const categoryName = section?.categoryName || 'Section';
+    // Each offering is a food type group (Vegetarian, Non-Vegetarian, etc.)
     const groups = (section?.offerings || []).map((offering) => {
       const itemTypeName = offering?.itemTypeName || 'Items';
       const selectionLimit = offering?.selectionLimit;
@@ -129,14 +106,16 @@ const EnquiriesDetail = ({ enquiryData }) => {
       }));
       return { title: itemTypeName, items, limitLabel };
     });
+    // Total item count across all offerings
     const count = groups.reduce((sum, g) => sum + g.items.length, 0);
     return { section: categoryName, count, groups };
   });
 
-  // Fallback: Services data from enquiryData.services
+  // ─── Services data — group by serviceCategory for Amenities & Services ───
   const servicesGrouped = (enquiryData?.services || []).reduce((acc, svc) => {
     const cat = svc?.serviceCategory || 'Other';
     if (!acc[cat]) acc[cat] = [];
+    // Find the matched option and type
     const matchedOption = svc?.options?.find(opt => opt._id === svc?.variantOptionId);
     const matchedType = matchedOption?.types?.find(t => t._id === svc?.variantTypeId);
     acc[cat].push({
@@ -152,7 +131,7 @@ const EnquiriesDetail = ({ enquiryData }) => {
   const servicesCategories = Object.entries(servicesGrouped);
   const hasServices = servicesCategories.length > 0;
 
-  /* SCROLL SPY LOGIC (only used for fallback inline menu) */
+  /* SCROLL SPY LOGIC  */
   const sectionRefs = useRef([]);
   const [activeSection, setActiveSection] = useState(0);
 
@@ -188,44 +167,6 @@ const EnquiriesDetail = ({ enquiryData }) => {
     });
   };
 
-  // Package menu scroll spy
-  const pkgSectionRefs = useRef({});
-  const [pkgActive, setPkgActive] = useState(null);
-
-  useEffect(() => {
-    if (!enquiryData?.menuSections?.length) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('data-id');
-            setPkgActive(id);
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: '-15% 0px -70% 0px',
-        threshold: 0,
-      }
-    );
-
-    setTimeout(() => {
-      Object.values(pkgSectionRefs.current).forEach((section) => {
-        if (section) observer.observe(section);
-      });
-    }, 100);
-
-    return () => observer.disconnect();
-  }, [enquiryData?.menuSections]);
-
-  const handlePkgMenuClick = (id) => {
-    setPkgActive(id);
-    pkgSectionRefs.current[id]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-  };
 
   const [selectedService, setSelectedService] = useState(() => {
     const saved = localStorage.getItem('selectedService');
@@ -777,9 +718,28 @@ const EnquiriesDetail = ({ enquiryData }) => {
             )}
           </>
         )}
+
+
+        {/* If no menu data, show a placeholder */}
+        {menuData.length === 0 && (
+          <div className="p-4 text-center text-gray-400">
+            <p>No menu information available for this enquiry.</p>
+          </div>
+        )}
       </div>
     </>
   );
 };
 
 export default EnquiriesDetail;
+
+
+
+
+
+
+
+
+
+
+

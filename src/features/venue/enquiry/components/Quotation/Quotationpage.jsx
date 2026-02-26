@@ -22,6 +22,7 @@ const STATUS_OPTIONS = ["Only-Invited", "Only-Shortlisted", "Hide-Rejected"];
 
 
 const Quotationpage = ({
+  variants = [],
   locationInput,
   setLocationInput,
   suggestions,
@@ -269,9 +270,15 @@ const Quotationpage = ({
         {isMapView?<MapView/>:<div className="flex-1 px-4 mt-2">
           {!showDetailPage ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-5">
-              {Array.from({ length: 15 }).map((_, i) => (
-                <QuotationCard key={i} />
-              ))}
+              {variants.length > 0 ? (
+                variants.map((variant, i) => (
+                  <QuotationCard key={variant?._id || variant?.id || i} variant={variant} />
+                ))
+              ) : (
+                <div className="col-span-2 text-center py-12 text-gray-400">
+                  <p className="text-lg font-semibold">No quotations available yet.</p>
+                </div>
+              )}
             </div>
           ) : (
             <EnquiriesDetail />
