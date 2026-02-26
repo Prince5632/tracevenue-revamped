@@ -19,7 +19,7 @@ import FoodItems from '@/features/package/components/FoodItems';
 import PackageServices from '@/features/package/components/PackageServices';
 import PackageCuisines from '@/features/package/components/PackageCuisines';
 
-const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisines }) => {
+const EnquiriesDetail = ({ jobData }) => {
   const [location, setLocation] = useState('');
   const [center, setCenter] = useState(null);
   const navigate = useNavigate();
@@ -103,10 +103,10 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
       : 'N/A';
 
   // ─── Determine what data to use for cuisines, menu, services ───
-  // If packageMenu/packageServices/packageCuisines are provided (from PreviewEnquiry),
+  // If jobData?.menuSections/jobData?.services/jobData?.cuisines are provided (from PreviewEnquiry),
   // use them directly with the package components.
   // Otherwise fall back to transforming jobData's menuSections / services / cuisines.
-  const usePackageComponents = !!(packageMenu?.length || packageServices?.length || packageCuisines?.length);
+  const usePackageComponents = !!(jobData?.menuSections?.length || jobData?.services?.length || jobData?.cuisines?.length);
 
   // Fallback: Cuisines from jobData
   const cuisinesData = (jobData?.cuisines || []).map((c, i) => ({
@@ -193,7 +193,7 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
   const [pkgActive, setPkgActive] = useState(null);
 
   useEffect(() => {
-    if (!packageMenu?.length) return;
+    if (!jobData?.menuSections?.length) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -217,7 +217,7 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
     }, 100);
 
     return () => observer.disconnect();
-  }, [packageMenu]);
+  }, [jobData?.menuSections]);
 
   const handlePkgMenuClick = (id) => {
     setPkgActive(id);
@@ -501,9 +501,9 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
         {usePackageComponents ? (
           <>
             {/* Cuisines */}
-            {packageCuisines?.length > 0 && (
+            {jobData?.cuisines?.length > 0 && (
               <div className="px-2 mt-2">
-                <PackageCuisines cuisines={packageCuisines} />
+                <PackageCuisines cuisines={jobData?.cuisines} />
               </div>
             )}
 
@@ -512,7 +512,7 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
               {/* Menu Categories */}
               <div className="hidden lg:block">
                 <MenuCategories
-                  packageMenu={packageMenu}
+                  packageMenu={jobData?.menuSections}
                   isActive={pkgActive}
                   handleMenuClick={() => handlePkgMenuClick}
                 />
@@ -521,12 +521,12 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
               <div className="w-full md:max-w-[600px]">
                 <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
                 <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
-                  <FoodItems packageMenu={packageMenu} sectionRefs={pkgSectionRefs} />
+                  <FoodItems packageMenu={jobData?.menuSections} sectionRefs={pkgSectionRefs} />
                 </div>
               </div>
               {/* Amenities & Services */}
               <PackageServices
-                services={packageServices}
+                services={jobData?.services}
                 handleMenuClick={() => handlePkgMenuClick}
                 sectionRefs={pkgSectionRefs}
               />
