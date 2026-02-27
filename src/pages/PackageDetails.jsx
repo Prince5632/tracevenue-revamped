@@ -1,7 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { Navbar } from "@shared/components/layout";
-import { packageInformation } from "@shared/services";
 import { getClubbedCuisineById } from "@/features/venue/services/clubbedPackageService";
 import { checkJobStatus } from "@/features/venue/services/jobService";
 import { fetchSelectedCuisineComboDetails } from "@/utils/helperCuisineApi";
@@ -126,6 +124,11 @@ function PackageDetails() {
   const packageTitle = generatePackageTitle(packageData?.cuisineNames || []);
   const job = clubbedData?.job || jobStatus?.job;
 
+  // Extract ObjectIds from cuisine_combination for the API payload
+  const cuisineIds = (clubbedData?.cuisine_combination || []).map(
+    (c) => c?.value?._id || c?.value
+  ).filter(Boolean);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -172,6 +175,7 @@ function PackageDetails() {
           cuisineMenu={packageData?.menuTree}
           cuisineServices={packageData?.services}
           cuisineNames={packageData?.cuisineNames}
+          cuisineIds={cuisineIds}
         />
 
         <div className="flex flex-col md:flex-row! items-start sticky top-24">

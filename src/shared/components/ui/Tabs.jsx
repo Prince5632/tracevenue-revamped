@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * Tabs Component - TraceVenue Design System
@@ -16,6 +16,13 @@ const Tabs = ({
     ...props
 }) => {
      const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
+
+  // Sync internal state when defaultTab changes externally
+  useEffect(() => {
+    if (defaultTab) {
+      setActiveTab(defaultTab);
+    }
+  }, [defaultTab]);
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
@@ -35,9 +42,9 @@ const Tabs = ({
         //     indicator: '',
         // },
         pills: {
-            container: 'bg-[#f0f0f4] rounded-full p-1 flex',
-            tab: `flex-1 text-sm font-semibold rounded-full text-gray-500 transition-all duration-200 cursor-pointer hover:bg-[#ff4000] hover:text-white`,
-            // activeTab: 'bg-[#FF4000] text-white shadow-sm',
+            container: 'bg-[#f0f0f4] rounded-full p-1 flex gap-[2rem]',
+            tab: `flex-1 text-sm font-semibold rounded-full text-gray-500 transition-all duration-200 cursor-pointer `,
+            activeTab: 'bg-[#ff4000] text-white shadow-sm',
             indicator: '',
         },
     };

@@ -11,7 +11,7 @@ function SidebarTab({ active, Icon, value, dropdown, onclick, classname }) {
                     className="w-6 h-6"
                 />
                 <div className=" h-4.5 font-bold text-[18px] leading-none tracking-normal">
-                    {value}
+                    {value} 
                 </div>
             </div>
             <div classname="">

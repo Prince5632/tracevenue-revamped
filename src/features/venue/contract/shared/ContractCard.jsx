@@ -2,11 +2,10 @@ import React from 'react'
 import { Card, GradientText } from '@/shared';
 import { useNavigate } from 'react-router-dom';
 import LocationPin from "../../../../assets/images/LocationPin.png";
-import { IconRenderer } from '../components/shared/Icons';
+import { IconRenderer } from '../../enquiry/components/shared/Icons';
 
+const ContractCard = ({ data }) => {
 
-
-const EnquiryCard = ({ data }) => {
     const formatDate = (dateString) => {
         if (!dateString) return '';
         return new Date(dateString)
@@ -20,7 +19,6 @@ const EnquiryCard = ({ data }) => {
     const timeAgo = ((dateString) => {
         const now = new Date();
         const past = new Date(dateString);
-        console.log(new Date(dateString));
         const diffInSeconds = Math.floor((now - past) / 1000);
 
         const minutes = Math.floor(diffInSeconds / 60);
@@ -40,17 +38,19 @@ const EnquiryCard = ({ data }) => {
         return `${years} year${years > 1 ? "s" : ""} ago`;
     }
     )
+
+    console.log("In Contract Card..", data);
     const navigate = useNavigate();
 
-    const { minPeople, maxPeople } = data?.peopleRange
+    const { minPeople, maxPeople } = data?.peopleRange || { minPeople: 0, maxPeople: 0 };
 
-    const { min, max } = data?.budget
+    const { min, max } = data?.budget || { min: 0, max: 0 };
 
-    const { min: personMin, max: personMax } = data?.perPersonBudget
+    const { min: personMin, max: personMax } = data?.perPersonBudget || { min: 0, max: 0 };
 
     const { short_name = "", long_name = "" } = data?.selectedCities?.[0]?.locality || {}
 
-    const [dateObj] = data?.eventDate;
+    const [dateObj] = data?.eventDate || [];
     const [date, time] = dateObj ? Object.entries(dateObj)[0] : [];
 
     const { createdAt } = data || "";
@@ -82,6 +82,7 @@ const EnquiryCard = ({ data }) => {
             hour12: true,
         });
     }
+
     function formatTimeRange(range) {
         if (!range) return "";
         const [start, end] = range.split(" - ");
@@ -89,18 +90,36 @@ const EnquiryCard = ({ data }) => {
         return range && `${formatTo12Hour(start)} ${formatTo12Hour(end)}`;
     }
 
-    const enquiryCardClick = () => {
-        navigate(`/service/venues/enquiry/details/${data?._id}`, {
-            state: {
-                from: "/service/venues/enquiry/active",
-                currentStepName: "Quotations",
-                activeTab: "all",
-            },
-        });
-    }
+    // Get contract status styling
+    const getStatusStyle = (status) => {
+        switch (status?.toLowerCase()) {
+            case 'approved':
+                return 'text-[#15B076]';
+            case 'pending':
+                return 'text-[#FF8C00]';
+            case 'completed':
+                return 'text-[#573BB6]';
+            default:
+                return 'text-[#15B076]';
+        }
+    };
+
+    const getStatusText = (status) => {
+        switch (status?.toLowerCase()) {
+            case 'approved':
+                return 'Active Contract';
+            case 'pending':
+                return 'Awaiting Approval';
+            case 'completed':
+                return 'Contract Completed';
+            default:
+                return status;
+        }
+    };
+
     return (
         <>
-            <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]' onClick={() => enquiryCardClick()}>
+            <div className='rounded-[30px] my-6 p-[12px] !h-auto lg:h-[221px] lg:w-full border border-[1px] border-[#D7D9DA] grid grid-cols-1 lg:grid-cols-[0.5fr_2fr]' onClick={() => navigate("/enquiry-detail-layout")}>
                 {/* image */}
                 <div className='p-4 lg:w-55'>
                     <Card variant="bordered" className="lg:h-44 rounded-[30px] !m-0 relative -top-2 -left-2">
@@ -182,7 +201,7 @@ const EnquiryCard = ({ data }) => {
                     </div>
 
                     <div className='flex justify-between mb-2'>
-                        <h2 className='text-[#15B076] font-semibold text-[16px]'>Awaiting Quotations</h2>
+                        <h2 className={`${getStatusStyle(data?.status)} font-semibold text-[16px]`}>{getStatusText(data?.status)}</h2>
                         <h2 className='font-semibold italic text-[#573BB6] text-[14px]'>{createdAt && timeAgo(createdAt)}</h2>
 
                     </div>
@@ -193,4 +212,4 @@ const EnquiryCard = ({ data }) => {
     )
 }
 
-export default EnquiryCard
+export default ContractCard

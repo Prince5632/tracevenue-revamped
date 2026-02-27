@@ -1,24 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/shared/components/ui";
 import PreviewEnquiry from "./PreviewEnquiry";
-import { useLogin } from "@/hooks/useLogin";
+import { useAuth } from "@/features/auth/context/useAuthStore.jsx";
 import { useRaiseEnquiry } from "@/features/venue/enquiry/utils/raiseEnquiry";
 import { useNavigate } from "react-router-dom";
+import Login from "@/features/auth/components/Login";
 
-function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames }) {
+/** Auto-generate a title like "Looking for Wedding for 50 people on 28 Feb." */
+const generateEnquiryTitle = (enquiry) => {
+  const eventName =
+    enquiry?.eventType?.eventName ||
+    enquiry?.eventType?.label ||
+    (typeof enquiry?.eventType === "string" ? enquiry.eventType : null);
+  const maxPeople = enquiry?.peopleRange?.maxPeople;
+  const firstDate = enquiry?.eventDateOptions?.preferredDates?.[0]?.date;
+  const dateStr = firstDate
+    ? new Date(firstDate).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+    : null;
+  if (!eventName) return enquiry?.name || "My Enquiry";
+  return `Looking for ${eventName}${maxPeople ? ` for ${maxPeople} people` : ""}${dateStr ? ` on ${dateStr}` : ""}.`;
+};
+
+const getEnquiryTitle = (job) =>
+  job?.name && job.name !== "Untitled Enquiry" ? job.name : generateEnquiryTitle(job);
+
+function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames, cuisineIds }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { login, isLoggedIn } = useLogin();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { isLoggedIn } = useAuth();
   const { raiseEnquiry } = useRaiseEnquiry();
   const navigate = useNavigate();
 
-  const handleRaiseEnquiry = () => {
-    if (!login()) return;
+  // Stores pending action to fire after login succeeds
+  const pendingActionRef = useRef(null);
 
-    // Access job details
-    if (job) {
-      raiseEnquiry(job.name, job, job._id);
+  // After login succeeds — fire the pending action automatically
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false);
+    if (pendingActionRef.current) {
+      const action = pendingActionRef.current;
+      pendingActionRef.current = null;
+      action();
     }
   };
+
+  // Merge package data into job so payload includes menuSections, services, cuisines
+  // Also generates a smart title instead of "Untitled Enquiry"
+  // cuisineIds = ObjectIds for the API; cuisineNames = display strings only
+  const buildEnrichedJob = () => {
+    const title = getEnquiryTitle(job);
+    return {
+      ...job,
+      name: title,
+      menuSections: cuisineMenu?.length ? cuisineMenu : (job?.menuSections || []),
+      services: cuisineServices?.length ? cuisineServices : (job?.services || []),
+      cuisines: cuisineIds?.length ? cuisineIds : (job?.cuisines || []),
+    };
+  };
+
+  const handleRaiseEnquiry = () => {
+    if (!isLoggedIn) {
+      pendingActionRef.current = () => {
+        const enrichedJob = buildEnrichedJob();
+        if (enrichedJob) raiseEnquiry(enrichedJob.name, enrichedJob, enrichedJob._id);
+      };
+      setShowLoginModal(true);
+      return;
+    }
+    const enrichedJob = buildEnrichedJob();
+    if (enrichedJob) {
+      raiseEnquiry(enrichedJob.name, enrichedJob, enrichedJob._id);
+    }
+  };
+
+  const handlePreviewEnquiry = () => setIsModalOpen(true);
 
   const handleViewEnquiry = () => {
     if (job?._id) {
@@ -37,7 +92,7 @@ function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames }) {
     <>
       <div
         className="
-            flex z-50
+            flex z-10
             px-2
             fixed bottom-0 right-0 left-0 justify-center
             md:bottom-8
@@ -145,7 +200,7 @@ function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames }) {
               <>
                 <Button
                   variant="outline"
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={handlePreviewEnquiry}
                   className="
                         w-full
                         px-[20px] py-[12px]
@@ -160,7 +215,14 @@ function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames }) {
                 >
                   Preview Enquiry
                 </Button>
-                <PreviewEnquiry enquiry={job} cuisineMenu={cuisineMenu} cuisineServices={cuisineServices} cuisineNames={cuisineNames} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                <PreviewEnquiry
+                  enquiry={job}
+                  cuisineMenu={cuisineMenu}
+                  cuisineServices={cuisineServices}
+                  cuisineNames={cuisineNames}
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                />
                 <Button
                   variant="gradient"
                   onClick={handleRaiseEnquiry}
@@ -192,6 +254,20 @@ function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames }) {
           </div>
         </div>
       </div>
+
+      {/* Inline login modal — no page reload, state preserved after auth */}
+      {showLoginModal && (
+        <div
+          className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/10 backdrop-blur-sm p-4"
+          onClick={() => setShowLoginModal(false)}
+        >
+          <Login
+            onLoginSuccess={handleLoginSuccess}
+            onClose={() => setShowLoginModal(false)}
+            type="login"
+          />
+        </div>
+      )}
     </>
   );
 }

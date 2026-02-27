@@ -1,36 +1,23 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import Tabs from '@shared/components/ui/Tabs';
-
-const BASE_PATH = "/enquiry-detail-layout";
 
 const steps = [
   {
     id: "quotations",
     label: "Quotations",
-    path: `${BASE_PATH}/quotation-pages`,
   },
   {
     id: "compare",
     label: "Compare Package",
-    path: `${BASE_PATH}/compare-packages`,
   },
   {
     id: "offer",
     label: "Offer & Booking",
-    path: `${BASE_PATH}/offer-booking`,
   },
 ];
 
-
-const EnquiryDetailTabs = () => {
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-
-  const activeStep =
-    steps.find(step => step.path === pathname)?.id || steps[0].id;
-
-  const activeIndex = steps.findIndex(step => step.path === pathname);
+const EnquiryDetailTabs = ({ activeTab, onTabChange }) => {
+  const activeIndex = steps.findIndex(step => step.id === activeTab);
 
   return (
     <div className="w-full">
@@ -46,7 +33,7 @@ const EnquiryDetailTabs = () => {
             return (
               <button
                 key={step.id}
-                onClick={() => navigate(step.path)}
+                onClick={() => onTabChange(step.id)}
                 className={`
                   relative z-10
                   w-8 h-8
@@ -71,11 +58,8 @@ const EnquiryDetailTabs = () => {
       <div className="hidden sm:block">
         <Tabs
           variant="pills"
-          defaultTab={activeStep}
-          onChange={(tabId) => {
-            const step = steps.find(s => s.id === tabId);
-            if (step) navigate(step.path);
-          }}
+          defaultTab={activeTab}
+          onChange={onTabChange}
           className="w-full"
           tabs={steps.map(step => ({
             id: step.id,

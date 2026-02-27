@@ -9,52 +9,47 @@ import ColdDrink from '@assets/images/colddrink.svg';
 import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
-
-import { CircleArrowLeft } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-
-// Package components (same as used in PackageDetails.jsx)
 import MenuCategories from '@/features/package/components/MenuCategories';
 import FoodItems from '@/features/package/components/FoodItems';
 import PackageServices from '@/features/package/components/PackageServices';
 import PackageCuisines from '@/features/package/components/PackageCuisines';
 
-const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisines }) => {
+const EnquiriesDetail = ({ enquiryData }) => {
   const [location, setLocation] = useState('');
   const [center, setCenter] = useState(null);
   const navigate = useNavigate();
 
-  // ─── Extract data from jobData (with safe defaults) ───
-  const eventName = jobData?.eventType?.eventName || 'N/A';
-  const budgetType = jobData?.budgetType || 'perPerson';
-  // API returns budget.min/max regardless of budgetType; perPersonBudget is a fallback
-  const budgetMin = jobData?.budget?.min ?? jobData?.perPersonBudget?.min;
-  const budgetMax = jobData?.budget?.max ?? jobData?.perPersonBudget?.max;
+  // ─── Extract data from enquiryData (with safe defaults) ───
+  const eventName = enquiryData?.eventType?.eventName || 'N/A';
+  const budgetType = enquiryData?.budgetType || 'perPerson';
+  // API always stores amounts in budget.min/max regardless of budgetType
+  const budgetMin = enquiryData?.budget?.min ?? enquiryData?.perPersonBudget?.min;
+  const budgetMax = enquiryData?.budget?.max ?? enquiryData?.perPersonBudget?.max;
   const budgetLabel = budgetType === 'perPerson' ? 'Per Person' : 'Lump Sum';
 
-  const gatheringMin = jobData?.peopleRange?.minPeople || '';
-  const gatheringMax = jobData?.peopleRange?.maxPeople || '';
+  const gatheringMin = enquiryData?.peopleRange?.minPeople || '';
+  const gatheringMax = enquiryData?.peopleRange?.maxPeople || '';
   const gatheringDisplay = gatheringMin && gatheringMax
     ? `${gatheringMin}–${gatheringMax}`
     : gatheringMin || gatheringMax || 'N/A';
 
-  const serviceType = jobData?.serviceType || '';
+  const serviceType = enquiryData?.serviceType || '';
 
   // Location
-  const locationRadius = jobData?.radius || 10;
-  const locationName = jobData?.selectedCities?.[0]?.locality?.short_name
-    || jobData?.selectedCities?.[0]?.name
+  const locationRadius = enquiryData?.radius || 10;
+  const locationName = enquiryData?.selectedCities?.[0]?.locality?.short_name
+    || enquiryData?.selectedCities?.[0]?.name
     || 'N/A';
 
   // Event dates — uses eventDateOptions structure
-  const preferredDates = jobData?.eventDateOptions?.preferredDates || jobData?.eventDate || [];
-  const alternateDates = jobData?.eventDateOptions?.alternateDates || [];
+  const preferredDates = enquiryData?.eventDateOptions?.preferredDates || enquiryData?.eventDate || [];
+  const alternateDates = enquiryData?.eventDateOptions?.alternateDates || [];
 
   const formatDateObj = (dateObj) => {
     if (!dateObj) return null;
 
     let dateKey, timeRange;
-
     // New format: { date: "2026-02-28", startTime: "09:00", endTime: "17:00" }
     if (dateObj.date) {
       dateKey = dateObj.date;
@@ -90,33 +85,28 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
   const primaryDateInfo = preferredDates.length > 0 ? formatDateObj(preferredDates[0]) : null;
 
   // Food preferences — uses vegOnly & nonAlcoholicOnly
-  const eating = jobData?.vegOnly === true
+  const eating = enquiryData?.vegOnly === true
     ? 'Veg Only'
-    : jobData?.vegOnly === false
+    : enquiryData?.vegOnly === false
       ? 'Veg & Non Veg'
       : 'N/A';
 
-  const alcohol = jobData?.nonAlcoholicOnly === true
+  const alcohol = enquiryData?.nonAlcoholicOnly === true
     ? 'Non Alcohol'
-    : jobData?.nonAlcoholicOnly === false
+    : enquiryData?.nonAlcoholicOnly === false
       ? 'Alcohol'
       : 'N/A';
 
-  // ─── Determine what data to use for cuisines, menu, services ───
-  // If packageMenu/packageServices/packageCuisines are provided (from PreviewEnquiry),
-  // use them directly with the package components.
-  // Otherwise fall back to transforming jobData's menuSections / services / cuisines.
-  const usePackageComponents = !!(packageMenu?.length || packageServices?.length || packageCuisines?.length);
-
-  // Fallback: Cuisines from jobData
-  const cuisinesData = (jobData?.cuisines || []).map((c, i) => ({
+  // Cuisines — simple string array
+  const cuisinesData = (enquiryData?.cuisines || []).map((c, i) => ({
     id: i + 1,
     label: typeof c === 'string' ? c : c?.name || c?.label || '',
   }));
 
-  // Fallback: Menu data from jobData.menuSections
-  const menuData = (jobData?.menuSections || []).map((section) => {
+  // ─── Menu data — transform menuSections into display format ───
+  const menuData = (enquiryData?.menuSections || []).map((section) => {
     const categoryName = section?.categoryName || 'Section';
+    // Each offering is a food type group (Vegetarian, Non-Vegetarian, etc.)
     const groups = (section?.offerings || []).map((offering) => {
       const itemTypeName = offering?.itemTypeName || 'Items';
       const selectionLimit = offering?.selectionLimit;
@@ -129,14 +119,16 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
       }));
       return { title: itemTypeName, items, limitLabel };
     });
+    // Total item count across all offerings
     const count = groups.reduce((sum, g) => sum + g.items.length, 0);
     return { section: categoryName, count, groups };
   });
 
-  // Fallback: Services data from jobData.services
-  const servicesGrouped = (jobData?.services || []).reduce((acc, svc) => {
+  // ─── Services data — group by serviceCategory for Amenities & Services ───
+  const servicesGrouped = (enquiryData?.services || []).reduce((acc, svc) => {
     const cat = svc?.serviceCategory || 'Other';
     if (!acc[cat]) acc[cat] = [];
+    // Find the matched option and type
     const matchedOption = svc?.options?.find(opt => opt._id === svc?.variantOptionId);
     const matchedType = matchedOption?.types?.find(t => t._id === svc?.variantTypeId);
     acc[cat].push({
@@ -152,48 +144,13 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
   const servicesCategories = Object.entries(servicesGrouped);
   const hasServices = servicesCategories.length > 0;
 
-  /* SCROLL SPY LOGIC (only used for fallback inline menu) */
-  const sectionRefs = useRef([]);
-  const [activeSection, setActiveSection] = useState(0);
-
-  useEffect(() => {
-    if (menuData.length === 0) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(Number(entry.target.dataset.index));
-          }
-        });
-      },
-      {
-        root: null,
-        threshold: 0.4,
-      }
-    );
-
-    sectionRefs.current.forEach((el) => el && observer.observe(el));
-
-    return () => observer.disconnect();
-  }, [menuData.length]);
-
-
-  const scrollToSection = (index) => {
-    const section = sectionRefs.current[index];
-    if (!section) return;
-
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
-
-  // Package menu scroll spy
+  /* ── PACKAGE COMPONENT SCROLL SPY (mirrors PackageDetails.jsx) ── */
   const pkgSectionRefs = useRef({});
   const [pkgActive, setPkgActive] = useState(null);
 
   useEffect(() => {
-    if (!packageMenu?.length) return;
+    if (!enquiryData?.menuSections?.length) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -217,15 +174,13 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
     }, 100);
 
     return () => observer.disconnect();
-  }, [packageMenu]);
+  }, [enquiryData?.menuSections]);
 
   const handlePkgMenuClick = (id) => {
     setPkgActive(id);
-    pkgSectionRefs.current[id]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
+    pkgSectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
 
   const [selectedService, setSelectedService] = useState(() => {
     const saved = localStorage.getItem('selectedService');
@@ -252,20 +207,20 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
     setCenter({ lat, lng });
   };
 
-  // Set initial map center from jobData location
+  // Set initial map center from enquiryData location
   useEffect(() => {
-    if (jobData?.location?.latitude && jobData?.location?.longitude) {
+    if (enquiryData?.location?.latitude && enquiryData?.location?.longitude) {
       setCenter({
-        lat: Number(jobData.location.latitude),
-        lng: Number(jobData.location.longitude),
+        lat: Number(enquiryData.location.latitude),
+        lng: Number(enquiryData.location.longitude),
       });
-    } else if (jobData?.selectedCities?.[0]?.latitude && jobData?.selectedCities?.[0]?.longitude) {
+    } else if (enquiryData?.selectedCities?.[0]?.latitude && enquiryData?.selectedCities?.[0]?.longitude) {
       setCenter({
-        lat: Number(jobData.selectedCities[0].latitude),
-        lng: Number(jobData.selectedCities[0].longitude),
+        lat: Number(enquiryData.selectedCities[0].latitude),
+        lng: Number(enquiryData.selectedCities[0].longitude),
       });
     }
-  }, [jobData]);
+  }, [enquiryData]);
 
   return (
     <>
@@ -502,288 +457,62 @@ const EnquiriesDetail = ({ jobData, packageMenu, packageServices, packageCuisine
         </div>
 
         {/* ── PACKAGE COMPONENTS (Cuisines / Menu / Services) ── */}
-        {usePackageComponents ? (
-          <>
-            {/* Cuisines */}
-            {packageCuisines?.length > 0 && (
-              <div className="px-2 mt-2">
-                <PackageCuisines cuisines={packageCuisines} />
-              </div>
-            )}
 
-            {/* Menu Categories + Food Items + Services (same layout as PackageDetails) */}
-            <div className="flex flex-col md:flex-row! items-start sticky top-24 mt-4">
-              {/* Menu Categories */}
-              <div className="hidden lg:block">
-                <MenuCategories
-                  packageMenu={packageMenu}
-                  isActive={pkgActive}
-                  handleMenuClick={() => handlePkgMenuClick}
-                />
-              </div>
-              {/* Food Items */}
-              <div className="w-full md:max-w-[600px]">
-                <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
-                <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto pt-2 overflow-hidden scrollbar-hide md:pb-[200px]">
-                  <FoodItems packageMenu={packageMenu} sectionRefs={pkgSectionRefs} className=""/>
-                </div>
-              </div>
-              {/* Amenities & Services */}
-              <PackageServices
-                services={packageServices}
-                handleMenuClick={() => handlePkgMenuClick}
-                sectionRefs={pkgSectionRefs}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            {/* FALLBACK: Inline cuisines from jobData */}
-            {cuisinesData.length > 0 && (
-              <div className='p-2'>
-                <Card variant="borderless" className="p-5 mb-3 bg-[#F8F9FA]" hoverable={false}>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="font-sans text-lg mr-3 mb-2 text-[#1A1A1A]">
-                      Cuisines
-                    </h2>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      {cuisinesData.map((cuisine) => (
-                        <Card
-                          key={cuisine.id}
-                          hoverable={false}
-                          className="w-fit py-2 px-4 bg-white lg:w-fit"
-                        >
-                          <span className="text-sm font-sans text-[#333333]">
-                            {cuisine.label}
-                          </span>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            )}
-
-            {/*  MENU + FOOD (fallback inline) */}
-            {menuData.length > 0 && (
-              <div className="flex gap-8 2xl:gap-0 ">
-
-                {/* LEFT MENU */}
-                <div className=" hidden lg:block">
-                  <div className="sticky top-4">
-                    <Card className="h-105.25 w-70">
-                      <h2 className="font-sans text-lg mb-4 h-5.25">Menu</h2>
-
-                      <ul className="space-y-1 mb-6">
-                        {menuData.map((section, index) => (
-                          <li key={index}>
-                            <button
-                              type="button"
-                              onClick={() => scrollToSection(index)}
-                              className={`w-full flex items-center justify-between px-2 py-3 rounded transition cursor-pointer text-left 
-                        ${activeSection === index
-                                  ? "bg-[#FFF8F0] text-[#E29F55] border-l-4 border-[#e0a057]"
-                                  : "text-gray-600 hover:bg-gray-50"
-                                }
-                      `}
-                            >
-                              <span className="text-base font-sans">{section.section}</span>
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded">
-                                {section.count}
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <h3 className="font-sans text-lg mb-4 mt-4 w-59.5 text-[#1A1A1A] h-5.25">Amenities & Services</h3>
-                      {hasServices ? (
-                        <ul className="space-y-1">
-                          {servicesCategories.map(([cat, items], idx) => (
-                            <li key={idx} className="flex items-center justify-between px-2 py-2 text-gray-600">
-                              <span className="text-base font-sans">{cat}</span>
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded">({items.length})</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <h2 className="text-base h-6 w-59.5 text-[#212528] font-sans">No Amenities & Services</h2>
-                      )}
-                    </Card>
-                  </div>
-                </div>
-
-                {/* RIGHT FOOD */}
-                <div id="food-scroll" className="flex-1 w-full lg:w-[65%] space-y-6 grid grid-cols-1  ">
-                  <Card className="hidden lg:block ">
-                    <h1 className="font-sans text-lg mb-4 h-5.25 ">Food Items</h1>
-
-                    {menuData.map((section, index) => (
-                      <div
-                        key={index}
-                        ref={(el) => (sectionRefs.current[index] = el)}
-                        data-index={index}
-                        className="mb-10"
-                      >
-                        <h2 className="font-sans text-[18.4px] h-11 border-b-2 border-[#e29f55] mb-4 pb-2.5 text-[#1A1A1A]">
-                          {section.section}
-                        </h2>
-
-                        {section.groups.map((group, gIndex) => (
-                          <Card key={gIndex} className="mb-5">
-                            <div className="flex items-center gap-3 mb-3">
-                              <h3 className="font-sans text-lg h-5.5 text-[#060606] mb-2.5">{group.title}</h3>
-                              {group.limitLabel && (
-                                <span className="bg-[#fce1cb] text-[#FF4000] rounded-full text-xs font-sans px-1.5">
-                                  {group.limitLabel}
-                                </span>
-                              )}
-                            </div>
-                            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-                              {group.items.map((item, i) => (
-                                <li key={i} className="flex items-start gap-1">
-                                  <img src={item.isVeg ? Veg : NonVeg} className="w-8 h-8" />
-                                  <span className="font-sans pr-2.5 text-sm">{item.name}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </Card>
-                        ))}
-                      </div>
-                    ))}
-                  </Card>
-
-                  <div>
-                    <Card className="hidden lg:block ">
-                      <div className="mt-5">
-                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
-                          Amenities & Services
-                        </h2>
-                      </div>
-                      {hasServices ? (
-                        servicesCategories.map(([cat, items], catIdx) => (
-                          <div key={catIdx} className="mb-5">
-                            <h3 className="text-base font-semibold text-[#FF6A3D] mb-3">{cat}</h3>
-                            {items.map((svc, svcIdx) => (
-                              <Card key={svcIdx} variant="bordered" className="flex items-center justify-between px-4 py-3 mb-2">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-2xl">🎂</span>
-                                  <div>
-                                    <span className="font-semibold text-[#060606]">{svc.serviceName}</span>
-                                    <div className="text-sm text-[#85878C]">
-                                      {svc.optionName}{svc.typeName ? `: ${svc.typeName}` : ''}
-                                    </div>
-                                  </div>
-                                </div>
-                                {svc.price === 0 && (
-                                  <span className="text-sm font-semibold text-[#15B076] bg-[#E8F8F0] px-3 py-1 rounded-full">FREE</span>
-                                )}
-                                {svc.price > 0 && (
-                                  <span className="text-sm font-semibold text-[#060606]">₹{svc.price.toLocaleString('en-IN')}</span>
-                                )}
-                              </Card>
-                            ))}
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm font-semibold text-gray-400">
-                          No Amenities & Services
-                        </p>
-                      )}
-                    </Card>
-                  </div>
-
-                  {/**Mobile view */}
-                  <div className="lg:hidden">
-                    <h1 className="font-bold text-xl mb-6">Food Items</h1>
-
-                    {menuData.map((section, index) => (
-                      <div
-                        key={index}
-                        data-index={index}
-                        className="mb-10"
-                      >
-                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
-                          {section.section}
-                        </h2>
-
-                        {section.groups.map((group, gIndex) => (
-                          <Card key={gIndex} className="mb-4">
-                            <div className="flex items-center gap-3 mb-3">
-                              <h3 className="font-semibold text-lg">{group.title}</h3>
-                              {group.limitLabel && (
-                                <span className="bg-[#f3e2dd] text-[#FF6A3D] px-1.5 rounded-full text-xs font-semibold">
-                                  {group.limitLabel}
-                                </span>
-                              )}
-                            </div>
-
-                            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-                              {group.items.map((item, i) => (
-                                <li key={i} className="flex items-start gap-1">
-                                  <img src={item.isVeg ? Veg : NonVeg} className="w-8 h-8" />
-                                  <span className="font-semibold text-sm">{item.name}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </Card>
-                        ))}
-                      </div>
-                    ))}
-                    <Card>
-                      <div className="mt-5">
-                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
-                          Amenities & Services
-                        </h2>
-                      </div>
-                      {hasServices ? (
-                        servicesCategories.map(([cat, items], catIdx) => (
-                          <div key={catIdx} className="mb-5">
-                            <h3 className="text-base font-semibold text-[#FF6A3D] mb-3">{cat}</h3>
-                            {items.map((svc, svcIdx) => (
-                              <Card key={svcIdx} variant="bordered" className="flex items-center justify-between px-4 py-3 mb-2">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-2xl">🎂</span>
-                                  <div>
-                                    <span className="font-semibold text-[#060606]">{svc.serviceName}</span>
-                                    <div className="text-sm text-[#85878C]">
-                                      {svc.optionName}{svc.typeName ? `: ${svc.typeName}` : ''}
-                                    </div>
-                                  </div>
-                                </div>
-                                {svc.price === 0 && (
-                                  <span className="text-sm font-semibold text-[#15B076] bg-[#E8F8F0] px-3 py-1 rounded-full">FREE</span>
-                                )}
-                                {svc.price > 0 && (
-                                  <span className="text-sm font-semibold text-[#060606]">₹{svc.price.toLocaleString('en-IN')}</span>
-                                )}
-                              </Card>
-                            ))}
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm font-semibold text-gray-400">
-                          No Amenities & Services
-                        </p>
-                      )}
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* If no menu data, show a placeholder */}
-            {menuData.length === 0 && (
-              <div className="p-4 text-center text-gray-400">
-                <p>No menu information available for this enquiry.</p>
-              </div>
-            )}
-          </>
+        {/* Cuisines */}
+        {enquiryData?.cuisines?.length > 0 && (
+          <div className="px-2 mt-2">
+            <PackageCuisines cuisines={enquiryData?.cuisines} />
+          </div>
         )}
-      </div>
+
+        {/* Menu Categories + Food Items + Services (same layout as PackageDetails) */}
+        <div className="flex flex-col md:flex-row! items-start sticky top-24 mt-4">
+          {/* Menu Categories */}
+          <div className="hidden lg:block">
+            <MenuCategories
+              packageMenu={enquiryData?.menuSections}
+              isActive={pkgActive}
+              handleMenuClick={() => handlePkgMenuClick}
+            />
+          </div>
+          {/* Food Items */}
+          <div className="w-full md:max-w-[600px]">
+            <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
+            <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
+              <FoodItems packageMenu={enquiryData?.menuSections} sectionRefs={pkgSectionRefs} />
+            </div>
+          </div>
+          {/* Amenities & Services */}
+          <PackageServices
+            services={enquiryData?.services}
+            handleMenuClick={() => handlePkgMenuClick}
+          // sectionRefs={pkgSectionRefs}
+          />
+        </div>
+
+
+
+
+        {/* If no menu data, show a placeholder */}
+        {menuData.length === 0 && (
+          <div className="p-4 text-center text-gray-400">
+            <p>No menu information available for this enquiry.</p>
+          </div>
+        )}
+      </div >
     </>
   );
 };
 
 export default EnquiriesDetail;
+
+
+
+
+
+
+
+
+
+
+

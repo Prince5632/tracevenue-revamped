@@ -1,4 +1,4 @@
-import Contract from "@/features/venue/dashboard/pages/Contract";
+import Contracts from "@/features/venue/contract/shared/Contracts";
 import Dashboard from "@/features/venue/dashboard/pages/Dashboard";
 import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail";
 import Enquiries from "@/features/venue/enquiry/shared/Enquiries";
@@ -34,44 +34,19 @@ export const dashboardRoutes = [
         path: "/service/venues/enquiry/:status",
         element: <Enquiries />,
       },
-      // dummy routes for all type enquiries
-      // {
-      //   path: "/service/venues/enquiry/active",
-      //   element: <ActiveEnquiries />,
-      // },
-      // {
-      //   path: "/service/venues/enquiry/completed",
-      //   element: <CompletedEnquiries />,
-      // },
-      // {
-      //   path: "/service/venues/enquiry/draft",
-      //   element: <DraftEnquiries />,
-      // },
-      // {
-      //   path: "/service/venues/enquiry/expired",
-      //   element: <ExpiredEnquiries />,
-      // },
-
       // contract routes
       {
         path: "/service/venues/contracts/:status",
-        element: <Contract />,
+        element: <Contracts />,
       },
       {
         path: "/venueGallery",
         element: <RestaurantDetailModal />,
       },
-
+      // enquiry detail route with job ID
       {
-        path: "/service/venues/enquiry/details/:id",
+        path: "/service/venues/enquiry/details/:jobId",
         element: <EnquiryDetailLayout />,
-        children: [
-          { index: true, element: <Quotationpage /> }, // default
-          { path: "quotation-pages", element: <Quotationpage /> },
-          { path: "compare-packages", element: <ComparePackages /> },
-          { path: "offer-booking", element: <Offer_booking /> },
-          { path: "details", element: <EnquiriesDetail /> }
-        ],
       },
     ],
   },

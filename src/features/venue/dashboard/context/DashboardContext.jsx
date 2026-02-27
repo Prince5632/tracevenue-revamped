@@ -24,6 +24,7 @@ export const DashboardProvider = ({ children }) => {
   const { userId } = useAuth();
   const [dashboardStats, setDashboardStats] = useState(null);
   const [jobs, setJobs] = useState([]);
+  const [contracts, setContracts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -37,7 +38,6 @@ export const DashboardProvider = ({ children }) => {
 
   const fetchDashboardStats = useCallback(async () => {
     if (!userId) return; // Wait for user ID
-
     setIsLoading(true);
     setError(null);
     try {
@@ -84,13 +84,43 @@ export const DashboardProvider = ({ children }) => {
     [userId],
   );
 
+  const fetchContractsByType = useCallback(
+    async (type) => {
+      if (!userId) return;
+
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(
+          `${BASE_URL}api/v1/traceVenue/job-contract/user/${userId}`,
+          {
+            params: {
+              type,
+            },
+            ...getAxiosConfig(),
+          },
+        );
+        setContracts(response.data);
+        return response.data;
+      } catch (err) {
+        setError(err);
+        console.error("Contracts Error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [userId],
+  );
+
   const value = {
     dashboardStats,
     jobs,
+    contracts,
     isLoading,
     error,
     fetchDashboardStats,
     fetchJobsByStatus,
+    fetchContractsByType,
   };
 
   return (

@@ -107,7 +107,7 @@ const DiscoverPackages = () => {
     }
 
     return (
-        <div className="flex-1 max-w-[1200px] mx-auto">
+        <div className="flex-1 max-w-[1000px] -mt-3 sm:mx-6 md:mx-6 lg:mx-0">
             {/* Header */}
             <div className="mb-8">
                 <p className="text-[15px] text-gray-500 mt-1">
@@ -117,7 +117,7 @@ const DiscoverPackages = () => {
             </div>
 
             {/* Package Cards Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-2 gap-6 -mt-4 mb-28">
                 {packages?.map((item, index) => {
                     // Handle both direct data and nested clubbedData structure
                     const clubbedData = item?.clubbedData || item;
