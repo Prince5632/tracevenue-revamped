@@ -9,65 +9,83 @@ import user from "@assets/images/user.png"
 import direction from "@assets/images/direction.png"
 import tick from "@assets/images/tick.png"
 
-const Overview = () => {
+const Overview = ({ details = {}, isInvited = false, distance = "2.4 km" }) => {
+    const {
+        restaurantName = "Restaurant",
+        rating = "4.5",
+        streetAddress,
+        district,
+        state,
+        capacity = {},
+        cuisines = [],
+        description = "Description not available",
+        services = [],
+        email = "N/A",
+        phoneNumber = "N/A",
+        active = true,
+        bannerUrl,
+        mediaUrl
+    } = details;
+
+    const displayCuisines = cuisines.length > 0 ? cuisines.slice(0, 2) : [];
+    const guests = `${capacity.min || 100}-${capacity.max || 500} guests`;
+    const fullAddress = streetAddress || `${district || ''}, ${state || ''}`;
+    const mainImage = bannerUrl?.url || mediaUrl?.[0]?.url || restaurant;
+
     return <div className="mt-4">
         <div className='relative'>
-            <img src={restaurant} alt="restaurant" className='rounded-[20px] !h-[300px] sm:!h-[220px] md:!h-[260px] lg:!h-[225px] w-[100%]' />
+            <img src={mainImage} alt={restaurantName} className='rounded-[20px] !h-[300px] sm:!h-[220px] md:!h-[260px] lg:!h-[225px] w-[100%] object-cover' />
 
-            <div className='absolute top-[15px] !right-[15px] flex gap-1 bg-[#FFFFFF] !h-[28px] w-[64px] rounded-[500px] py-1 px-2'>
-                <img src={star} alt="star" className='!h-[20px] !w-[20px]' />
-                <span className='text-[14px] text-[#060606] font-semibold'>4.8</span>
+            <div className='absolute top-[15px] right-[15px] flex gap-1 bg-[#FFFFFF] h-[28px] w-[64px] rounded-[500px] py-1 px-4 items-center justify-center'>
+                <i className="fa-solid fa-star text-[14px] text-[#FCDA00]"></i>
+                <span className='text-[14px] text-[#060606] font-semibold'>{rating}</span>
             </div>
 
             <div className='absolute inset-0 top-[120px] sm:top-[85px] md:top-[85px] lg:top-[85px] left-[12px] flex flex-col sm:!flex-row'>
 
-                <div className=' h-[128px] w-[300px] sm:w-[340px] bg-[#FFFFFF] rounded-[20px] border-[1px] border-[#D7D9DA]'>
+                <div className='h-auto min-h-[128px] w-[300px] sm:w-[340px] bg-[#FFFFFF] rounded-[20px] border-[1px] border-[#D7D9DA] pb-3'>
 
                     <div className='flex justify-between px-[20px] pt-[15px]'>
 
-                        <div className='flex flex-col gap-0.5'>
+                        <div className='flex flex-col gap-0.5 max-w-[70%]'>
+                            <span className='text-[15px] text-[#060606] font-bold truncate' title={restaurantName}>{restaurantName}</span>
 
-                            <span className='text-[15px] text-[#060606] font-bold'>Moti Mahal Delux</span>
-
-                            <div className='flex gap-2 items-center'>
-                                <img src={location} alt="location" className='!h-[15px] !w-[15px]' />
-                                <span className='text-[12px] text-[#85878C] font-semibold'>Sector 7, Chandigarh</span>
+                            <div className='flex gap-2 items-start mt-1'>
+                                <img src={location} alt="location" className='h-[15px] w-[15px] mt-0.5' />
+                                <span className='text-[12px] text-[#85878C] font-semibold line-clamp-1' title={fullAddress}>{fullAddress}</span>
                             </div>
 
-                            <div className='flex gap-2 items-center'>
-                                <img src={user} alt="user" className='!h-[15px] !w-[15px]' />
-                                <span className='text-[12px] text-[#85878C] font-semibold'>200-500 guests</span>
+                            <div className='flex gap-2 items-center mt-1'>
+                                <img src={user} alt="user" className='h-[15px] w-[15px]' />
+                                <span className='text-[12px] text-[#85878C] font-semibold'>{guests}</span>
                             </div>
 
                         </div>
 
-                        <div className='flex flex-col gap-3'>
-
-                            <span className='text-[12px] text-[#85878C] font-semibold ml-10'>2.4 km</span>
+                        <div className='flex flex-col gap-3 shrink-0'>
+                            <span className='text-[12px] text-[#85878C] font-semibold ml-10'>{distance}</span>
 
                             <div className='flex gap-1 items-center'>
-                                <img src={direction} alt="direction" className='!h-[15px] !w-[15px]' />
+                                <i className="fa-solid fa-location-arrow text-[13px] text-[#15B076]"></i>
                                 <span className='text-[13px] text-[#15B076] font-semibold'>Directions</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className='flex justify-between min-w-[200px] sm:w-[320px] h-[35px] bg-[#FFF3EA] py-[15px] px-[20px] rounded-[15px] mx-[10px] mt-2 items-center'>
-                        <span className='text-[13px] text-[#FF4000] font-semibold'>Invited</span>
-                        <img src={tick} alt="tick" className='!h-[15px] !w-[15px]' />
-                    </div>
-
+                    {isInvited && (
+                        <div className='flex justify-between min-w-[200px] sm:w-[320px] h-[35px] bg-[#FFF3EA] py-[15px] px-[20px] rounded-[15px] mx-[10px] mt-3 items-center'>
+                            <span className='text-[13px] text-[#FF4000] font-semibold'>Invited</span>
+                            <img src={tick} alt="tick" className='!h-[15px] !w-[15px]' />
+                        </div>
+                    )}
                 </div>
 
-                <div className='flex gap-1 ml-12 sm:ml-auto md:-ml-60 lg:ml-auto mr-3 mt-2 sm:mt-25 md:mt-35 lg:mt-25'>
-
-                    <div className='w-[101px] h-[27px] bg-[#FFFFFFE5] rounded-[20px] border-1 border-[#D7D9DA] py-[1px] px-[12px]'>
-                        <span className='text-[14px] text-[#060606] font-semibold'>Continental</span>
-                    </div>
-
-                    <div className='w-[101px] h-[27px] bg-[#FFFFFFE5] rounded-[20px] border-1 border-[#D7D9DA] py-[1px] px-4'>
-                        <span className='text-[14px] text-[#060606] font-semibold'>Fast Food</span>
-                    </div>
+                <div className='flex gap-1 ml-12 sm:ml-auto md:-ml-60 lg:ml-auto mr-3 mt-2 sm:mt-25 md:mt-35 lg:mt-25 flex-wrap justify-end'>
+                    {displayCuisines.map((cuisine, idx) => (
+                        <div key={idx} className='h-[27px] bg-[#FFFFFFE5] rounded-[20px] border border-[#D7D9DA] py-[1px] px-[12px] flex items-center shadow-sm'>
+                            <span className='text-[14px] text-[#060606] font-semibold'>{cuisine}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
@@ -75,53 +93,46 @@ const Overview = () => {
 
         <div className='mt-3'>
             <h1 className='text-[18px] text-[#060606] font-bold'>About</h1>
-            <p className='!text-[12px] text-[#85878C] leading-tight !my-1'>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                It has survived not only five centuries, but also the leap into electronic typesetting,
-                remaining essentially unchanged.
+            <p className='text-[13px] text-[#85878C] leading-snug my-2'>
+                {description}
             </p>
 
-            <h1 className='text-[18px] text-[#060606] font-bold !mt-2'>Facilities</h1>
+            {services?.length > 0 && (
+                <>
+                    <h1 className='text-[18px] text-[#060606] font-bold mt-4'>Facilities</h1>
+                    <div className='flex flex-col sm:!flex-row md:!flex-row lg:!flex-row flex-wrap w-full gap-[5px] mt-2 mb-4'>
+                        {services.map((service, idx) => (
+                            <div key={idx} className='flex items-center border border-[#D7D9DA] rounded-[30px] py-[6px] px-[15px] gap-[10px]'>
+                                <span className='text-[14px] text-[#060606] font-semibold'>{service}</span>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
 
-            <div className='flex flex-col sm:!flex-row md:!flex-row lg:!flex-row flex-wrap w-full gap-[5px] mt-1 mb-4'>
-                <div className='flex border-1 border-[#D7D9DA] rounded-[30px] py-[6px] px-[15px] gap-[10px]'>
-                    <img src={wifi} alt="wifi" className='!h-[20px] !w-[20px]' />
-                    <span className='text-[14px] text-[#060606] font-semibold'>Free Wifi</span>
+            <div className='space-y-2 mt-4'>
+                <div className='flex gap-2'>
+                    <span className='text-[14px] text-[#060606] font-bold min-w-[80px]'>Address:</span>
+                    <span className='text-[13px] text-[#060606] font-semibold'>{fullAddress}</span>
                 </div>
-                <div className='flex border-1 border-[#D7D9DA] rounded-[30px] py-[6px] px-[15px] gap-[10px]'>
-                    <img src={parking} alt="parking" className='!h-[20px] !w-[20px]' />
-                    <span className='text-[14px] text-[#060606] font-semibold'>Free Parking</span>
+
+                <div className='flex gap-2'>
+                    <span className='text-[14px] text-[#060606] font-bold min-w-[80px]'>Phone:</span>
+                    <span className='text-[13px] text-[#060606] font-semibold'>{phoneNumber ? `+91 ${phoneNumber}` : "N/A"}</span>
                 </div>
-                <div className='flex border-1 border-[#D7D9DA] rounded-[30px] py-[6px] px-[15px] gap-[10px]'>
-                    <img src={reservation} alt="reservation" className='!h-[20px] !w-[20px]' />
-                    <span className='text-[14px] text-[#060606] font-semibold'>Reservation</span>
+
+                <div className='flex gap-2'>
+                    <span className='text-[14px] text-[#060606] font-bold min-w-[80px]'>E-Mail:</span>
+                    <span className='text-[13px] text-[#060606] font-semibold break-all'>{email}</span>
+                </div>
+
+                <div className='flex gap-2'>
+                    <span className='text-[14px] text-[#060606] font-bold min-w-[80px]'>Status:</span>
+                    <span className='text-[13px] text-[#15B076] font-semibold'>{active ? "Active" : "Inactive"}</span>
                 </div>
             </div>
-
-            <div className=''>
-                <div className='flex'>
-                    <span className='!text-[14px] text-[#060606] font-bold'>Address:</span>
-                    <span className='!text-[12px] text-[#060606] font-semibold'> 2nd Floor, Mann Bhawan, SCO 958, Mataur, Sector 70, Sahibzada Ajit Singh Nagar, mohali, Punjab</span>
-                </div>
-
-                <div className='flex'>
-                    <span className='!text-[14px] text-[#060606] font-bold'>Phone:</span>
-                    <span className='!text-[12px] text-[#060606] font-semibold'> +91 97797 93377</span>
-                </div>
-
-                <div className='flex'>
-                    <span className='!text-[14px] text-[#060606] font-bold'>E-Mail:</span>
-                    <span className='!text-[12px] text-[#060606] font-semibold'> abs@yopmail.com</span>
-                </div>
-
-                <div className='flex'>
-                    <span className='!text-[14px] text-[#060606] font-bold'>Status:</span>
-                    <span className='!text-[12px] text-[#15B076] font-semibold'> Active</span>
-                </div>
-
-            </div>
-        </div></div>;
+        </div>
+    </div>;
 };
 
 export default Overview;

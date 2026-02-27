@@ -20,7 +20,7 @@ const EnquiryDetailLayout = () => {
   const [tabKey, setTabKey] = useState(0);
 
   // Zustand store
-  const { enquiryDetail, variants, isLoading, error, fetchEnquiryDetail, clearEnquiryDetail } = useEnquiryDetailStore();
+  const { enquiryDetail, variants, isLoading, error, fetchEnquiryDetail, clearEnquiryDetail, fetchVenuesForJob } = useEnquiryDetailStore();
 
   // Fetch job detail on mount
   useEffect(() => {
@@ -29,6 +29,13 @@ const EnquiryDetailLayout = () => {
     }
     return () => clearEnquiryDetail();
   }, [jobId, fetchEnquiryDetail, clearEnquiryDetail]);
+
+  // Once enquiry detail is loaded, prefetch venues for the Invite tab
+  useEffect(() => {
+    if (enquiryDetail && jobId) {
+      fetchVenuesForJob(jobId, enquiryDetail);
+    }
+  }, [enquiryDetail, jobId, fetchVenuesForJob]);
 
   // Use the name field directly from API (it already has the full heading)
   const heading = enquiryDetail?.name || 'Loading enquiry details...';
@@ -91,18 +98,19 @@ const EnquiryDetailLayout = () => {
               onTabChange={setActiveTab}
             />
           </div>
-
-          {/* Render tab content */}
-          <div className="mt-4">
-            {isLoading ? (
-              <div className="flex items-center justify-center p-12">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#fd4304]"></div>
-              </div>
-            ) : (
-              renderTabContent()
-            )}
-          </div>
         </div>
+
+        {/* Render tab content — outside sticky so it gets full width */}
+        <div className="mt-4 w-full">
+          {isLoading ? (
+            <div className="flex items-center justify-center p-12">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#fd4304]"></div>
+            </div>
+          ) : (
+            renderTabContent()
+          )}
+        </div>
+
       </div>
     </div>
   )

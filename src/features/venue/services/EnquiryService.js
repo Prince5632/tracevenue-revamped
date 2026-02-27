@@ -7,7 +7,7 @@ import { API } from "@shared/services";
  */
 export const fetchEnquiry = async (enquiryId) => {
   try {
-    const response = await API.get(`/api/v1/traceVenue/jobs/${enquiryId}`);
+    const response = await API.get(`/api/v1/traceVenue/jobs/user/${enquiryId}`);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch enquiry detail:", error);

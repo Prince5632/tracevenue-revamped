@@ -26,6 +26,14 @@ const venueService = {
       );
     }
   },
+  fetchRestaurantById: async (restaurantId) => {
+    try {
+      const response = await API.get(`/restaurants/${restaurantId}/users`);
+      return response.data;
+    } catch (error) {
+      return error.response?.data || "Failed to fetch restaurant details.";
+    }
+  },
 };
 
 export default venueService;

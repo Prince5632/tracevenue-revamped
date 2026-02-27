@@ -5,52 +5,27 @@ import Gallery3 from "@assets/new images/gallery3.png";
 import Gallery4 from "@assets/new images/gallery4.png";
 import Gallery5 from "@assets/new images/gallery5.png";
 
-const Gallery = () => {
+const STATIC_IMAGES = [
+    { id: 1, image: Gallery1, title: "Picture 1" },
+    { id: 2, image: Gallery2, title: "Picture 2" },
+    { id: 3, image: Gallery3, title: "Picture 3" },
+    { id: 4, image: Gallery4, title: "Picture 4" },
+    { id: 5, image: Gallery5, title: "Picture 5" },
+];
+
+const Gallery = ({ images: imageProp, onClose }) => {
     const [preview, setPreview] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const images = [
-        {
-            id: 1,
-            image: Gallery1,
-            title: "Picture1",
-        },
-        {
-            id: 2,
-            image: Gallery2,
-            title: "Picture2",
-        },
-        {
-            id: 3,
-            image: Gallery1,
-            title: "Picture3",
-        },
-        {
-            id: 4,
-            image: Gallery3,
-            title: "Picture4",
-        },
-        {
-            id: 5,
-            image: Gallery1,
-            title: "Picture5",
-        },
-        {
-            id: 6,
-            image: Gallery4,
-            title: "Picture6",
-        },
-        {
-            id: 7,
-            image: Gallery1,
-            title: "Picture7",
-        },
-        {
-            id: 8,
-            image: Gallery5,
-            title: "Picture8",
-        },
-    ];
+    // Use dynamic images from API if provided, else fall back to statics
+    const images =
+        imageProp && imageProp.length > 0
+            ? imageProp.map((item, i) => ({
+                id: i,
+                image: item?.url || item,
+                title: item?.title || `Picture ${i + 1}`,
+            }))
+            : STATIC_IMAGES;
 
     const nextImage = () => {
         setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
