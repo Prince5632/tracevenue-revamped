@@ -87,7 +87,7 @@ const RenderOffering = ({ offering }) => {
                 </h4>
             </Card.Header>
             <Card.Body>
-                <div className="grid grid-cols-2 w-full gap-2">
+                <div className="grid max-sm:grid-cols-2 w-full gap-2">
                     {items.map((item, index) => (
                         <div key={item._id || index} className="flex gap-2 mt-[10px]">
                             <ItemTypeDot itemTypeName={itemTypeName} />

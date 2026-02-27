@@ -8,7 +8,7 @@ function PackageCuisines({ cuisines }) {
                     Cuisines
                 </h4>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="flex flex-wrap gap-2">
                 {cuisines?.map((item, index) => (
                     <Badge
                         variant="outline"
@@ -19,7 +19,7 @@ function PackageCuisines({ cuisines }) {
                 bg-[#ffffff]!
                 rounded-[30px] border border-[#e0e0e0]
                 transition-all
-                duration-200 ease-in mr-2
+                duration-200 ease-in
             "
                     >
                         {item}
