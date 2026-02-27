@@ -5,7 +5,7 @@ import Quotationpage from "@/features/venue/enquiry/components/Quotation/Quotati
 import ComparePackages from "@/features/venue/enquiry/components/ComparePackages/ComparePackages"
 import Offer_booking from "@/features/venue/enquiry/components/OfferBooking/Offer_booking"
 import EnquiriesDetail from "@/features/venue/enquiry/pages/EnquiriesDetail"
-import useJobDetailStore from "@/features/venue/enquiry/context/useJobDetailStore"
+import useEnquiryDetailStore from "@/features/venue/enquiry/context/useEnquiryDetailStore"
 import {
   CircleArrowLeft,
 } from "lucide-react";
@@ -20,18 +20,18 @@ const EnquiryDetailLayout = ({ enquiryData }) => {
   const [tabKey, setTabKey] = useState(0);
 
   // Zustand store
-  const { jobDetail, variants, isLoading, error, fetchJobDetail, clearJobDetail } = useJobDetailStore();
+  const { enquiryDetail, variants, isLoading, error, fetchEnquiryDetail, clearEnquiryDetail } = useEnquiryDetailStore();
 
   // Fetch job detail on mount
   useEffect(() => {
     if (jobId) {
-      fetchJobDetail(jobId);
+      fetchEnquiryDetail(jobId);
     }
-    return () => clearJobDetail();
-  }, [jobId, fetchJobDetail, clearJobDetail]);
+    return () => clearEnquiryDetail();
+  }, [jobId, fetchEnquiryDetail, clearEnquiryDetail]);
 
   // Use the name field directly from API (it already has the full heading)
-  const heading = jobDetail?.name || 'Loading enquiry details...';
+  const heading = enquiryDetail?.name || 'Loading enquiry details...';
 
   // Handle eye icon click — show details and reset tabs
   const handleEyeClick = () => {
@@ -41,7 +41,7 @@ const EnquiryDetailLayout = ({ enquiryData }) => {
 
   // Render component based on active tab
   const renderTabContent = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case 'quotations':
         return <Quotationpage variants={variants} />;
       case 'compare':
@@ -49,7 +49,7 @@ const EnquiryDetailLayout = ({ enquiryData }) => {
       case 'offer':
         return <Offer_booking />;
       case 'details':
-        return <EnquiriesDetail jobData={jobDetail} />;
+        return <EnquiriesDetail enquiryData={enquiryDetail} />;
       default:
         return <Quotationpage variants={variants} />;
     }
@@ -70,9 +70,9 @@ const EnquiryDetailLayout = ({ enquiryData }) => {
         <div className='sticky top-0 z-10 bg-white'>
           <div className='p-1'>
             <div className="flex items-center gap-3 mb-2">
-              <CircleArrowLeft 
-                size={36} 
-                color="#fd4304" 
+              <CircleArrowLeft
+                size={36}
+                color="#fd4304"
                 className="cursor-pointer"
                 onClick={() => navigate(-1)}
               />
@@ -80,19 +80,18 @@ const EnquiryDetailLayout = ({ enquiryData }) => {
                 {isLoading ? 'Loading...' : heading}
               </h2>
               <img src={Eyeicon}
-                className={`w-8 h-8 ml-20 cursor-pointer transition-all duration-200 ${
-                  activeTab === 'details' ? '' : 'grayscale opacity-40'
-                }`}
+                className={`w-8 h-8 ml-20 cursor-pointer transition-all duration-200 ${activeTab === 'details' ? '' : 'grayscale opacity-40'
+                  }`}
                 onClick={handleEyeClick}
               />
             </div>
-            <EnquiryDetailTabs 
+            <EnquiryDetailTabs
               key={tabKey}
               activeTab={activeTab}
               onTabChange={setActiveTab}
             />
           </div>
-          
+
           {/* Render tab content */}
           <div className="mt-4">
             {isLoading ? (

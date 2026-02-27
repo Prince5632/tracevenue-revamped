@@ -10,6 +10,10 @@ import Venue from '@assets/images/venue.png';
 import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
 import { useNavigate } from 'react-router-dom';
+import MenuCategories from '@/features/package/components/MenuCategories';
+import FoodItems from '@/features/package/components/FoodItems';
+import PackageServices from '@/features/package/components/PackageServices';
+import PackageCuisines from '@/features/package/components/PackageCuisines';
 
 const EnquiriesDetail = ({ enquiryData }) => {
   const [location, setLocation] = useState('');
@@ -19,12 +23,9 @@ const EnquiriesDetail = ({ enquiryData }) => {
   // ─── Extract data from enquiryData (with safe defaults) ───
   const eventName = enquiryData?.eventType?.eventName || 'N/A';
   const budgetType = enquiryData?.budgetType || 'perPerson';
-  const budgetMin = budgetType === 'perPerson'
-    ? enquiryData?.perPersonBudget?.min
-    : enquiryData?.budget?.min;
-  const budgetMax = budgetType === 'perPerson'
-    ? enquiryData?.perPersonBudget?.max
-    : enquiryData?.budget?.max;
+  // API always stores amounts in budget.min/max regardless of budgetType
+  const budgetMin = enquiryData?.budget?.min ?? enquiryData?.perPersonBudget?.min;
+  const budgetMax = enquiryData?.budget?.max ?? enquiryData?.perPersonBudget?.max;
   const budgetLabel = budgetType === 'perPerson' ? 'Per Person' : 'Lump Sum';
 
   const gatheringMin = enquiryData?.peopleRange?.minPeople || '';
@@ -47,13 +48,25 @@ const EnquiriesDetail = ({ enquiryData }) => {
 
   const formatDateObj = (dateObj) => {
     if (!dateObj) return null;
-    const dateKey = Object.keys(dateObj)[0];
+
+    let dateKey, timeRange;
+    // New format: { date: "2026-02-28", startTime: "09:00", endTime: "17:00" }
+    if (dateObj.date) {
+      dateKey = dateObj.date;
+      timeRange = dateObj.startTime && dateObj.endTime
+        ? `${dateObj.startTime} - ${dateObj.endTime}`
+        : '';
+    } else {
+      // Old format: { "2026-02-28": "09:00 - 17:00" }
+      dateKey = Object.keys(dateObj)[0];
+      timeRange = dateObj[dateKey] || '';
+    }
+
     if (!dateKey) return null;
     const d = new Date(dateKey);
     if (isNaN(d.getTime())) return null;
     const dayName = d.toLocaleDateString('en-IN', { weekday: 'long' });
     const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-    const timeRange = dateObj[dateKey] || '';
     return { dayName, dateStr, timeRange };
   };
 
@@ -131,40 +144,41 @@ const EnquiriesDetail = ({ enquiryData }) => {
   const servicesCategories = Object.entries(servicesGrouped);
   const hasServices = servicesCategories.length > 0;
 
-  /* SCROLL SPY LOGIC  */
-  const sectionRefs = useRef([]);
-  const [activeSection, setActiveSection] = useState(0);
+  /* ── PACKAGE COMPONENT SCROLL SPY (mirrors PackageDetails.jsx) ── */
+  const pkgSectionRefs = useRef({});
+  const [pkgActive, setPkgActive] = useState(null);
 
   useEffect(() => {
-    if (menuData.length === 0) return;
+    if (!enquiryData?.menuSections?.length) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(Number(entry.target.dataset.index));
+            const id = entry.target.getAttribute('data-id');
+            setPkgActive(id);
           }
         });
       },
       {
         root: null,
-        threshold: 0.4,
+        rootMargin: '-15% 0px -70% 0px',
+        threshold: 0,
       }
     );
 
-    sectionRefs.current.forEach((el) => el && observer.observe(el));
+    setTimeout(() => {
+      Object.values(pkgSectionRefs.current).forEach((section) => {
+        if (section) observer.observe(section);
+      });
+    }, 100);
 
     return () => observer.disconnect();
-  }, [menuData.length]);
+  }, [enquiryData?.menuSections]);
 
-
-  const scrollToSection = (index) => {
-    const section = sectionRefs.current[index];
-    if (!section) return;
-
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+  const handlePkgMenuClick = (id) => {
+    setPkgActive(id);
+    pkgSectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
 
@@ -439,285 +453,40 @@ const EnquiriesDetail = ({ enquiryData }) => {
         </div>
 
         {/* ── PACKAGE COMPONENTS (Cuisines / Menu / Services) ── */}
-        {usePackageComponents ? (
-          <>
-            {/* Cuisines */}
-            {enquiryData?.cuisines?.length > 0 && (
-              <div className="px-2 mt-2">
-                <PackageCuisines cuisines={enquiryData?.cuisines} />
-              </div>
-            )}
 
-            {/* Menu Categories + Food Items + Services (same layout as PackageDetails) */}
-            <div className="flex flex-col md:flex-row! items-start sticky top-24 mt-4">
-              {/* Menu Categories */}
-              <div className="hidden lg:block">
-                <MenuCategories
-                  packageMenu={enquiryData?.menuSections}
-                  isActive={pkgActive}
-                  handleMenuClick={() => handlePkgMenuClick}
-                />
-              </div>
-              {/* Food Items */}
-              <div className="w-full md:max-w-[600px]">
-                <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
-                <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
-                  <FoodItems packageMenu={enquiryData?.menuSections} sectionRefs={pkgSectionRefs} />
-                </div>
-              </div>
-              {/* Amenities & Services */}
-              <PackageServices
-                services={enquiryData?.services}
-                handleMenuClick={() => handlePkgMenuClick}
-                sectionRefs={pkgSectionRefs}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            {/* FALLBACK: Inline cuisines from enquiryData */}
-            {cuisinesData.length > 0 && (
-              <div className='p-2'>
-                <Card variant="borderless" className="p-5 mb-3 bg-[#F8F9FA]" hoverable={false}>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="font-sans text-lg mr-3 mb-2 text-[#1A1A1A]">
-                      Cuisines
-                    </h2>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      {cuisinesData.map((cuisine) => (
-                        <Card
-                          key={cuisine.id}
-                          hoverable={false}
-                          className="w-fit py-2 px-4 bg-white lg:w-fit"
-                        >
-                          <span className="text-sm font-sans text-[#333333]">
-                            {cuisine.label}
-                          </span>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            )}
-
-            {/*  MENU + FOOD (fallback inline) */}
-            {menuData.length > 0 && (
-              <div className="flex gap-8 2xl:gap-0 ">
-
-                {/* LEFT MENU */}
-                <div className=" hidden lg:block">
-                  <div className="sticky top-4">
-                    <Card className="h-105.25 w-70">
-                      <h2 className="font-sans text-lg mb-4 h-5.25">Menu</h2>
-
-                      <ul className="space-y-1 mb-6">
-                        {menuData.map((section, index) => (
-                          <li key={index}>
-                            <button
-                              type="button"
-                              onClick={() => scrollToSection(index)}
-                              className={`w-full flex items-center justify-between px-2 py-3 rounded transition cursor-pointer text-left 
-                        ${activeSection === index
-                                  ? "bg-[#FFF8F0] text-[#E29F55] border-l-4 border-[#e0a057]"
-                                  : "text-gray-600 hover:bg-gray-50"
-                                }
-                      `}
-                            >
-                              <span className="text-base font-sans">{section.section}</span>
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded">
-                                {section.count}
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <h3 className="font-sans text-lg mb-4 mt-4 w-59.5 text-[#1A1A1A] h-5.25">Amenities & Services</h3>
-                      {hasServices ? (
-                        <ul className="space-y-1">
-                          {servicesCategories.map(([cat, items], idx) => (
-                            <li key={idx} className="flex items-center justify-between px-2 py-2 text-gray-600">
-                              <span className="text-base font-sans">{cat}</span>
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded">({items.length})</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <h2 className="text-base h-6 w-59.5 text-[#212528] font-sans">No Amenities & Services</h2>
-                      )}
-                    </Card>
-                  </div>
-                </div>
-
-                {/* RIGHT FOOD */}
-                <div id="food-scroll" className="flex-1 w-full lg:w-[65%] space-y-6 grid grid-cols-1  ">
-                  <Card className="hidden lg:block ">
-                    <h1 className="font-sans text-lg mb-4 h-5.25 ">Food Items</h1>
-
-                    {menuData.map((section, index) => (
-                      <div
-                        key={index}
-                        ref={(el) => (sectionRefs.current[index] = el)}
-                        data-index={index}
-                        className="mb-10"
-                      >
-                        <h2 className="font-sans text-[18.4px] h-11 border-b-2 border-[#e29f55] mb-4 pb-2.5 text-[#1A1A1A]">
-                          {section.section}
-                        </h2>
-
-                        {section.groups.map((group, gIndex) => (
-                          <Card key={gIndex} className="mb-5">
-                            <div className="flex items-center gap-3 mb-3">
-                              <h3 className="font-sans text-lg h-5.5 text-[#060606] mb-2.5">{group.title}</h3>
-                              {group.limitLabel && (
-                                <span className="bg-[#fce1cb] text-[#FF4000] rounded-full text-xs font-sans px-1.5">
-                                  {group.limitLabel}
-                                </span>
-                              )}
-                            </div>
-                            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-                              {group.items.map((item, i) => (
-                                <li key={i} className="flex items-start gap-1">
-                                  <img src={item.isVeg ? Veg : NonVeg} className="w-8 h-8" />
-                                  <span className="font-sans pr-2.5 text-sm">{item.name}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </Card>
-                        ))}
-                      </div>
-                    ))}
-                  </Card>
-
-                  <div>
-                    <Card className="hidden lg:block ">
-                      <div className="mt-5">
-                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
-                          Amenities & Services
-                        </h2>
-                      </div>
-                      {hasServices ? (
-                        servicesCategories.map(([cat, items], catIdx) => (
-                          <div key={catIdx} className="mb-5">
-                            <h3 className="text-base font-semibold text-[#FF6A3D] mb-3">{cat}</h3>
-                            {items.map((svc, svcIdx) => (
-                              <Card key={svcIdx} variant="bordered" className="flex items-center justify-between px-4 py-3 mb-2">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-2xl">🎂</span>
-                                  <div>
-                                    <span className="font-semibold text-[#060606]">{svc.serviceName}</span>
-                                    <div className="text-sm text-[#85878C]">
-                                      {svc.optionName}{svc.typeName ? `: ${svc.typeName}` : ''}
-                                    </div>
-                                  </div>
-                                </div>
-                                {svc.price === 0 && (
-                                  <span className="text-sm font-semibold text-[#15B076] bg-[#E8F8F0] px-3 py-1 rounded-full">FREE</span>
-                                )}
-                                {svc.price > 0 && (
-                                  <span className="text-sm font-semibold text-[#060606]">₹{svc.price.toLocaleString('en-IN')}</span>
-                                )}
-                              </Card>
-                            ))}
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm font-semibold text-gray-400">
-                          No Amenities & Services
-                        </p>
-                      )}
-                    </Card>
-                  </div>
-
-                  {/**Mobile view */}
-                  <div className="lg:hidden">
-                    <h1 className="font-bold text-xl mb-6">Food Items</h1>
-
-                    {menuData.map((section, index) => (
-                      <div
-                        key={index}
-                        data-index={index}
-                        className="mb-10"
-                      >
-                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
-                          {section.section}
-                        </h2>
-
-                        {section.groups.map((group, gIndex) => (
-                          <Card key={gIndex} className="mb-4">
-                            <div className="flex items-center gap-3 mb-3">
-                              <h3 className="font-semibold text-lg">{group.title}</h3>
-                              {group.limitLabel && (
-                                <span className="bg-[#f3e2dd] text-[#FF6A3D] px-1.5 rounded-full text-xs font-semibold">
-                                  {group.limitLabel}
-                                </span>
-                              )}
-                            </div>
-
-                            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
-                              {group.items.map((item, i) => (
-                                <li key={i} className="flex items-start gap-1">
-                                  <img src={item.isVeg ? Veg : NonVeg} className="w-8 h-8" />
-                                  <span className="font-semibold text-sm">{item.name}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </Card>
-                        ))}
-                      </div>
-                    ))}
-                    <Card>
-                      <div className="mt-5">
-                        <h2 className="font-semibold text-xl border-b-2 border-yellow-600 mb-4 pb-2">
-                          Amenities & Services
-                        </h2>
-                      </div>
-                      {hasServices ? (
-                        servicesCategories.map(([cat, items], catIdx) => (
-                          <div key={catIdx} className="mb-5">
-                            <h3 className="text-base font-semibold text-[#FF6A3D] mb-3">{cat}</h3>
-                            {items.map((svc, svcIdx) => (
-                              <Card key={svcIdx} variant="bordered" className="flex items-center justify-between px-4 py-3 mb-2">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-2xl">🎂</span>
-                                  <div>
-                                    <span className="font-semibold text-[#060606]">{svc.serviceName}</span>
-                                    <div className="text-sm text-[#85878C]">
-                                      {svc.optionName}{svc.typeName ? `: ${svc.typeName}` : ''}
-                                    </div>
-                                  </div>
-                                </div>
-                                {svc.price === 0 && (
-                                  <span className="text-sm font-semibold text-[#15B076] bg-[#E8F8F0] px-3 py-1 rounded-full">FREE</span>
-                                )}
-                                {svc.price > 0 && (
-                                  <span className="text-sm font-semibold text-[#060606]">₹{svc.price.toLocaleString('en-IN')}</span>
-                                )}
-                              </Card>
-                            ))}
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm font-semibold text-gray-400">
-                          No Amenities & Services
-                        </p>
-                      )}
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* If no menu data, show a placeholder */}
-            {menuData.length === 0 && (
-              <div className="p-4 text-center text-gray-400">
-                <p>No menu information available for this enquiry.</p>
-              </div>
-            )}
-          </>
+        {/* Cuisines */}
+        {enquiryData?.cuisines?.length > 0 && (
+          <div className="px-2 mt-2">
+            <PackageCuisines cuisines={enquiryData?.cuisines} />
+          </div>
         )}
+
+        {/* Menu Categories + Food Items + Services (same layout as PackageDetails) */}
+        <div className="flex flex-col md:flex-row! items-start sticky top-24 mt-4">
+          {/* Menu Categories */}
+          <div className="hidden lg:block">
+            <MenuCategories
+              packageMenu={enquiryData?.menuSections}
+              isActive={pkgActive}
+              handleMenuClick={() => handlePkgMenuClick}
+            />
+          </div>
+          {/* Food Items */}
+          <div className="w-full md:max-w-[600px]">
+            <h2 className="text-[18px] text-[#060606] font-bold px-4">Food Items</h2>
+            <div className="w-full h-auto max-h-[calc(100vh-8rem)] overflow-y-auto overflow-hidden scrollbar-hide md:pb-[200px]">
+              <FoodItems packageMenu={enquiryData?.menuSections} sectionRefs={pkgSectionRefs} />
+            </div>
+          </div>
+          {/* Amenities & Services */}
+          <PackageServices
+            services={enquiryData?.services}
+            handleMenuClick={() => handlePkgMenuClick}
+          // sectionRefs={pkgSectionRefs}
+          />
+        </div>
+
+
 
 
         {/* If no menu data, show a placeholder */}
@@ -726,7 +495,7 @@ const EnquiriesDetail = ({ enquiryData }) => {
             <p>No menu information available for this enquiry.</p>
           </div>
         )}
-      </div>
+      </div >
     </>
   );
 };

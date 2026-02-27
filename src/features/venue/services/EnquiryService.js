@@ -7,7 +7,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/";
  * @param {string} jobId
  * @returns {Promise<Object>} Job detail response
  */
-export const fetchJobDetail = async (jobId) => {
+export const fetchEnquiry = async (jobId) => {
   const response = await axios.get(
     `${BASE_URL}api/v1/traceVenue/jobs/user/${jobId}/`,
     { withCredentials: true }
