@@ -370,12 +370,12 @@ const EnquiriesDetail = ({ enquiryData }) => {
                     return (
                       <div className="h-full bg-[#C6FBE580] px-4 py-2 rounded-xl flex gap-4 justify-center items-center text-[#85878C] text-sm font-bold">
                         <div className='h-full flex flex-col items-center justify-center '>
-                          <div className='h-[10px] w-[10px] bg-[#15B076] rounded-[30px]'></div>
+                          <div className='h-[13px] w-[13px] bg-[#15B076] rounded-[30px]'></div>
                           <div className='h-[40%] !bg-[#B1F4D8] w-[4px]'></div>
-                          <div className='h-[10px] w-[10px] bg-[#15B076] rounded-[30px]'></div>
+                          <div className='h-[13px] w-[13px] bg-[#15B076] rounded-[30px]'></div>
                         </div>
                         <div className='h-full flex flex-col justify-between items-center'>
-                          <div className='text-[16px] font-medium text-[#85878C] mb-4 '>{times.start}</div>
+                          <div className='text-[16px] font-medium text-[#85878C] mb-2 '>{times.start}</div>
                           <div className='text-[16px] font-medium text-[#85878C] '>{times.end}</div>
                         </div>
                       </div>
