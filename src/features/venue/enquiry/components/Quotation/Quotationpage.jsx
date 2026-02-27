@@ -20,7 +20,6 @@ import MapToggle from "./MapToggle";
 const STATUS_OPTIONS = ["Only-Invited", "Only-Shortlisted", "Hide-Rejected"];
 
 const Quotationpage = ({
-  variants = [],
   locationInput,
   setLocationInput,
   suggestions,
@@ -30,7 +29,7 @@ const Quotationpage = ({
   detectCurrentLocation,
 }) => {
   const { jobId } = useParams();
-  const { venues, venuesLoading } = useEnquiryDetailStore();
+  const { venues, venuesLoading, variants = [] } = useEnquiryDetailStore();
 
   const [showOptions, setShowOptions] = useState(false);
   const [activeStatus, setActiveStatus] = useState("Only-Invited");
@@ -289,6 +288,7 @@ const Quotationpage = ({
                       <VenueCard
                         key={variant?._id || variant?.id || i}
                         variant={variant}
+                        allVariants={variants}
                         mode="received"
                       />
                     ))

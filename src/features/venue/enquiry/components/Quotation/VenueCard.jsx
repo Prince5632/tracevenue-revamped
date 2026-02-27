@@ -3,6 +3,7 @@ import CardImage from "@/assets/QuotationCard/QuotationCardIMG.png";
 import RestaurantDetailModal from "../shared/RestaurantDetailModal";
 import CelebrationMessage from "../shared/CelebrationMessage";
 import ConfirmModal from "../shared/ConfirmModal";
+import PackageModal from "../shared/AddPackagemodal";
 import Gallery from "../Gallery";
 import { MapPin, Users } from "lucide-react";
 import useEnquiryDetailStore from "@/features/venue/enquiry/context/useEnquiryDetailStore";
@@ -16,7 +17,7 @@ import { useParams } from "react-router-dom";
  *  venue    — venue object (Invite tab, flat by-location shape)
  *  mode     — "received" | "invite"  (default: "received")
  */
-const VenueCard = ({ variant, venue: venueProp, mode = "received" }) => {
+const VenueCard = ({ variant, venue: venueProp, allVariants = [], mode = "received" }) => {
     const { jobId } = useParams();
     const { sendInvite, invitedVenueIds, fetchRestaurantDetail } = useEnquiryDetailStore();
 
@@ -24,6 +25,7 @@ const VenueCard = ({ variant, venue: venueProp, mode = "received" }) => {
     const [showGallery, setShowGallery] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showCelebration, setShowCelebration] = useState(false);
+    const [showPackageModal, setShowPackageModal] = useState(false);
 
     // ── Resolve data from either shape ─────────────────────────────
     const variantData = variant?.variant_id || {};
@@ -34,7 +36,7 @@ const VenueCard = ({ variant, venue: venueProp, mode = "received" }) => {
     const name = venueData?.restaurantName || variantData?.name || "Restaurant";
     const image = venueData?.bannerUrl?.url || venueData?.mediaUrl?.[0]?.url || CardImage;
     const rating = venueData?.rating || venueData?.averageRating || "4.5";
-    const location = venueData?.locality?.short_name || venueData?.sublocality || venueData?.district || venueData?.streetAddress || name;
+    const location = venueData?.locality?.short_name || venueData?.district || venueData?.streetAddress || name;
 
     const minPersons = variantData?.minPersons || venueData?.minPersons || venueData?.capacity?.min;
     const maxPersons = variantData?.maxPersons || venueData?.maxPersons || venueData?.capacity?.max;
@@ -70,6 +72,11 @@ const VenueCard = ({ variant, venue: venueProp, mode = "received" }) => {
     const inviteStatus = invitedVenueIds?.[venueId];
     const isSending = inviteStatus === "sending";
     const isSent = inviteStatus === "sent";
+
+    // Reconstruct all variants for this specific venue layout
+    const venueVariants = allVariants.filter(
+        (v) => v?.variant_id?.packageId?.venueId?._id === venueId
+    );
 
     const handleAskForQuote = () => {
         if (isSending || isSent) return;
@@ -146,7 +153,7 @@ const VenueCard = ({ variant, venue: venueProp, mode = "received" }) => {
                                 <MapPin size={14} color="#85878C" />
                                 <p className="text-[16px] text-[#85878C] font-semibold">{location}</p>
                             </div>
-                          {  <div className="flex items-center gap-1">
+                            {<div className="flex items-center gap-1">
                                 <Users size={14} color="#85878C" />
                                 <p className="text-[16px] text-[#85878C] font-semibold">{guestCapacity}</p>
                             </div>}
@@ -191,29 +198,41 @@ const VenueCard = ({ variant, venue: venueProp, mode = "received" }) => {
                 ) : (
                     /* Received: single View Quotations button */
                     <div
-                        className="flex justify-between items-center p-2 mt-4 bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] rounded-[20px] cursor-pointer"
-                        onClick={() => {
-                            if (venueData?._id) fetchRestaurantDetail(venueData._id);
-                            setShowModal(true);
-                        }}
+                        className="flex items-center w-full py-3 mx-0 my-0 bg-[linear-gradient(121.12deg,#FFF3EA_0%,#FDEAED_100%)] rounded-[20px] cursor-pointer relative"
+                        onClick={() => setShowPackageModal(true)}
                     >
-                        <button className="text-[16px] font-semibold text-[#FF4000] pl-4 py-1">
-                            View Quotations
-                        </button>
-                        {fromPrice && (
-                            <button className="text-[16px] font-semibold text-[#FF4000] italic border-l border-l-[#ff400027] pl-6 py-1">
-                                From &#8377;{Number(fromPrice).toLocaleString("en-IN")}
-                            </button>
-                        )}
-                        <button className="h-[22px] w-[22px] border border-[#FF4000] rounded-full flex justify-center items-center bg-white">
-                            <i className="fa-solid fa-arrow-right text-[11px] text-[#FF4000]" />
-                        </button>
+                        <div className="flex-1 flex justify-center items-center">
+                            <span className="text-[15px] sm:text-[16px] font-bold text-[#FF4000]">
+                                View Quotations
+                            </span>
+                        </div>
+
+                        <div className="w-px h-[20px] bg-[#ff400040]" />
+
+                        <div className="flex-1 flex justify-center items-center pl-2 pr-10 relative">
+                            {fromPrice && (
+                                <span className="text-[15px] sm:text-[16px] font-bold text-[#FF4000] italic truncate">
+                                    From &#8377;{Number(fromPrice).toLocaleString("en-IN")}
+                                </span>
+                            )}
+                            <div className="absolute right-3 h-[24px] w-[24px] border border-[#FF4000] rounded-full flex justify-center items-center bg-white shrink-0">
+                                <i className="fa-solid fa-arrow-right text-[12px] text-[#FF4000]" />
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
 
             {/* RestaurantDetailModal */}
             {showModal && <RestaurantDetailModal onClose={() => setShowModal(false)} isInvited={isSent} />}
+
+            {/* Package Variants Modal */}
+            <PackageModal
+                isOpen={showPackageModal}
+                onClose={() => setShowPackageModal(false)}
+                variants={venueVariants}
+                venueName={name}
+            />
 
             {/* ── Confirmation Dialog ── */}
             {showConfirm && (

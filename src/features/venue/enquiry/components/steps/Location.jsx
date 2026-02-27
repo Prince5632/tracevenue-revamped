@@ -386,7 +386,7 @@ const Location = ({ urlParams = {} }) => {
             <div className="relative flex-1">
               <input
                 type="range"
-                min="1"
+                min="10"
                 max="50"
                 value={range}
                 onChange={handleRadiusChange}

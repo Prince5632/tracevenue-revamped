@@ -50,7 +50,7 @@ const EnquiryDetailLayout = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'quotations':
-        return <Quotationpage variants={variants} />;
+        return <Quotationpage />;
       case 'compare':
         return <ComparePackages />;
       case 'offer':
@@ -58,7 +58,7 @@ const EnquiryDetailLayout = () => {
       case 'details':
         return <EnquiriesDetail enquiryData={enquiryDetail} />;
       default:
-        return <Quotationpage variants={variants} />;
+        return <Quotationpage />;
     }
   };
 

@@ -8,7 +8,7 @@ import QuotationCard from '@/features/venue/enquiry/components/Quotation/Quotati
 import Quotationpage from '@/features/venue/enquiry/components/Quotation/Quotationpage';
 import EnquiryDetailLayout from '@/features/venue/enquiry/Layout/EnquiryDetailLayout';
 import RestaurantDetailModal from '@/features/venue/enquiry/components/shared/RestaurantDetailModal';
-import AddPackagemodal from '@/features/venue/enquiry/components/shared/AddPackagemodal/index';
+import AddPackagemodal from '@/features/venue/enquiry/components/shared/AddPackagemodal';
 import ChatLayout from "@features/venue/ChatSection/ChatLayout"
 import ProtectedRoute from "@/routes/ProtectedRoute";
 /**

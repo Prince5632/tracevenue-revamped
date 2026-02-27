@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
-import AddPackageModal from "../../components/shared/AddPackagemodal";
+import AddPackageModal from "../shared/AddPackagemodal";
 
 const ComparePackages = () => {
   const menuData = [
@@ -129,11 +129,11 @@ const ComparePackages = () => {
     <>
       <div className="border border-gray-300 rounded-3xl w-full overflow-hidden h-120 overflow-y-auto hide-scrollbar">
         <table className="w-full rounded-2xl">
-          <TableHeader setOpenAddPackageModal={setOpenAddPackageModal}/>
+          <TableHeader setOpenAddPackageModal={setOpenAddPackageModal} />
           <TableBody data={menuData} />
         </table>
       </div>
-      {openAddPackageModal ? <AddPackageModal isOpen={openAddPackageModal} onClose={() => setOpenAddPackageModal(false)}/> : null}
+      {openAddPackageModal ? <AddPackageModal isOpen={openAddPackageModal} onClose={() => setOpenAddPackageModal(false)} /> : null}
     </>
   );
 };

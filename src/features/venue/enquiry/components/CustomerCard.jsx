@@ -12,16 +12,11 @@ const PackageCard = ({
   title = "Custom Food Package",
   subtitle = "",
   cuisines = [],
-  foodItemCount = 0,
-  menuCount = 0,
-  cuisineCount = 0,
-  amenitiesCount = 0,
+  stats,
   priceText = "",
-  description = "",
   image,
   clubbedId,
   jobId,
-  venueCount = 0,
   onClick,
 }) => {
   const navigate = useNavigate();
@@ -81,14 +76,14 @@ const PackageCard = ({
             <div className="my-4 text-[#85878C] text-[14px] font-semibold flex justify-between">
               <ul className="space-y-1">
                 <li>
-                  • {foodItemCount > 5 ? `${foodItemCount - 5}-` : ""}
-                  {foodItemCount} Food Items
+                  • {stats?.uniqueCategoryCount > 5 ? `${stats?.uniqueCategoryCount - 5}-` : ""}
+                  {stats?.uniqueCategoryCount} Food Items
                 </li>
-                <li>• {menuCount} Menu</li>
+                <li>• {stats?.uniqueCategoryCount} Menu</li>
               </ul>
               <ul className="space-y-1 !mr-3">
-                <li>• {cuisineCount} Cuisines</li>
-                <li>• {amenitiesCount} Amenities & Services</li>
+                <li>• {stats?.uniqueCuisineCount} Cuisines</li>
+                <li>• {stats?.uniqueServiceCount} Amenities & Services</li>
               </ul>
             </div>
 
@@ -97,29 +92,29 @@ const PackageCard = ({
               <span className="font-semibold italic text-[14px] text-[#15B076]">1 restaurant offering this package.</span>
             </div>
 
-            
+
           </div>
 
           {/* Price Section */}
-            <div className="w-full rounded-[20px] py-[15px] px-[20px] bg-linear-to-b from-[#FFF3EA] to-[#FDEAED] mt-4">
-              <div className="flex gap-[30px]">
+          <div className="w-full rounded-[20px] py-[15px] px-[20px] bg-linear-to-b from-[#FFF3EA] to-[#FDEAED] mt-4">
+            <div className="flex gap-[30px]">
 
-                <div>
-                  <p className="font-bold italic text-[14px] bg-gradient-to-r from-[#F08E45] to-[#EE5763] bg-clip-text text-transparent">
-                    Starts from
-                  </p>
-                  
-                    <span className="font-bold italic text-[25px] inline-block pr-1 bg-gradient-to-b from-[#F08E45] to-[#EE5763] bg-clip-text text-transparent">
-                      {priceText}
-                    </span>
-                </div>
+              <div>
+                <p className="font-bold italic text-[14px] bg-gradient-to-r from-[#F08E45] to-[#EE5763] bg-clip-text text-transparent">
+                  Starts from
+                </p>
 
-                <div className="flex-1 font-semibold text-[13px] text-[#5C5F62] mt-[10px]">
-                  {description}
-                </div>
-
+                <span className="font-bold italic text-[25px] inline-block pr-1 bg-gradient-to-b from-[#F08E45] to-[#EE5763] bg-clip-text text-transparent">
+                  {priceText}
+                </span>
               </div>
+
+              <div className="flex-1 font-semibold text-[13px] text-[#5C5F62] mt-[10px]">
+                Diverse multi-cuisine meal with Indian, Italian, and more
+              </div>
+
             </div>
+          </div>
         </div>
       </Card.Body>
     </Card>
