@@ -1,7 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
-import { getGlobalDispatch } from "@/utils/dispatchBridge";
-// import { logoutUser } from "@/redux/slices/userSlice";
 import { globalLoginToggle } from "@/utils/loginBridge";
 import { globalAccessDeniedToggle } from "@/utils/accessDeniedBridge";
 

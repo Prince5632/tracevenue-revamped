@@ -25,7 +25,7 @@ const generateEnquiryTitle = (enquiry) => {
     return `Looking for ${eventName}${maxPeople ? ` for ${maxPeople} people` : ""}${dateStr ? ` on ${dateStr}` : ""}.`;
 };
 
-function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, isModalOpen, setIsModalOpen }) {
+function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, cuisineIds, isModalOpen, setIsModalOpen }) {
     const [isClick, setIsClick] = useState(false);
     const [isFocus, setIsFoucus] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -64,7 +64,13 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
         name: value,
         menuSections: enquiry?.menuSections?.length ? enquiry.menuSections : (cuisineMenu || []),
         services: enquiry?.services?.length ? enquiry.services : (cuisineServices || []),
-        cuisines: enquiry?.cuisines?.length ? enquiry.cuisines : (cuisineNames || []),
+        // Always prefer cuisineIds (ObjectIds) for the API payload;
+        // cuisineNames are display-only for the preview UI
+        cuisines: cuisineIds?.length
+            ? cuisineIds
+            : enquiry?.cuisines?.length
+                ? enquiry.cuisines
+                : [],
     };
 
     const handlePencilButtonClick = () => {
@@ -106,6 +112,7 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
     const handleRaiseEnquiry = async () => {
         if (!isLoggedIn) {
             pendingActionRef.current = doRaiseEnquiry;
+            setIsModalOpen(false);   // close PreviewEnquiry before showing login
             setShowLoginModal(true);
             return;
         }
@@ -137,7 +144,7 @@ function PreviewEnquiry({ enquiry, cuisineMenu, cuisineServices, cuisineNames, i
                 size="md"
                 className="w-[80%]!"
             >
-                    <Modal.Header className="sticky top-0 bg-[#ffffff] z-50">
+                <Modal.Header className="sticky top-0 bg-[#ffffff] z-50">
                     {/* Top row: title editor + close button */}
                     <div className="mb-4 flex items-center justify-between gap-3">
                         <div className="flex-1 flex gap-3 items-center min-w-0">

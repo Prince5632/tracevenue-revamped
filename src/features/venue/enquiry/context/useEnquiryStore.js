@@ -73,6 +73,33 @@ const useEnquiryStore = create((set, get) => ({
   setCuisineCombinationsData: (data) => set({ cuisineCombinationsData: data }),
   setClubbedPackageId: (id) => set({ clubbedPackageId: id }),
 
+  /**
+   * Call this when the user changes event type after a job was already created.
+   * Clears the existing jobId (so next step-6 submission creates a *new* job),
+   * and resets all form fields that come after the event type step.
+   */
+  resetJobData: () =>
+    set((state) => ({
+      jobId: null,
+      cuisineCombinationsData: null,
+      clubbedPackageId: null,
+      formData: {
+        ...state.formData,
+        // Clear everything downstream of event type
+        selectedPeopleRange: null,
+        minBudgetValue: null,
+        maxBudgetValue: null,
+        budgetType: null,
+        yourBudget: { min: null, max: null },
+        selectedDates: [],
+        alternateDates: [],
+        dietaryRequirements: [],
+        vegOnly: null,
+        alcoholic: null,
+        cuisineApiResponse: null,
+      },
+    })),
+
   clearValidationFeedback: () =>
     set({
       issueFactor: null,

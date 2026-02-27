@@ -6,14 +6,71 @@ import Veg from '@assets/images/veg.svg';
 import Location from '@assets/images/locationPin.svg'
 import NonVeg from '@assets/images/non-veg.svg';
 import ColdDrink from '@assets/images/colddrink.svg';
-import Venue from '@assets/images/venue.png';
-import Catering from '@assets/images/catering.png';
 import Icon from '@assets/images/dotLine.svg';
 import { useNavigate } from 'react-router-dom';
 import MenuCategories from '@/features/package/components/MenuCategories';
 import FoodItems from '@/features/package/components/FoodItems';
 import PackageServices from '@/features/package/components/PackageServices';
 import PackageCuisines from '@/features/package/components/PackageCuisines';
+import { ServiceIconRenderer } from '@/features/venue/enquiry/components/shared/serviceTypeIcons';
+import { IconRenderer } from '../components/shared/Icons';
+
+
+/**
+ * Reusable date + time pill card used for both preferred and alternate dates.
+ * timeRange: e.g. "09:00 - 17:00" or "All Day" (or falsy for no time display)
+ */
+const DateTimeCard = ({ dayName, dateStr, timeRange, variant = 'default', padding = 'md' }) => {
+  const isAllDay = !timeRange || timeRange.toLowerCase().includes('all');
+
+  const format12 = (t) => {
+    if (!t) return '';
+    const parts = t.trim().split(':');
+    if (parts.length < 2) return t;
+    return `${parts[0]}:${parts[1]}`;
+  };
+
+  const times = (() => {
+    if (isAllDay) return { start: 'All Day', end: '' };
+    const [s = '', e = ''] = timeRange.split(' - ');
+    return { start: format12(s), end: format12(e) };
+  })();
+
+  return (
+    <Card variant={variant} padding={padding} className="flex items-center justify-center gap-5 p-3!">
+      {/* Date block */}
+      <div className="text-left">
+        <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+          {dayName}
+        </div>
+        <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
+          {dateStr}
+        </div>
+      </div>
+
+      {/* Time block */}
+      <div className="h-full bg-[#C6FBE580] px-4 py-2 rounded-xl flex gap-4 justify-center items-center text-[#85878C] text-sm font-bold">
+        {/* Dot indicator — single dot for All Day, two connected dots otherwise */}
+        <div className="flex flex-col items-center justify-center gap-1">
+          <div className="h-[13px] w-[13px] bg-[#15B076] rounded-full" />
+          {!isAllDay && (
+            <>
+              <div className="h-[30px] bg-[#B1F4D8] w-[4px] rounded" />
+              <div className="h-[13px] w-[13px] bg-[#15B076] rounded-full" />
+            </>
+          )}
+        </div>
+        {/* Time text */}
+        <div className="flex flex-col justify-between items-center gap-2">
+          <div className="text-[16px] font-medium text-[#85878C]">{times.start}</div>
+          {!isAllDay && times.end && (
+            <div className="text-[16px] font-medium text-[#85878C]">{times.end}</div>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+};
 
 const EnquiriesDetail = ({ enquiryData }) => {
   const [location, setLocation] = useState('');
@@ -24,8 +81,8 @@ const EnquiriesDetail = ({ enquiryData }) => {
   const eventName = enquiryData?.eventType?.eventName || 'N/A';
   const budgetType = enquiryData?.budgetType || 'perPerson';
   // API always stores amounts in budget.min/max regardless of budgetType
-  const budgetMin = enquiryData?.budget?.min ?? enquiryData?.perPersonBudget?.min;
-  const budgetMax = enquiryData?.budget?.max ?? enquiryData?.perPersonBudget?.max;
+  const budgetMin = enquiryData?.budgetType === "lumpSum" ? enquiryData?.budget?.min : enquiryData?.perPersonBudget?.min;
+  const budgetMax = enquiryData?.budgetType === "lumpSum" ? enquiryData?.budget?.max : enquiryData?.perPersonBudget?.max;
   const budgetLabel = budgetType === 'perPerson' ? 'Per Person' : 'Lump Sum';
 
   const gatheringMin = enquiryData?.peopleRange?.minPeople || '';
@@ -187,11 +244,6 @@ const EnquiriesDetail = ({ enquiryData }) => {
     return saved ? Number(saved) : null;
   });
 
-  const services = [
-    { id: 1, label: 'Venue', image: Venue },
-    { id: 2, label: 'Catering', image: Catering },
-  ];
-
   // Auto-select service based on API serviceType
   useEffect(() => {
     if (serviceType && !selectedService) {
@@ -235,34 +287,49 @@ const EnquiriesDetail = ({ enquiryData }) => {
 
               {/* Venue & Catering */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {services.map(service => (
-                  <Card
-                    key={service.id}
-                    variant="bordered"
-                    padding="sm"
-                    onClick={() => {
-                      setSelectedService(service.id);
-                      localStorage.setItem('selectedService', service.id);
-                    }}
-                    className={`cursor-pointer transition-all duration-200 relative h-full min-h-39
-                      ${selectedService === service.id
-                        ? 'border-[#ff8359]' : ''}
-                    `}
-                  >
-                    <span className="absolute top-4 left-4 text-[25px] font-bold
+
+                <Card
+
+                  variant="bordered"
+                  padding="sm"
+                  onClick={() => {
+                    setSelectedService(service.id);
+                    localStorage.setItem('selectedService', service.id);
+                  }}
+                  className={`cursor-pointer transition-all duration-200 relative h-full min-h-39 border-[#ff8359]`}
+                >
+                  <span className="absolute top-4 left-4 text-[25px] font-bold
                       bg-[linear-gradient(93.96deg,#F08E45_0%,#EE5763_98.12%)]
                       bg-clip-text text-transparent"
-                    >
-                      {service.label}
-                    </span>
+                  >
+                    {enquiryData?.serviceType
+                      ? enquiryData.serviceType.charAt(0).toUpperCase() + enquiryData.serviceType.slice(1)
+                      : ''}
+                  </span>
+                  <div className="absolute bottom-4 right-4 w-23 object-contain"><ServiceIconRenderer
+                    type={enquiryData?.serviceType
+                      ? enquiryData.serviceType.charAt(0).toUpperCase() + enquiryData.serviceType.slice(1)
+                      : ''}
+                  /></div>
+                </Card>
+                <Card
 
-                    <img
-                      src={service.image}
-                      alt={service.label}
-                      className="absolute bottom-4 right-2 w-23 object-contain"
-                    />
-                  </Card>
-                ))}
+                  variant="bordered"
+                  padding="sm"
+
+                  className={`cursor-pointer transition-all duration-200 relative h-full min-h-39
+                     border-[#ff8359]`}
+                >
+                  <span className="absolute top-4 left-4 text-[25px] font-bold
+                      bg-[linear-gradient(93.96deg,#F08E45_0%,#EE5763_98.12%)]
+                      bg-clip-text text-transparent"
+                  >
+                    {enquiryData?.eventType?.eventName}
+                  </span>
+                  <div className="absolute bottom-4 right-4 w-23 object-contain"><IconRenderer
+                    className={enquiryData?.eventType?.className}
+                  /></div>
+                </Card>
               </div>
 
               {/* Budget & Gathering Size */}
@@ -277,7 +344,7 @@ const EnquiriesDetail = ({ enquiryData }) => {
                       {budgetLabel}
                     </Card>
 
-                    <Card
+                    {budgetType === "perPerson" ? <Card
                       padding="sm"
                       className="font-semibold py-1 px-1 text-lg flex items-center whitespace-nowrap w-fit text-[#333333]"
                     >
@@ -286,7 +353,14 @@ const EnquiriesDetail = ({ enquiryData }) => {
                       <span className="text-gray-500 mx-1">-</span>
                       <span className="text-gray-500 mx-1 ">₹</span>
                       {budgetMax ? budgetMax.toLocaleString('en-IN') : '–'}
-                    </Card>
+                    </Card> : <Card
+                      padding="sm"
+                      className="font-semibold py-1 px-1 text-lg flex items-center whitespace-nowrap w-fit text-[#333333]"
+                    >
+
+                      <span className="text-gray-500 mx-1 ">₹</span>
+                      {budgetMax ? budgetMax.toLocaleString('en-IN') : '–'}
+                    </Card>}
                   </div>
                 </Card>
 
@@ -355,68 +429,14 @@ const EnquiriesDetail = ({ enquiryData }) => {
 
               {/* Preferred Date */}
               {primaryDateInfo && (
-                <Card variant="default" padding="md" className="flex items-center justify-center gap-10 !p-3">
-                  <div className="text-left">
-                    <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
-                      {primaryDateInfo.dayName}
-                    </div>
-                    <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
-                      {primaryDateInfo.dateStr}
-                    </div>
-                  </div>
-
-                  {primaryDateInfo.timeRange && (() => {
-                    const times = formatTimeRange(primaryDateInfo.timeRange);
-                    return (
-                      <div className="h-full bg-[#C6FBE580] px-4 py-2 rounded-xl flex gap-4 justify-center items-center text-[#85878C] text-sm font-bold">
-                        <div className='h-full flex flex-col items-center justify-center '>
-                          <div className='h-[13px] w-[13px] bg-[#15B076] rounded-[30px]'></div>
-                          <div className='h-[40%] !bg-[#B1F4D8] w-[4px]'></div>
-                          <div className='h-[13px] w-[13px] bg-[#15B076] rounded-[30px]'></div>
-                        </div>
-                        <div className='h-full flex flex-col justify-between items-center'>
-                          <div className='text-[16px] font-medium text-[#85878C] mb-2 '>{times.start}</div>
-                          <div className='text-[16px] font-medium text-[#85878C] '>{times.end}</div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </Card>
+                <DateTimeCard
+                  dayName={primaryDateInfo.dayName}
+                  dateStr={primaryDateInfo.dateStr}
+                  timeRange={primaryDateInfo.timeRange}
+                />
               )}
 
-              {/* Alternate Dates */}
-              {alternateDates.length > 0 && (
-                <>
-                  <h2 className="font-gilroy font-bold text-lg mb-2 text-[#6c757d]">Alternate Dates</h2>
-                  {alternateDates.map((altDateObj, idx) => {
-                    const altInfo = formatDateObj(altDateObj);
-                    if (!altInfo) return null;
-                    const altTimes = formatTimeRange(altInfo.timeRange);
-                    return (
-                      <Card key={idx} variant="default" padding="md" className="flex items-center justify-between gap-5">
-                        <div className="text-left">
-                          <div className="text-base bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
-                            {altInfo.dayName}
-                          </div>
-                          <div className="text-3xl font-bold bg-linear-to-r from-[#f08e45] to-[#ee5763] bg-clip-text text-transparent">
-                            {altInfo.dateStr}
-                          </div>
-                        </div>
 
-                        {altInfo.timeRange && (
-                          <div className="h-16 w-[40%] bg-green-100 p-1 rounded-xl flex justify-center items-center text-[#85878C] text-sm font-bold">
-                            <img src={Icon} alt="connector icon" className='pr-2' />
-                            <div className="flex flex-col leading-tight text-center">
-                              <span>{altTimes.start}</span>
-                              <span>{altTimes.end}</span>
-                            </div>
-                          </div>
-                        )}
-                      </Card>
-                    );
-                  })}
-                </>
-              )}
 
             </div>
           </div>
@@ -455,7 +475,26 @@ const EnquiriesDetail = ({ enquiryData }) => {
             </div>
           </div>
         </div>
-
+        {/* Alternate Dates */}
+        {alternateDates.length > 0 && (
+          <>
+            <h2 className="font-gilroy font-bold text-lg mb-2 text-[#6c757d]">Alternate Dates</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              {alternateDates.map((altDateObj, idx) => {
+                const altInfo = formatDateObj(altDateObj);
+                if (!altInfo) return null;
+                return (
+                  <DateTimeCard
+                    key={idx}
+                    dayName={altInfo.dayName}
+                    dateStr={altInfo.dateStr}
+                    timeRange={altInfo.timeRange}
+                  />
+                );
+              })}
+            </div>
+          </>
+        )}
         {/* ── PACKAGE COMPONENTS (Cuisines / Menu / Services) ── */}
 
         {/* Cuisines */}

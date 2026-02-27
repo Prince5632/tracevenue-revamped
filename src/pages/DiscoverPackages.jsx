@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import useEnquiryStore from "@/features/venue/enquiry/context/useEnquiryStore";
-import { getClubbedCuisineById } from "@/features/venue/services/clubbedPackageService";
 import PackageCard from "@/features/venue/enquiry/components/CustomerCard";
 import {
     generatePackageTitle,
@@ -9,24 +7,61 @@ import {
     generateFeaturedText,
 } from "@/utils/packageTitle";
 import { formatRupees } from "@/features/venue/enquiry/utils/budgetHelpers";
-
+import { fetchCuisineCombinations } from "@/features/venue/services/cuisineComboService";
+import { saveClubbedData } from "@/features/venue/services/clubbedPackageService";
 
 /**
  * Discover Packages — rendered as step 7 within EnquiryLayout.
  * Displays cuisine combination cards using data saved via the clubbed package API.
- * The sidebar and footer are provided by EnquiryLayout — this component only renders the cards.
+ * Falls back to calling the cuisine analysis API directly if store data is missing.
  */
 const DiscoverPackages = () => {
-    const navigate = useNavigate();
     const {
         cuisineCombinationsData,
-        clubbedPackageId,
         jobId,
         formData,
+        isApiLoading,
+        setCuisineCombinationsData,
+        setClubbedPackageId,
     } = useEnquiryStore();
-    console.log("clubbedPackageId", clubbedPackageId, cuisineCombinationsData);
+
+    const [localLoading, setLocalLoading] = useState(false);
     const packages = cuisineCombinationsData;
-    const [loading, setLoading] = useState(true);
+
+    // Fallback: if we arrive at this step without store data (e.g. after page refresh
+    // or direct navigation), re-run the cuisine analysis + save flow.
+    useEffect(() => {
+        if (cuisineCombinationsData && cuisineCombinationsData.length > 0) return;
+        if (!formData?.selectedEventType) return; // not enough data to query
+
+        const load = async () => {
+            setLocalLoading(true);
+            try {
+                const response = await fetchCuisineCombinations(formData);
+                const data = response?.data;
+                if (!data) return;
+
+                const sortedCombinations = data?.sorted_cuisine_combinations || [];
+                if (sortedCombinations.length === 0) return;
+
+                const saveRes = await saveClubbedData(sortedCombinations);
+                const savedDocs = saveRes?.savedDocs || [];
+                if (savedDocs.length > 0) {
+                    setCuisineCombinationsData(savedDocs);
+                    setClubbedPackageId(savedDocs[0]?._id);
+                } else {
+                    setCuisineCombinationsData(sortedCombinations);
+                }
+            } catch (err) {
+                console.error("Failed to load cuisine combinations:", err);
+            } finally {
+                setLocalLoading(false);
+            }
+        };
+
+        load();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // run once on mount
 
     // useEffect(() => {
     //     const loadPackages = async () => {
@@ -87,15 +122,15 @@ const DiscoverPackages = () => {
             : formatRupees(priceRange.min_price);
     };
 
-    // if (loading) {
-    //     return (
-    //         <div className="flex items-center justify-center min-h-[400px]">
-    //             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
-    //         </div>
-    //     );
-    // }
+    if (isApiLoading || localLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+            </div>
+        );
+    }
 
-    if (packages.length === 0) {
+    if (packages && packages?.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 text-center p-4">
                 <h2 className="text-2xl font-bold text-gray-800">No Packages Found</h2>
@@ -111,8 +146,8 @@ const DiscoverPackages = () => {
             {/* Header */}
             <div className="mb-8">
                 <p className="text-[15px] text-gray-500 mt-1">
-                    Based on your preferences, we found {packages.length} package
-                    {packages.length !== 1 ? "s" : ""} for you
+                    Based on your preferences, we found {packages?.length} package
+                    {packages?.length !== 1 ? "s" : ""} for you
                 </p>
             </div>
 

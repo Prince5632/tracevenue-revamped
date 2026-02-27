@@ -185,9 +185,34 @@ const drawLocation = (doc, job, y) => {
 };
 
 // ─── Section: Date & Time ──────────────────────────────────────────────────────
+/**
+ * Normalize a date entry that may be in either of two shapes:
+ *   OLD: { date: "2026-02-28", startTime: "18:30", endTime: "22:30", allDay: false }
+ *   NEW: { "2026-02-28": "18:30 - 22:30" }  or  { "2026-02-28": "All Day" }
+ */
+const normalizeDateEntry = (item) => {
+    if (!item) return null;
+    // Old shape — has a .date string property
+    if (typeof item.date === "string") return item;
+    // New shape — single key is the date, value is the time range string
+    const key = Object.keys(item)[0];
+    if (!key) return null;
+    const val = item[key] || "";
+    const lv = val.toLowerCase();
+    if (lv.includes("all") || lv.includes("full")) {
+        return { date: key, allDay: true, startTime: "00:00", endTime: "23:59" };
+    }
+    const [start = "", end = ""] = val.split("-").map((s) => s.trim());
+    return { date: key, allDay: false, startTime: start, endTime: end };
+};
+
 const drawDateTime = (doc, job, y) => {
-    const dates = job?.eventDateOptions?.preferredDates || [];
-    if (!dates.length) return y;
+    const rawPreferred = job?.eventDateOptions?.preferredDates || [];
+    const rawAlternate = job?.eventDateOptions?.alternateDates || [];
+    const dates = rawPreferred.map(normalizeDateEntry).filter(Boolean);
+    const altDates = rawAlternate.map(normalizeDateEntry).filter(Boolean);
+
+    if (!dates.length && !altDates.length) return y;
 
     y = checkPage(doc, y, 100);
     doc.font("Helvetica-Bold").fontSize(13).fillColor(C.dark);
@@ -219,6 +244,41 @@ const drawDateTime = (doc, job, y) => {
 
         y += itemH + 8;
     });
+
+    // Alternate dates
+    if (altDates.length) {
+        y = checkPage(doc, y, 30);
+        y += 8;
+        doc.font("Helvetica-Bold").fontSize(11).fillColor(C.textSec);
+        safeText(doc, "Alternate Dates", M, y);
+        y += 14;
+
+        altDates.forEach((item, idx) => {
+            y = checkPage(doc, y, itemH + 10);
+            const di = fmtDate(item.date);
+            doc.roundedRect(M, y, CW, itemH, 8).fill(C.sectionBg);
+            doc.roundedRect(M + 10, y + 8, 45, 34, 6).fill(C.primaryBg);
+            doc.font("Helvetica-Bold").fontSize(10).fillColor(C.primary);
+            doc.text(di.date.split(" ")[0], M + 10, y + 14, { width: 45, align: "center" });
+            doc.font("Helvetica").fontSize(8).fillColor(C.primary);
+            doc.text(di.date.split(" ")[1], M + 10, y + 26, { width: 45, align: "center" });
+
+            const tx = M + 70;
+            doc.font("Helvetica-Bold").fontSize(8.5).fillColor(C.dark);
+            safeText(doc, "Alternate Schedule", tx, y + 12);
+            const timeStr = item.allDay ? "Full Day Event" : `${fmtTime(item.startTime)} – ${fmtTime(item.endTime)}`;
+            doc.font("Helvetica-Bold").fontSize(11).fillColor(C.textSec);
+            safeText(doc, timeStr, tx, y + 26);
+
+            const bw = 60;
+            doc.roundedRect(M + CW - bw - 10, y + 15, bw, 20, 10).fill(C.white);
+            doc.font("Helvetica-Bold").fontSize(8).fillColor(C.textSec);
+            doc.text(`Alt ${idx + 1}`, M + CW - bw - 10, y + 21, { width: bw, align: "center" });
+
+            y += itemH + 8;
+        });
+    }
+
     return y + 10;
 };
 

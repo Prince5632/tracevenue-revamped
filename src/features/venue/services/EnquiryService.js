@@ -1,16 +1,16 @@
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/";
+import { API } from "@shared/services";
 
 /**
- * Fetch detailed job/enquiry data by job ID
- * @param {string} jobId
- * @returns {Promise<Object>} Job detail response
+ * Fetch detailed enquiry data by enquiry ID
+ * @param {string} enquiryId
+ * @returns {Promise<Object>} Enquiry detail response
  */
-export const fetchEnquiry = async (jobId) => {
-  const response = await axios.get(
-    `${BASE_URL}api/v1/traceVenue/jobs/user/${jobId}/`,
-    { withCredentials: true }
-  );
-  return response.data;
+export const fetchEnquiry = async (enquiryId) => {
+  try {
+    const response = await API.get(`/api/v1/traceVenue/jobs/${enquiryId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch enquiry detail:", error);
+    throw error.response?.data || error;
+  }
 };

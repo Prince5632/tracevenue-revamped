@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useParams } from 'react-router-dom';
 
-const EnquiryDetailLayout = ({ enquiryData }) => {
+const EnquiryDetailLayout = () => {
   const navigate = useNavigate();
   const { jobId } = useParams();
   const [activeTab, setActiveTab] = useState('quotations');

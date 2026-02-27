@@ -21,10 +21,15 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater, onNext
     (state) => state.eventOptionsLoading,
   );
   const loadEventOptions = useEnquiryStore((state) => state.loadEventOptions);
+  const jobId = useEnquiryStore((state) => state.jobId);
+  const resetJobData = useEnquiryStore((state) => state.resetJobData);
+
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [autoNext, setAutoNext] = useState(false);
+  // Pending event — set when user picks a new event while a job already exists
+  const [pendingEvent, setPendingEvent] = useState(null);
   const openSearch = () => setIsSearchOpen(true);
   const toggleSearch = () => setIsSearchOpen((prev) => !prev);
   const closeSearch = () => setIsSearchOpen(false);
@@ -126,6 +131,15 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater, onNext
     );
   }, [searchValue, allEvents]);
 
+  /** Apply the event selection to form state. Used directly or after confirmation. */
+  const applySelection = (normalized) => {
+    setSelectedEventId(normalized.value || normalized.id || null);
+    setSearchValue(normalized.label || "");
+    setIsSearchOpen(false);
+    updateFormData("selectedEventType", normalized);
+    setAutoNext(true);
+  };
+
   const handleSelect = (event) => {
     const match = matchEventFromCatalog(eventOptions, event);
     const normalized = match
@@ -140,12 +154,31 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater, onNext
 
     if (!normalized) return;
 
-    setSelectedEventId(normalized.value || normalized.id || null);
-    setSearchValue(normalized.label || "");
-    setIsSearchOpen(false);
-    updateFormData("selectedEventType", normalized);
-    setAutoNext(true);
+    const currentEventId =
+      formData?.selectedEventType?.value ||
+      formData?.selectedEventType?.id;
+
+    const isChangingExistingEvent =
+      jobId && currentEventId && currentEventId !== (normalized.value || normalized.id);
+
+    if (isChangingExistingEvent) {
+      // Store the pending selection and show confirmation instead of applying immediately
+      setPendingEvent(normalized);
+      return;
+    }
+
+    applySelection(normalized);
   };
+
+  const handleConfirmChange = () => {
+    if (!pendingEvent) return;
+    resetJobData();
+    applySelection(pendingEvent);
+    setPendingEvent(null);
+  };
+
+  const handleCancelChange = () => setPendingEvent(null);
+
 
   const clearSelection = () => {
     setSearchValue("");
@@ -262,6 +295,38 @@ const EventType = ({ formData: propFormData, updateFormData: propUpdater, onNext
           </div>
         ))}
       </div>
+
+      {/* ── Confirmation dialog: changing event type will reset all form data ── */}
+      {pendingEvent && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div
+            className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 flex flex-col gap-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[18px] font-bold text-[#060606]">
+                Change Event Type?
+              </h3>
+              <p className="text-[14px] text-[#666]">Changing the event type will clear all data you filled in the next steps — gathering size, budget, dates, food preferences, and your current package selection. A new enquiry will be created.</p>
+            </div>
+
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={handleCancelChange}
+                className="px-5 py-2.5 rounded-xl border border-[#e0e0e0] text-[14px] font-semibold text-[#333] hover:bg-[#f5f5f5] transition-all cursor-pointer"
+              >
+                Keep Current
+              </button>
+              <button
+                onClick={handleConfirmChange}
+                className="px-5 py-2.5 rounded-xl bg-[linear-gradient(135deg,#ff4000_0%,#ff6b35_100%)] text-white text-[14px] font-bold shadow-[0_4px_16px_#ff400050] hover:shadow-[0_6px_20px_#ff400070] transition-all cursor-pointer"
+              >
+                Yes, Change Event
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

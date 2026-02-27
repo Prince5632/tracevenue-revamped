@@ -288,7 +288,13 @@ const EnquiryLayout = () => {
         Math.min(stepIndex, steps.length - 1),
         -1,
       );
-      const includeStepId = safeIndex >= 0 ? steps[safeIndex]?.id ?? null : null;
+
+      // Never produce a URL that covers fewer steps than the current URL already encodes.
+      // e.g. user goes back to step 3 via sidebar while at step 7 — pressing Next
+      // should still keep food_preferences params (f, a) in the URL.
+      const highestCoveredIndex = Math.max(safeIndex, resolvedStepIndex);
+      const includeStepId =
+        highestCoveredIndex >= 0 ? steps[highestCoveredIndex]?.id ?? null : null;
 
       const nextUrl = buildWizardUrl({
         formData,
@@ -303,7 +309,7 @@ const EnquiryLayout = () => {
       navigate(nextUrl, { replace: true });
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    [formData, navigate, location.pathname, location.search, steps],
+    [formData, navigate, location.pathname, location.search, steps, resolvedStepIndex],
   );
 
   const handleNext = useCallback(async () => {
@@ -360,37 +366,65 @@ const EnquiryLayout = () => {
       setIsApiLoading(true);
       try {
         // 1. Build job data from formData
+        const maxPeople = formData?.selectedPeopleRange?.maxPeople || 1;
+        const isPerPerson = formData?.budgetType === "perPerson";
+        const perPersonMin = formData?.minBudgetValue || 0;
+        const perPersonMax = formData?.maxBudgetValue || 0;
+        // budget in payload is always lump-sum totals
+        const budgetMin = isPerPerson ? perPersonMin * maxPeople : perPersonMin;
+        const budgetMax = isPerPerson ? perPersonMax * maxPeople : perPersonMax;
+
+        // Convert selectedDates to [{date: "HH:MM - HH:MM"}] format
+        const toDateTimeMap = (dates = []) =>
+          dates.map((d) => {
+            if (!d?.date) return null;
+            const timeStr =
+              d.allDay
+                ? "All Day"
+                : `${d.startTime || "00:00"} - ${d.endTime || "23:59"}`;
+            return { [d.date]: timeStr };
+          }).filter(Boolean);
+
+        const preferredDates = toDateTimeMap(formData?.selectedDates?.slice(0, 1));
+        const alternateDates = toDateTimeMap(formData?.selectedDates?.slice(1));
+
+        // Fresh cuisine API response (stale-closure-safe)
+        const cuisineApiResponse = useEnquiryStore.getState().formData?.cuisineApiResponse;
+
         const jobData = {
           name: formData?.jobTitle || "Untitled Enquiry",
-          description: "",
           status: "Draft",
-          eventType: formData?.selectedEventType?.value || formData?.selectedEventType?.id,
-          cuisines: formData?.selectedCuisines?.map((c) => c?.value?.id || c?.value) || [],
-          budget: {
-            min: formData?.yourBudget?.min || 0,
-            max: formData?.yourBudget?.max || 0,
+          serviceType: formData?.serviceType,
+          // Send full eventType object so API has _id, eventName, className
+          eventType: formData?.selectedEventType?._id
+            || formData?.selectedEventType?.id
+            || formData?.selectedEventType?.value,
+          selectedCities: formData?.selectedCities || [],
+          radius: String(formData?.radius || formData?.distance || ""),
+          location: {
+            latitude: formData?.latitude || formData?.selectedCities?.[0]?.latitude,
+            longitude: formData?.longitude || formData?.selectedCities?.[0]?.longitude,
           },
-          serviceType: formData?.selectedServiceType?.value || formData?.selectedServiceType,
-          services: formData?.services || [],
-          menuSections: formData?.countData || [],
-          numberOfGuests: formData?.selectedPeopleRange?.value,
+          budget: { min: budgetMin, max: budgetMax },
+          perPersonBudget: { min: perPersonMin, max: perPersonMax },
           peopleRange: {
             minPeople: formData?.selectedPeopleRange?.minPeople,
-            maxPeople: formData?.selectedPeopleRange?.maxPeople,
+            maxPeople: maxPeople,
           },
-          isBudgetPerPerson: formData?.budgetType === "perPerson",
+          isBudgetPerPerson: isPerPerson,
           budgetType: formData?.budgetType || "perPerson",
-          dietaryRequirements: formData?.dietaryRequirements || [],
-          location: formData?.locationData,
-          selectedCities: formData?.selectedCities || [],
-          radius: String(formData?.distance || ""),
-          eventDate: formData?.selectedDates?.[0]?.date || "",
+          eventDate: preferredDates,
           eventDateOptions: {
-            preferredDates: formData?.selectedDates?.slice(0, 1) || [],
-            alternateDates: formData?.selectedDates?.slice(1) || [],
+            preferredDates,
+            alternateDates,
           },
+          dietaryRequirements: formData?.dietaryRequirements || [],
           vegOnly: formData?.dietaryRequirements?.includes("vegOnly") || false,
           nonAlcoholicOnly: !formData?.dietaryRequirements?.includes("alcoholic"),
+          cuisineApiData: cuisineApiResponse
+            ? { matchedResponse: cuisineApiResponse?.data || cuisineApiResponse }
+            : undefined,
+          coveredMaxStep: "Discover Packages",
         };
 
         // 2. Create or update draft job

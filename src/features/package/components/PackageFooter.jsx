@@ -220,6 +220,7 @@ function PackageFooter({ job, cuisineMenu, cuisineServices, cuisineNames, cuisin
                   cuisineMenu={cuisineMenu}
                   cuisineServices={cuisineServices}
                   cuisineNames={cuisineNames}
+                  cuisineIds={cuisineIds}
                   isModalOpen={isModalOpen}
                   setIsModalOpen={setIsModalOpen}
                 />

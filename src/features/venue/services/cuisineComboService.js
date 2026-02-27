@@ -49,7 +49,6 @@ export const fetchCuisineCombinations = async (formData) => {
             `/analysis/cuisine-analysis`,
             payload
         );
-        console.log(response, "responseresponseresponse");
         return response;
     } catch (error) {
         console.error("Error while fetching cuisine combinations", error);
